@@ -1,6 +1,6 @@
 package List::Compare::Base::_Auxiliary;
-$VERSION = 0.31;
-# As of:  08/15/2004
+$VERSION = 0.32;
+# As of:  09/18/2005
 use Carp;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw|
@@ -72,6 +72,7 @@ use Carp;
     ) ],
 );
 use strict;
+local $^W =1;
 
 sub _validate_2_seenhashes {
     my ($refL, $refR) = @_;
@@ -757,8 +758,8 @@ List::Compare::Base::_Auxiliary - Internal use only
 
 =head1 VERSION
 
-This document refers to version 0.31 of List::Compare::Base::_Auxiliary.
-This version was released August 15, 2004.
+This document refers to version 0.32 of List::Compare::Base::_Auxiliary.
+This version was released September 18, 2005.
 
 =head1 SYNOPSIS
 
@@ -770,7 +771,7 @@ List::Compare::Functional.  They are not intended to be publicly callable.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  August 15, 2004. 
+Creation date:  May 20, 2002.  Last modification date:  September 18, 2005. 
 Copyright (c) 2002-04 James E. Keenan.  United States.  All rights reserved. 
 This is free software and may be distributed under the same terms as Perl
 itself.

@@ -1,7 +1,7 @@
 package List::Compare;
-$VERSION = 0.31;   # August 15, 2004 
+$VERSION = '0.32';   # September 18, 2005 
 use strict;
-# use warnings; # commented out so module will run on pre-5.6 versions of Perl
+local $^W = 1;
 use Carp;
 use List::Compare::Base::_Auxiliary qw(
     _validate_2_seenhashes
@@ -1747,8 +1747,8 @@ List::Compare - Compare elements of two or more lists
 
 =head1 VERSION
 
-This document refers to version 0.31 of List::Compare.  This version was
-released August 15, 2004.
+This document refers to version 0.32 of List::Compare.  This version was
+released September 18, 2005.
 
 =head1 SYNOPSIS
 
@@ -3160,7 +3160,7 @@ you must first install the Want module, also available on CPAN.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  August 15, 2004. 
+Creation date:  May 20, 2002.  Last modification date:  September 18, 2005. 
 Copyright (c) 2002-04 James E. Keenan.  United States.  All rights reserved. 
 This is free software and may be distributed under the same terms as Perl
 itself.
