@@ -1,0 +1,41 @@
+# MANIFEST for List::Compare
+# $VERSION = 0.31;
+# as of:  08/01/2004
+Changes
+Compare.pm
+Compare/Base/_Auxiliary.pm
+Compare/Base/_Engine.pm
+Compare/Functional.pm
+MANIFEST
+Makefile.PL
+README
+t/01_simple.t
+t/02_accelerated.t
+t/03_multiple.t
+t/07_functional.t
+t/08_functional_sh.t
+t/09_multaccel.t
+t/11_functional_multiple.t
+t/12_functional_multiple_sh.t
+t/13_simple_sh_rev.t
+t/14_accelerated_sh_rev.t
+t/15_multiple_sh_rev.t
+t/16_multaccel_sh_rev.t
+t/17_alt_construct_simple.t
+t/18_alt_construct_accelerated.t
+t/19_alt_construct_multiple.t
+t/20_alt_construct_multaccel.t
+t/21_alt_construct_simple_sh.t
+t/22_alt_construct_accelerated_sh.t
+t/23_alt_construct_multiple_sh.t
+t/24_alt_construct_multaccel_sh.t
+t/25_alt_functional.t
+t/26_alt_functional_multiple.t
+t/27_alt_functional_sh.t
+t/28_alt_functional_multiple_sh.t
+t/29_unqall.t
+t/30_unqall_unsorted.t
+t/31_unqall_functional.t 
+t/32_unqall_functional_unsorted.t 
+t/Test/ListCompareSpecial.pm
+META.yml                                Module meta-data (added by MakeMaker)

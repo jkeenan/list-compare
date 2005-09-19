@@ -1,0 +1,121 @@
+Revision history for Perl extension List::Compare.
+
+0.04  Sat Jun  8 2002
+	- last draft version before using h2xs
+
+0.05  Sun Jun  9 2002
+	- original version; created by h2xs 1.20 with options
+		-XA -n List::Compare
+
+0.06  Wed Jun 12 2002
+	- documentation changes; POD broke
+
+0.07  Thu Jun 13 2002
+	- documentation changes
+
+0.08  Sat Jun 15 2002
+	- added method get_version()
+	- used non-idiomatic syntax for 'foreach' in hope of making module more backwardly compatible
+	- to free up memory, zeroed out %seenA and %seenB when no longer needed
+	- added method get_bag()
+	- inspired by Set::Scalar, used typeglob syntax to implement aliases for methods
+	- revised POD extensively
+
+0.09  Sun Jun 16 2002
+	- added tests to test get_bag()
+	- implemented Carp module for warnings
+
+0.10  Wed Jun 19 2002
+	- corrected one typo in documentation
+	- commented out # require 5.00562 and use warnings
+	- first version uploaded to CPAN
+
+0.11  Thu Jun 20 2002
+	- corrected errors in POD that caused HTML to display incorrectly
+
+0.12  Sat Jul 13 2002
+	- major expansion
+	- capability to accelerate processing of comparisons of 2 lists 
+	  when only 1 comparison method is expected to be called
+	- capability to compare more than 2 lists at a time
+	- introduction of methods including:
+		get_shared()
+		get_nonintersection()
+		print_subset_map()
+		print_equivalence_map()
+	- not released to CPAN due to errors in README and Changes
+
+0.13  Sat Aug 03 2002
+	- corrected documentation errors found in v0.12
+	- released to CPAN
+
+0.14  Sun Aug 18 2002
+	- commented out 'use warnings;' to permit module to run on pre-5.6 versions
+	- corrected one error in POD
+	- removed e-mail addresses of authors of other modules from POD
+
+0.15  Sat Sep 07 2002
+	- conformed CPAN addresses of other modules to new structure of search.cpan.org
+
+0.16  Sat Mar 08 2003
+	- for each method which returned an array, added an analogous method which
+	  returns a reference to that array
+
+0.17  Thu May 22 2003
+	- eliminated certain synthetic variables
+	- created List::Compare::SeenHash
+
+0.18  Sun Jun 1 2003
+	- added methods member_which(), single_member_which()
+
+0.19  Sun Jun 1 2003
+	- added methods member_any(), single_member_any()
+	- fixed annoying carping messages when running 'make test'
+
+0.20 Fri Jun 6 2003
+	- updated documentation discussing changes since v0.17
+	- changed names of recently added methods to is_member_which(), is_member_which_ref(),
+	  are_members(), is_member_any(), are_members_any()
+
+0.21 Sun Oct 26 2003
+	- added functional interface to list comparison functions:  List::Compare::Functional; this required changes in List::Compare::Base::Accelerated and the creation of List::Compare::Base::_Engine
+
+0.22 Sun Nov 23 2003
+	- corrected conceptual flaw in List::Compare::SeenHash so as to exclude values in a seen-hash mathematically equal to zero
+	- implemented 'unsorted' option for list comparisons
+
+0.23 [Accidentally skipped.]
+
+0.24 Sun Mar 28 2004
+	- first implementation of 'multiple accelerated' mode wherein user can request speedier processing of more than two lists when only one comparison among the lists is sought
+	- converted test suite to use Test::Simple
+
+0.25 Sun Apr 4 2004
+	- continued implementation of 'multiple accelerated' mode; applied to List::Compare::SeenHash and List::Compare::Functional
+	- modification of interfaces to methods/functions are_members_which() and are_members_any throughout; items to be tested must be passed (by reference) as an anonymous array rather than as a flat list
+
+0.26  Sun Apr 11 2004
+        - List::Compare::SeenHash and associated tests deprecated
+        - capacity to pass references to seen-hashes to constructor now 
+transferred directly into List::Compare
+	- corrections to POD
+
+0.27  Sun Apr 18 2004
+	- corrections to POD
+
+0.28  Sun Apr 25 2004
+	- implementation of is_LdisjointR
+	- correction of error in tests of multiple-accelerated mode
+	- correction of error in internal subroutine _argument_checker_0
+	- further implication of deprecation of List::Compare::SeenHash is that all the code in List::Compare::Base::Regular, L:C:B:Accelerated, L:C:B:Multiple and L:C:B:Multiple::Accelerated is no longer shared between List::Compare and List::Compare::SeenHash and hence can be taken back into List::Compare; thereby eliminating the 'use base' calls from List::Compare.
+
+0.29  Sun May 16 2004
+	- implementation of alternative ('Adlerian') interface wherein a single hash reference is passed to constructor or function 
+
+0.30  Fri May 21 2004
+	- documentation corrections only
+
+0.31  Sun Aug 15 2004
+	- added methods get_unique_all() and get_complement_all(); added 3335 tests; repositioned most methods in List::Compare::Base::_Engine to List::Compare::Accelerated as they were no longer also being used in List::Compare::Functional; other internal code clean-up
+
+
