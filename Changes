@@ -119,6 +119,8 @@ transferred directly into List::Compare
 	- added methods get_unique_all() and get_complement_all(); added 3335 tests; repositioned most methods in List::Compare::Base::_Engine to List::Compare::Accelerated as they were no longer also being used in List::Compare::Functional; other internal code clean-up
 
 0.32  Sun Sep 18 2005
+    - No changes in functionality.  Distribution restructured so that modules
+      are now underneath the 'lib/' directory.
 
 0.33  Sun Feb 19 2006
     - Documentation changes only.  Support for List-Compare is now offered via
