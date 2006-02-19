@@ -3072,21 +3072,22 @@ of June 2002.  Some of these modules may have changed since then.)
 =item *
 
 Algorithm::Diff - Compute 'intelligent' differences between two files/lists
-(L<http://search.cpan.org/author/NEDKONZ/Algorithm-Diff-1.15/lib/Algorithm/Diff.pm>)
+(L<http://search.cpan.org/dist/Algorithm-Diff/>)
 
 Algorithm::Diff is a sophisticated module originally written by Mark-Jason
-Dominus and now maintained by Ned Konz. Think of the Unix C<diff> utility 
-and you're on the right track.  Algorithm::Diff exports methods such as 
-C<diff>, which ''computes the smallest set of additions and deletions necessary 
-to turn the first sequence into the second, and returns a description of these
-changes.''  Algorithm::Diff is mainly concerned with the sequence of
-elements within two lists.  It does not export functions for intersection,
-union, subset status, etc.
+Dominus, later maintained by Ned Konz, now maintained by Tye McQueen. Think of 
+the Unix C<diff> utility  and you're on the right track.  Algorithm::Diff
+exports 
+methods such as C<diff>, which ''computes the smallest set of additions and 
+deletions necessary to turn the first sequence into the second, and returns a 
+description of these changes.''  Algorithm::Diff is mainly concerned with the 
+sequence of elements within two lists.  It does not export functions for 
+intersection, union, subset status, etc.
 
 =item *
 
 Array::Compare - Perl extension for comparing arrays
-(L<http://search.cpan.org/author/DAVECROSS/Array-Compare-1.03/Compare.pm>)
+(L<http://search.cpan.org/dist/Array-Compare/>)
 
 Array::Compare, by Dave Cross, asks whether two arrays
 are the same or different by doing a C<join> on each string with a
@@ -3101,7 +3102,7 @@ union.
 =item *
 
 List::Util - A selection of general-utility list subroutines
-(L<http://search.cpan.org/author/GBARR/Scalar-List-Utils-1.0701/lib/List/Util.pm>)
+(L<http://search.cpan.org/dist/Scalar-List-Utils/>)
 
 List::Util, by Graham Barr, exports a variety of simple,
 useful functions for operating on one list at a time.    The C<min> function
@@ -3112,23 +3113,27 @@ rather than just one -- but it aims to be as simple and useful as
 List::Util.  List::Util will be included in the standard Perl 
 distribution as of Perl 5.8.0.
 
-Lists::Util (L<http://search.cpan.org/author/TBONE/List-Utils-0.01/Utils.pm>), 
-by Terrence Brannon, provides methods which extend List::Util's functionality.
+Lists::Util (L<http://search.cpan.org/dist/List-MoreUtils/>), 
+by Tassilo von Parseval, building on code by Terrence Brannon, provides
+methods 
+which extend List::Util's functionality.
 
 =item *
 
 Quantum::Superpositions 
-(L<http://search.cpan.org/author/DCONWAY/Quantum-Superpositions-1.03/lib/Quantum/Superpositions.pm>), 
-by Damian Conway, is useful if, in addition to comparing lists, you need to
-emulate quantum supercomputing as well.  Not for the eigen-challenged.
+(L<http://search.cpan.org/dist/Quantum-Superpositions/>), 
+originally by Damian Conway, now maintained by Steven Lembark is useful if, in 
+addition to comparing lists, you need to emulate quantum supercomputing as
+well.  
+Not for the eigen-challenged.
 
 =item *
 
 Set::Scalar - basic set operations
-(L<http://search.cpan.org/author/JHI/Set-Scalar-1.17/lib/Set/Scalar.pm>)
+(L<http://search.cpan.org/dist/Set-Scalar/>)
 
 Set::Bag - bag (multiset) class
-(L<http://search.cpan.org/author/JHI/Set-Bag-1.007/Bag.pm>)
+(L<http://search.cpan.org/dist/Set-Bag/>)
 
 Both of these modules are by Jarkko Hietaniemi.  Set::Scalar
 has methods to return the intersection, union, difference and symmetric
@@ -3146,9 +3151,9 @@ has more than one instance of an element in a list.
 
 Set::Array - Arrays as objects with lots of handy methods (including set
 comparisons) and support for method chaining.
-(L<http://search.cpan.org/author/DJBERG/Set-Array-0.08/Array.pm>)
+(L<http://search.cpan.org/dist/Set-Array/>)
 
-Set::Array, by Daniel Berger, ''aims to provide
+Set::Array, by Daniel Berger, now maintained by Ron Savage, ''aims to provide
 built-in methods for operations that people are always asking how to do,and
 which already exist in languages like Ruby.''  Among the many methods in
 this module are some for intersection, union, etc.  To install Set::Array,
@@ -3156,18 +3161,54 @@ you must first install the Want module, also available on CPAN.
 
 =back
 
+=head1 BUGS
+
+There are no bug reports outstanding on List::Compare as of the most recent 
+CPAN upload date of this distribution.
+
+=head1 SUPPORT
+
+Support for List::Compare is now provided by mailing list:
+L<http://thenceforward.net/cgi-bin/mailman/listinfo/list-compare>.
+
+Please report any bugs by mail to C<bug-ExtUtils-ModuleMaker@rt.cpan.org> 
+or through the web interface at L<http://rt.cpan.org>.
+
 =head1 AUTHOR
 
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  February 19, 2006. 
-Copyright (c) 2002-04 James E. Keenan.  United States.  All rights reserved. 
+Creation date:  May 20, 2002.  Last modification date:  February 19, 2006.
+
+=head1 COPYRIGHT
+
+Copyright (c) 2002-06 James E. Keenan.  United States.  All rights reserved. 
 This is free software and may be distributed under the same terms as Perl
 itself.
 
+=head1 DISCLAIMER OF WARRANTY
+
+BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+PROVIDE THE SOFTWARE ''AS IS'' WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
+ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
+YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
+NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
+LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
+OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
+THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
 =cut 
-
-
-
 
