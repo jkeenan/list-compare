@@ -1,5 +1,5 @@
 package List::Compare;
-$VERSION = '0.32';   # September 18, 2005 
+$VERSION = '0.33';   # February 19, 2006 
 use strict;
 local $^W = 1;
 use Carp;
@@ -1747,8 +1747,8 @@ List::Compare - Compare elements of two or more lists
 
 =head1 VERSION
 
-This document refers to version 0.32 of List::Compare.  This version was
-released September 18, 2005.
+This document refers to version 0.33 of List::Compare.  This version was
+released February 19, 2006.
 
 =head1 SYNOPSIS
 
@@ -2511,8 +2511,9 @@ In the example above, C<$complement_all_ref> will hold:
 
 =back
 
-=head2 Multiple Accelerated Case:  Compare Three or More Lists 
-but Request Only a Single Comparison among the Lists
+=back
+
+=head2 Multiple Accelerated Case:  Compare Three or More Lists but Request Only a Single Comparison among the Lists
 
 =over 4
 
@@ -3160,7 +3161,7 @@ you must first install the Want module, also available on CPAN.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  September 18, 2005. 
+Creation date:  May 20, 2002.  Last modification date:  February 19, 2006. 
 Copyright (c) 2002-04 James E. Keenan.  United States.  All rights reserved. 
 This is free software and may be distributed under the same terms as Perl
 itself.

@@ -1,9 +1,9 @@
 use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
 WriteMakefile(
-    'NAME'		=> 'List::Compare',
-    'VERSION_FROM'	=> 'Compare.pm', # finds $VERSION
-    'PREREQ_PM'		=> { Test::Simple => 0.10 }, # e.g., Module::Name => 1.1
+    NAME		    => 'List::Compare',
+    AUTHOR          => 'James E Keenan (jkeenan@cpan.org)',
+    VERSION_FROM	=> 'lib/List/Compare.pm',
+    ABSTRACT_FROM	=> 'lib/List/Compare.pm',
+    PREREQ_PM		=> { Test::Simple => 0.10 },
 );
 

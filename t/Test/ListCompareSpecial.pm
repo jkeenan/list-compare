@@ -1,6 +1,6 @@
 package Test::ListCompareSpecial;
 # Contains test subroutines for distribution with List::Compare
-# As of:  September 18, 2005
+# As of:  February 19, 2006
 require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(
