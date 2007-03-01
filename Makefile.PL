@@ -6,4 +6,3 @@ WriteMakefile(
     ABSTRACT_FROM	=> 'lib/List/Compare.pm',
     PREREQ_PM		=> { Test::Simple => 0.10 },
 );
-
