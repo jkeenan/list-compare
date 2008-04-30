@@ -6,6 +6,7 @@ use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw(:seen);
 
+my @pred = ();
 my %seen = ();
 my (@unique, @complement, @intersection, @union, @symmetric_difference, @bag);
 my ($unique_ref, $complement_ref, $intersection_ref, $union_ref,
@@ -24,598 +25,140 @@ my @a8 = qw(kappa lambda mu);
 
 my $lc    = List::Compare->new(\@a0, \@a1);
 
-ok($lc);
+ok($lc, "List::Compare constructor returned true value");
 
+@pred = qw(abel baker camera delta edward fargo golfer hilton);
 @union = $lc->get_union;
-ok($union[0] eq 'abel');
-ok($union[1] eq 'baker');
-ok($union[2] eq 'camera');
-ok($union[3] eq 'delta');
-ok($union[4] eq 'edward');
-ok($union[5] eq 'fargo');
-ok($union[6] eq 'golfer');
-ok($union[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@union);
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply( \@union, \@pred, "Got expected union");
 
 $union_ref = $lc->get_union_ref;
-ok(${$union_ref}[0] eq 'abel');
-ok(${$union_ref}[1] eq 'baker');
-ok(${$union_ref}[2] eq 'camera');
-ok(${$union_ref}[3] eq 'delta');
-ok(${$union_ref}[4] eq 'edward');
-ok(${$union_ref}[5] eq 'fargo');
-ok(${$union_ref}[6] eq 'golfer');
-ok(${$union_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$union_ref});
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply( $union_ref, \@pred, "Got expected union");
 
 {
     local $SIG{__WARN__} = \&_capture;
     @shared = $lc->get_shared;
 }
-ok($shared[0] eq 'abel');
-ok($shared[1] eq 'baker');
-ok($shared[2] eq 'camera');
-ok($shared[3] eq 'delta');
-ok($shared[4] eq 'edward');
-ok($shared[5] eq 'fargo');
-ok($shared[6] eq 'golfer');
-ok($shared[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@shared);
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply( \@shared, \@pred, "Got expected shared");
 
 {
     local $SIG{__WARN__} = \&_capture;
     $shared_ref = $lc->get_shared_ref;
 }
-ok(${$shared_ref}[0] eq 'abel');
-ok(${$shared_ref}[1] eq 'baker');
-ok(${$shared_ref}[2] eq 'camera');
-ok(${$shared_ref}[3] eq 'delta');
-ok(${$shared_ref}[4] eq 'edward');
-ok(${$shared_ref}[5] eq 'fargo');
-ok(${$shared_ref}[6] eq 'golfer');
-ok(${$shared_ref}[-1] eq 'hilton');
+is_deeply( $shared_ref, \@pred, "Got expected shared");
 
-$seen{$_}++ foreach (@{$shared_ref});
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
+@pred = qw( baker camera delta edward fargo golfer );
 @intersection = $lc->get_intersection;
-ok($intersection[0] eq 'baker');
-ok($intersection[1] eq 'camera');
-ok($intersection[2] eq 'delta');
-ok($intersection[3] eq 'edward');
-ok($intersection[4] eq 'fargo');
-ok($intersection[-1] eq 'golfer');
-
-$seen{$_}++ foreach (@intersection);
-ok(! exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@intersection, \@pred, "Got expected intersection");
 
 $intersection_ref = $lc->get_intersection_ref;
-ok(${$intersection_ref}[0] eq 'baker');
-ok(${$intersection_ref}[1] eq 'camera');
-ok(${$intersection_ref}[2] eq 'delta');
-ok(${$intersection_ref}[3] eq 'edward');
-ok(${$intersection_ref}[4] eq 'fargo');
-ok(${$intersection_ref}[-1] eq 'golfer');
+is_deeply($intersection_ref, \@pred, "Got expected intersection");
 
-$seen{$_}++ foreach (@{$intersection_ref});
-ok(! exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
+@pred = qw( abel );
 @unique = $lc->get_unique;
-ok($unique[-1] eq 'abel');
-
-$seen{$_}++ foreach (@unique);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@unique, \@pred, "Got expected unique");
 
 $unique_ref = $lc->get_unique_ref;
-ok(${$unique_ref}[-1] eq 'abel');
-
-$seen{$_}++ foreach (@{$unique_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply($unique_ref, \@pred, "Got expected unique");
 
 @unique = $lc->get_Lonly;
-ok($unique[-1] eq 'abel');
-
-$seen{$_}++ foreach (@unique);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@unique, \@pred, "Got expected unique");
 
 $unique_ref = $lc->get_Lonly_ref;
-ok(${$unique_ref}[-1] eq 'abel');
-
-$seen{$_}++ foreach (@{$unique_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply($unique_ref, \@pred, "Got expected unique");
 
 @unique = $lc->get_Aonly;
-ok($unique[-1] eq 'abel');
-
-$seen{$_}++ foreach (@unique);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@unique, \@pred, "Got expected unique");
 
 $unique_ref = $lc->get_Aonly_ref;
-ok(${$unique_ref}[-1] eq 'abel');
+is_deeply($unique_ref, \@pred, "Got expected unique");
 
-$seen{$_}++ foreach (@{$unique_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
+@pred = qw ( hilton );
 @complement = $lc->get_complement;
-ok($complement[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@complement);
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@complement, \@pred, "Got expected complement");
 
 $complement_ref = $lc->get_complement_ref;
-ok(${$complement_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$complement_ref});
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply($complement_ref, \@pred, "Got expected complement");
 
 @complement = $lc->get_Ronly;
-ok($complement[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@complement);
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@complement, \@pred, "Got expected complement");
 
 $complement_ref = $lc->get_Ronly_ref;
-ok(${$complement_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$complement_ref});
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply($complement_ref, \@pred, "Got expected complement");
 
 @complement = $lc->get_Bonly;
-ok($complement[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@complement);
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@complement, \@pred, "Got expected complement");
 
 $complement_ref = $lc->get_Bonly_ref;
-ok(${$complement_ref}[-1] eq 'hilton');
+is_deeply($complement_ref, \@pred, "Got expected complement");
 
-$seen{$_}++ foreach (@{$complement_ref});
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
+@pred = qw( abel hilton );
 @symmetric_difference = $lc->get_symmetric_difference;
-ok($symmetric_difference[0] eq 'abel');
-ok($symmetric_difference[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
 
 $symmetric_difference_ref = $lc->get_symmetric_difference_ref;
-ok(${$symmetric_difference_ref}[0] eq 'abel');
-ok(${$symmetric_difference_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
 
 @symmetric_difference = $lc->get_symdiff;
-ok($symmetric_difference[0] eq 'abel');
-ok($symmetric_difference[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
 
 $symmetric_difference_ref = $lc->get_symdiff_ref;
-ok(${$symmetric_difference_ref}[0] eq 'abel');
-ok(${$symmetric_difference_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
 
 @symmetric_difference = $lc->get_LorRonly;
-ok($symmetric_difference[0] eq 'abel');
-ok($symmetric_difference[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
 
 $symmetric_difference_ref = $lc->get_LorRonly_ref;
-ok(${$symmetric_difference_ref}[0] eq 'abel');
-ok(${$symmetric_difference_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
 
 @symmetric_difference = $lc->get_AorBonly;
-ok($symmetric_difference[0] eq 'abel');
-ok($symmetric_difference[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
 
 $symmetric_difference_ref = $lc->get_AorBonly_ref;
-ok(${$symmetric_difference_ref}[0] eq 'abel');
-ok(${$symmetric_difference_ref}[-1] eq 'hilton');
+is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
 
-$seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
+@pred = qw( abel hilton );
 {
     local $SIG{__WARN__} = \&_capture;
     @nonintersection = $lc->get_nonintersection;
 }
-ok($nonintersection[0] eq 'abel');
-ok($nonintersection[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@nonintersection);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@nonintersection, \@pred, "Got expected nonintersection");
 
 {
     local $SIG{__WARN__} = \&_capture;
     $nonintersection_ref = $lc->get_nonintersection_ref;
 }
-ok(${$nonintersection_ref}[0] eq 'abel');
-ok(${$nonintersection_ref}[-1] eq 'hilton');
+is_deeply($nonintersection_ref, \@pred, "Got expected nonintersection");
 
-$seen{$_}++ foreach (@{$nonintersection_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
+@pred = qw( abel abel baker baker camera camera delta delta delta edward
+edward fargo fargo golfer golfer hilton );
 @bag = $lc->get_bag;
-ok($bag[0] eq 'abel');
-ok($bag[1] eq 'abel');
-ok($bag[2] eq 'baker');
-ok($bag[3] eq 'baker');
-ok($bag[4] eq 'camera');
-ok($bag[5] eq 'camera');
-ok($bag[6] eq 'delta');
-ok($bag[7] eq 'delta');
-ok($bag[8] eq 'delta');
-ok($bag[9] eq 'edward');
-ok($bag[10] eq 'edward');
-ok($bag[11] eq 'fargo');
-ok($bag[12] eq 'fargo');
-ok($bag[13] eq 'golfer');
-ok($bag[14] eq 'golfer');
-ok($bag[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@bag);
-ok($seen{'abel'} == 2);
-ok($seen{'baker'} == 2);
-ok($seen{'camera'} == 2);
-ok($seen{'delta'} == 3);
-ok($seen{'edward'} == 2);
-ok($seen{'fargo'} == 2);
-ok($seen{'golfer'} == 2);
-ok($seen{'hilton'} == 1);
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply(\@bag, \@pred, "Got expected bag");
 
 $bag_ref = $lc->get_bag_ref;
-ok(${$bag_ref}[0] eq 'abel');
-ok(${$bag_ref}[1] eq 'abel');
-ok(${$bag_ref}[2] eq 'baker');
-ok(${$bag_ref}[3] eq 'baker');
-ok(${$bag_ref}[4] eq 'camera');
-ok(${$bag_ref}[5] eq 'camera');
-ok(${$bag_ref}[6] eq 'delta');
-ok(${$bag_ref}[7] eq 'delta');
-ok(${$bag_ref}[8] eq 'delta');
-ok(${$bag_ref}[9] eq 'edward');
-ok(${$bag_ref}[10] eq 'edward');
-ok(${$bag_ref}[11] eq 'fargo');
-ok(${$bag_ref}[12] eq 'fargo');
-ok(${$bag_ref}[13] eq 'golfer');
-ok(${$bag_ref}[14] eq 'golfer');
-ok(${$bag_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$bag_ref});
-ok($seen{'abel'} == 2);
-ok($seen{'baker'} == 2);
-ok($seen{'camera'} == 2);
-ok($seen{'delta'} == 3);
-ok($seen{'edward'} == 2);
-ok($seen{'fargo'} == 2);
-ok($seen{'golfer'} == 2);
-ok($seen{'hilton'} == 1);
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+is_deeply($bag_ref, \@pred, "Got expected bag");
 
 $LR = $lc->is_LsubsetR;
-ok(! $LR);
+ok(! $LR, "Got expected subset relationship");
 
 $LR = $lc->is_AsubsetB;
-ok(! $LR);
+ok(! $LR, "Got expected subset relationship");
 
 $RL = $lc->is_RsubsetL;
-ok(! $RL);
+ok(! $RL, "Got expected subset relationship");
 
 $RL = $lc->is_BsubsetA;
-ok(! $RL);
+ok(! $RL, "Got expected subset relationship");
 
 $eqv = $lc->is_LequivalentR;
-ok(! $eqv);
+ok(! $eqv, "Got expected equivalent relationship");
 
 $eqv = $lc->is_LeqvlntR;
-ok(! $eqv);
+ok(! $eqv, "Got expected equivalent relationship");
 
 $disj = $lc->is_LdisjointR;
-ok(! $disj);
+ok(! $disj, "Got expected disjoint relationship");
+
+__END__
 
 $return = $lc->print_subset_chart;
 ok($return);
