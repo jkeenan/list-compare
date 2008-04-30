@@ -1,4 +1,5 @@
 use ExtUtils::MakeMaker;
+require 5.006;
 WriteMakefile(
     NAME		    => 'List::Compare',
     AUTHOR          => 'James E Keenan (jkeenan@cpan.org)',

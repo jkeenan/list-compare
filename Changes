@@ -128,3 +128,6 @@ List::Compare::Functional; other internal code clean-up
 0.33  Sun Feb 19 2006
     - Documentation changes only.  Support for List-Compare is now offered via
       dedicated mailing list.
+
+0.34 Mon Nov  5 18:35:15 EST 2007
+    - Add require 5.6 to Makefile.PL.
