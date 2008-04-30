@@ -1,3 +1,4 @@
+#$Id$
 use ExtUtils::MakeMaker;
 require 5.006;
 WriteMakefile(

@@ -1,4 +1,5 @@
 package List::Compare::Base::_Engine;
+#$Id$
 $VERSION = 0.35;
 # Holds subroutines used within 
 # List::Compare::Base::Accelerated and List::Compare::Functional

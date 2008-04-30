@@ -1,4 +1,5 @@
 package List::Compare::Base::_Auxiliary;
+#$Id$
 $VERSION = 0.35;
 # As of:  09/18/2005
 use Carp;
