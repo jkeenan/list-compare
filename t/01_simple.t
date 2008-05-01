@@ -205,6 +205,9 @@ ok(ok_seen_a( \@memb_arr, 'jerky',  0, [ qw<     > ] ),
 ok(ok_seen_a( \@memb_arr, 'zebra',  0, [ qw<     > ] ),
     "is_member_which() returned expected values");
 
+eval { $memb_arr_ref = $lc->is_member_which('jerky', 'zebra') };
+ok(ok_capture_error($@), "is_member_which() correctly generated error message");
+
 
 $memb_arr_ref = $lc->is_member_which_ref('abel');
 ok(ok_seen_a( $memb_arr_ref, 'abel',   1, [ qw< 0   > ] ),
@@ -250,62 +253,85 @@ $memb_arr_ref = $lc->is_member_which_ref('zebra');
 ok(ok_seen_a( $memb_arr_ref, 'zebra',  0, [ qw<     > ] ),
     "is_member_which_ref() returned expected values");
 
-__END__
-
 eval { $memb_arr_ref = $lc->is_member_which_ref('jerky', 'zebra') };
-ok(ok_capture_error($@));
+ok(ok_capture_error($@), "is_member_which_ref() correctly generated error message");
 
 
 $memb_hash_ref = $lc->are_members_which( [ qw| abel baker camera delta edward fargo 
     golfer hilton icon jerky zebra | ] );
-ok(ok_seen_h( $memb_hash_ref, 'abel',   1, [ qw< 0   > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'baker',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'camera', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'delta',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'edward', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'fargo',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'golfer', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'hilton', 1, [ qw<   1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'icon',   0, [ qw<     > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'jerky',  0, [ qw<     > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'zebra',  0, [ qw<     > ] ));
+ok(ok_seen_h( $memb_hash_ref, 'abel',   1, [ qw< 0   > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'baker',  2, [ qw< 0 1 > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'camera', 2, [ qw< 0 1 > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'delta',  2, [ qw< 0 1 > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'edward', 2, [ qw< 0 1 > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'fargo',  2, [ qw< 0 1 > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'golfer', 2, [ qw< 0 1 > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'hilton', 1, [ qw<   1 > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'icon',   0, [ qw<     > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'jerky',  0, [ qw<     > ] ),
+    "are_members_which() returned expected values");
+ok(ok_seen_h( $memb_hash_ref, 'zebra',  0, [ qw<     > ] ),
+    "are_members_which() returned expected values");
 
 eval { $memb_hash_ref = $lc->are_members_which( { key => 'value' } ) };
-ok(ok_capture_error($@));
+ok(ok_capture_error($@), "are_members_which correctly generated error message");
 
 
-ok($lc->is_member_any('abel'));
-ok($lc->is_member_any('baker'));
-ok($lc->is_member_any('camera'));
-ok($lc->is_member_any('delta'));
-ok($lc->is_member_any('edward'));
-ok($lc->is_member_any('fargo'));
-ok($lc->is_member_any('golfer'));
-ok($lc->is_member_any('hilton'));
-ok(! $lc->is_member_any('icon' ));
-ok(! $lc->is_member_any('jerky'));
-ok(! $lc->is_member_any('zebra'));
+ok($lc->is_member_any('abel'), "is_member_any() returned expected value");
+ok($lc->is_member_any('baker'), "is_member_any() returned expected value");
+ok($lc->is_member_any('camera'), "is_member_any() returned expected value");
+ok($lc->is_member_any('delta'), "is_member_any() returned expected value");
+ok($lc->is_member_any('edward'), "is_member_any() returned expected value");
+ok($lc->is_member_any('fargo'), "is_member_any() returned expected value");
+ok($lc->is_member_any('golfer'), "is_member_any() returned expected value");
+ok($lc->is_member_any('hilton'), "is_member_any() returned expected value");
+ok(! $lc->is_member_any('icon' ), "is_member_any() returned expected value");
+ok(! $lc->is_member_any('jerky'), "is_member_any() returned expected value");
+ok(! $lc->is_member_any('zebra'), "is_member_any() returned expected value");
 
 eval { $lc->is_member_any('jerky', 'zebra') };
-ok(ok_capture_error($@));
+ok(ok_capture_error($@), "is_member_any() correctly generated error message");
 
 
-$memb_hash_ref = $lc->are_members_any( [ qw| abel baker camera delta edward fargo 
-    golfer hilton icon jerky zebra | ] );
-ok(ok_any_h( $memb_hash_ref, 'abel',   1 ));
-ok(ok_any_h( $memb_hash_ref, 'baker',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'camera', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'delta',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'edward', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'fargo',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'golfer', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'hilton', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'icon',   0 ));
-ok(ok_any_h( $memb_hash_ref, 'jerky',  0 ));
-ok(ok_any_h( $memb_hash_ref, 'zebra',  0 ));
+$memb_hash_ref = $lc->are_members_any(
+    [ qw| abel baker camera delta edward fargo 
+          golfer hilton icon jerky zebra | ] );
+ok(ok_any_h( $memb_hash_ref, 'abel',   1 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'baker',  1 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'camera', 1 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'delta',  1 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'edward', 1 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'fargo',  1 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'golfer', 1 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'hilton', 1 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'icon',   0 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'jerky',  0 ),
+    "are_members_any() returned expected values");
+ok(ok_any_h( $memb_hash_ref, 'zebra',  0 ),
+    "are_members_any() returned expected values");
 
 eval { $memb_hash_ref = $lc->are_members_any( { key => 'value' } ) };
-ok(ok_capture_error($@));
+ok(ok_capture_error($@), "are_members_any() correctly generated error message");
+
+__END__
 
 $vers = $lc->get_version;
 ok($vers);
