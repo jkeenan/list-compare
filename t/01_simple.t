@@ -158,80 +158,99 @@ ok(! $eqv, "Got expected equivalent relationship");
 $disj = $lc->is_LdisjointR;
 ok(! $disj, "Got expected disjoint relationship");
 
-__END__
-
-$return = $lc->print_subset_chart;
-ok($return);
-
-$return = $lc->print_equivalence_chart;
-ok($return);
+ok( $lc->print_subset_chart, "print_subset_chart() returned true value");
+ok( $lc->print_equivalence_chart, "print_equivalence_chart() returned true value");
 
 @memb_arr = $lc->is_member_which('abel');
-ok(ok_seen_a( \@memb_arr, 'abel',   1, [ qw< 0   > ] ));
+ok(ok_seen_a( \@memb_arr, 'abel',   1, [ qw< 0   > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('baker');
-ok(ok_seen_a( \@memb_arr, 'baker',  2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( \@memb_arr, 'baker',  2, [ qw< 0 1 > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('camera');
-ok(ok_seen_a( \@memb_arr, 'camera', 2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( \@memb_arr, 'camera', 2, [ qw< 0 1 > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('delta');
-ok(ok_seen_a( \@memb_arr, 'delta',  2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( \@memb_arr, 'delta',  2, [ qw< 0 1 > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('edward');
-ok(ok_seen_a( \@memb_arr, 'edward', 2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( \@memb_arr, 'edward', 2, [ qw< 0 1 > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('fargo');
-ok(ok_seen_a( \@memb_arr, 'fargo',  2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( \@memb_arr, 'fargo',  2, [ qw< 0 1 > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('golfer');
-ok(ok_seen_a( \@memb_arr, 'golfer', 2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( \@memb_arr, 'golfer', 2, [ qw< 0 1 > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('hilton');
-ok(ok_seen_a( \@memb_arr, 'hilton', 1, [ qw<   1 > ] ));
+ok(ok_seen_a( \@memb_arr, 'hilton', 1, [ qw<   1 > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('icon');
-ok(ok_seen_a( \@memb_arr, 'icon',   0, [ qw<     > ] ));
+ok(ok_seen_a( \@memb_arr, 'icon',   0, [ qw<     > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('jerky');
-ok(ok_seen_a( \@memb_arr, 'jerky',  0, [ qw<     > ] ));
+ok(ok_seen_a( \@memb_arr, 'jerky',  0, [ qw<     > ] ),
+    "is_member_which() returned expected values");
 
 @memb_arr = $lc->is_member_which('zebra');
-ok(ok_seen_a( \@memb_arr, 'zebra',  0, [ qw<     > ] ));
+ok(ok_seen_a( \@memb_arr, 'zebra',  0, [ qw<     > ] ),
+    "is_member_which() returned expected values");
 
 
 $memb_arr_ref = $lc->is_member_which_ref('abel');
-ok(ok_seen_a( $memb_arr_ref, 'abel',   1, [ qw< 0   > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'abel',   1, [ qw< 0   > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('baker');
-ok(ok_seen_a( $memb_arr_ref, 'baker',  2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'baker',  2, [ qw< 0 1 > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('camera');
-ok(ok_seen_a( $memb_arr_ref, 'camera', 2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'camera', 2, [ qw< 0 1 > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('delta');
-ok(ok_seen_a( $memb_arr_ref, 'delta',  2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'delta',  2, [ qw< 0 1 > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('edward');
-ok(ok_seen_a( $memb_arr_ref, 'edward', 2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'edward', 2, [ qw< 0 1 > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('fargo');
-ok(ok_seen_a( $memb_arr_ref, 'fargo',  2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'fargo',  2, [ qw< 0 1 > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('golfer');
-ok(ok_seen_a( $memb_arr_ref, 'golfer', 2, [ qw< 0 1 > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'golfer', 2, [ qw< 0 1 > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('hilton');
-ok(ok_seen_a( $memb_arr_ref, 'hilton', 1, [ qw<   1 > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'hilton', 1, [ qw<   1 > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('icon');
-ok(ok_seen_a( $memb_arr_ref, 'icon',   0, [ qw<     > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'icon',   0, [ qw<     > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('jerky');
-ok(ok_seen_a( $memb_arr_ref, 'jerky',  0, [ qw<     > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'jerky',  0, [ qw<     > ] ),
+    "is_member_which_ref() returned expected values");
 
 $memb_arr_ref = $lc->is_member_which_ref('zebra');
-ok(ok_seen_a( $memb_arr_ref, 'zebra',  0, [ qw<     > ] ));
+ok(ok_seen_a( $memb_arr_ref, 'zebra',  0, [ qw<     > ] ),
+    "is_member_which_ref() returned expected values");
+
+__END__
 
 eval { $memb_arr_ref = $lc->is_member_which_ref('jerky', 'zebra') };
 ok(ok_capture_error($@));
