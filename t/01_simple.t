@@ -4,7 +4,7 @@
 use Test::More qw(no_plan); # tests => 884;
 use List::Compare;
 use lib ("./t");
-use Test::ListCompareSpecial qw(:seen);
+use Test::ListCompareSpecial qw( :seen :wrap );
 
 my @pred = ();
 my %seen = ();
@@ -228,13 +228,22 @@ ok(wrap_are_members_which(
 eval { $memb_hash_ref = $lc->are_members_which( { key => 'value' } ) };
 ok(ok_capture_error($@), "are_members_which correctly generated error message");
 
-foreach my $v ( qw| abel baker camera delta edward fargo golfer hilton | ) {
-    ok($lc->is_member_any( $v ), "is_member_any() returned expected value");
-}
-
-foreach my $v ( qw| icon jerky zebra | ) {
-    ok(! $lc->is_member_any( $v ), "is_member_any() returned expected value");
-}
+ok(wrap_is_member_any(
+    $lc,
+    {
+        abel    => 1,
+        baker   => 1,
+        camera  => 1,
+        delta   => 1,
+        edward  => 1,
+        fargo   => 1,
+        golfer  => 1,
+        hilton  => 1,
+        icon    => 0,
+        jerky   => 0,
+        zebra   => 0,
+    },
+), "is_member_any() returned all expected values");
 
 eval { $lc->is_member_any('jerky', 'zebra') };
 ok(ok_capture_error($@), "is_member_any() correctly generated error message");
@@ -540,232 +549,208 @@ ok(unseen(\%seen, \@unpred),
     "nonintersection:  All non-expected elements correctly excluded");
 %seen = ();
 
-__END__
-
+%pred = (
+    abel    => 2,
+    baker   => 2,
+    camera  => 2,
+    delta   => 3,
+    edward  => 2,
+    fargo   => 2,
+    golfer  => 2,
+    hilton  => 1,
+);
+@unpred = qw| icon jerky |;
 @bag = $lcu->get_bag;
 $seen{$_}++ foreach (@bag);
-ok($seen{'abel'} == 2);
-ok($seen{'baker'} == 2);
-ok($seen{'camera'} == 2);
-ok($seen{'delta'} == 3);
-ok($seen{'edward'} == 2);
-ok($seen{'fargo'} == 2);
-ok($seen{'golfer'} == 2);
-ok($seen{'hilton'} == 1);
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "Got predicted quantities in bag");
+ok(unseen(\%seen, \@unpred),
+    "bag:  All non-expected elements correctly excluded");
 %seen = ();
 
 $bag_ref = $lcu->get_bag_ref;
 $seen{$_}++ foreach (@{$bag_ref});
-ok($seen{'abel'} == 2);
-ok($seen{'baker'} == 2);
-ok($seen{'camera'} == 2);
-ok($seen{'delta'} == 3);
-ok($seen{'edward'} == 2);
-ok($seen{'fargo'} == 2);
-ok($seen{'golfer'} == 2);
-ok($seen{'hilton'} == 1);
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "Got predicted quantities in bag");
+ok(unseen(\%seen, \@unpred),
+    "bag:  All non-expected elements correctly excluded");
 %seen = ();
 
+
 $LR = $lcu->is_LsubsetR;
-ok(! $LR);
+ok(! $LR, "Got expected subset relationship");
 
 $LR = $lcu->is_AsubsetB;
-ok(! $LR);
+ok(! $LR, "Got expected subset relationship");
 
 $RL = $lcu->is_RsubsetL;
-ok(! $RL);
+ok(! $RL, "Got expected subset relationship");
 
 $RL = $lcu->is_BsubsetA;
-ok(! $RL);
+ok(! $RL, "Got expected subset relationship");
 
 $eqv = $lcu->is_LequivalentR;
-ok(! $eqv);
+ok(! $eqv, "Got expected equivalent relationship");
 
 $eqv = $lcu->is_LeqvlntR;
-ok(! $eqv);
+ok(! $eqv, "Got expected equivalent relationship");
 
 $disj = $lcu->is_LdisjointR;
-ok(! $disj);
+ok(! $disj, "Got expected disjoint relationship");
 
-$return = $lcu->print_subset_chart;
-ok($return);
+ok( $lcu->print_subset_chart, "print_subset_chart() returned true value");
+ok( $lcu->print_equivalence_chart, "print_equivalence_chart() returned true value");
 
-$return = $lcu->print_equivalence_chart;
-ok($return);
+ok(wrap_is_member_which(
+    $lcu,
+    {
+        abel      => [ 1, [ qw< 0   > ] ],
+        baker     => [ 2, [ qw< 0 1 > ] ],
+        camera    => [ 2, [ qw< 0 1 > ] ],
+        delta     => [ 2, [ qw< 0 1 > ] ],
+        edward    => [ 2, [ qw< 0 1 > ] ],
+        fargo     => [ 2, [ qw< 0 1 > ] ],
+        golfer    => [ 2, [ qw< 0 1 > ] ],
+        hilton    => [ 1, [ qw<   1 > ] ],
+        icon      => [ 0, [ qw<     > ] ],
+        jerky     => [ 0, [ qw<     > ] ],
+        zebra     => [ 0, [ qw<     > ] ],
+    },
+), "is_member_which() returned all expected values");
 
-@memb_arr = $lcu->is_member_which('abel');
-ok(ok_seen_a( \@memb_arr, 'abel',   1, [ qw< 0   > ] ));
-
-@memb_arr = $lcu->is_member_which('baker');
-ok(ok_seen_a( \@memb_arr, 'baker',  2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcu->is_member_which('camera');
-ok(ok_seen_a( \@memb_arr, 'camera', 2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcu->is_member_which('delta');
-ok(ok_seen_a( \@memb_arr, 'delta',  2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcu->is_member_which('edward');
-ok(ok_seen_a( \@memb_arr, 'edward', 2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcu->is_member_which('fargo');
-ok(ok_seen_a( \@memb_arr, 'fargo',  2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcu->is_member_which('golfer');
-ok(ok_seen_a( \@memb_arr, 'golfer', 2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcu->is_member_which('hilton');
-ok(ok_seen_a( \@memb_arr, 'hilton', 1, [ qw<   1 > ] ));
-
-@memb_arr = $lcu->is_member_which('icon');
-ok(ok_seen_a( \@memb_arr, 'icon',   0, [ qw<     > ] ));
-
-@memb_arr = $lcu->is_member_which('jerky');
-ok(ok_seen_a( \@memb_arr, 'jerky',  0, [ qw<     > ] ));
-
-@memb_arr = $lcu->is_member_which('zebra');
-ok(ok_seen_a( \@memb_arr, 'zebra',  0, [ qw<     > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('abel');
-ok(ok_seen_a( $memb_arr_ref, 'abel',   1, [ qw< 0   > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('baker');
-ok(ok_seen_a( $memb_arr_ref, 'baker',  2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('camera');
-ok(ok_seen_a( $memb_arr_ref, 'camera', 2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('delta');
-ok(ok_seen_a( $memb_arr_ref, 'delta',  2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('edward');
-ok(ok_seen_a( $memb_arr_ref, 'edward', 2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('fargo');
-ok(ok_seen_a( $memb_arr_ref, 'fargo',  2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('golfer');
-ok(ok_seen_a( $memb_arr_ref, 'golfer', 2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('hilton');
-ok(ok_seen_a( $memb_arr_ref, 'hilton', 1, [ qw<   1 > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('icon');
-ok(ok_seen_a( $memb_arr_ref, 'icon',   0, [ qw<     > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('jerky');
-ok(ok_seen_a( $memb_arr_ref, 'jerky',  0, [ qw<     > ] ));
-
-$memb_arr_ref = $lcu->is_member_which_ref('zebra');
-ok(ok_seen_a( $memb_arr_ref, 'zebra',  0, [ qw<     > ] ));
+ok(wrap_is_member_which_ref(
+    $lcu,
+    {
+        abel      => [ 1, [ qw< 0   > ] ],
+        baker     => [ 2, [ qw< 0 1 > ] ],
+        camera    => [ 2, [ qw< 0 1 > ] ],
+        delta     => [ 2, [ qw< 0 1 > ] ],
+        edward    => [ 2, [ qw< 0 1 > ] ],
+        fargo     => [ 2, [ qw< 0 1 > ] ],
+        golfer    => [ 2, [ qw< 0 1 > ] ],
+        hilton    => [ 1, [ qw<   1 > ] ],
+        icon      => [ 0, [ qw<     > ] ],
+        jerky     => [ 0, [ qw<     > ] ],
+        zebra     => [ 0, [ qw<     > ] ],
+    },
+), "is_member_which_ref() returned all expected values");
 
 $memb_hash_ref = $lcu->are_members_which(
     [ qw| abel baker camera delta edward fargo 
           golfer hilton icon jerky zebra | ] );
-ok(ok_seen_h( $memb_hash_ref, 'abel',   1, [ qw< 0   > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'baker',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'camera', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'delta',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'edward', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'fargo',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'golfer', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'hilton', 1, [ qw<   1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'icon',   0, [ qw<     > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'jerky',  0, [ qw<     > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'zebra',  0, [ qw<     > ] ));
+ok(wrap_are_members_which(
+    $memb_hash_ref,
+    {
+        abel      => [ 1, [ qw< 0   > ] ],
+        baker     => [ 2, [ qw< 0 1 > ] ],
+        camera    => [ 2, [ qw< 0 1 > ] ],
+        delta     => [ 2, [ qw< 0 1 > ] ],
+        edward    => [ 2, [ qw< 0 1 > ] ],
+        fargo     => [ 2, [ qw< 0 1 > ] ],
+        golfer    => [ 2, [ qw< 0 1 > ] ],
+        hilton    => [ 1, [ qw<   1 > ] ],
+        icon      => [ 0, [ qw<     > ] ],
+        jerky     => [ 0, [ qw<     > ] ],
+        zebra     => [ 0, [ qw<     > ] ],
+    },
+), "are_members_which() returned all expected value");
 
-ok($lcu->is_member_any('abel'));
-ok($lcu->is_member_any('baker'));
-ok($lcu->is_member_any('camera'));
-ok($lcu->is_member_any('delta'));
-ok($lcu->is_member_any('edward'));
-ok($lcu->is_member_any('fargo'));
-ok($lcu->is_member_any('golfer'));
-ok($lcu->is_member_any('hilton'));
-ok(! $lcu->is_member_any('icon' ));
-ok(! $lcu->is_member_any('jerky'));
-ok(! $lcu->is_member_any('zebra'));
+ok(wrap_is_member_any(
+    $lcu,
+    {
+        abel    => 1,
+        baker   => 1,
+        camera  => 1,
+        delta   => 1,
+        edward  => 1,
+        fargo   => 1,
+        golfer  => 1,
+        hilton  => 1,
+        icon    => 0,
+        jerky   => 0,
+        zebra   => 0,
+    },
+), "is_member_any() returned all expected values");
 
 $memb_hash_ref = $lcu->are_members_any(
     [ qw| abel baker camera delta edward fargo 
           golfer hilton icon jerky zebra | ] );
-
-ok(ok_any_h( $memb_hash_ref, 'abel',   1 ));
-ok(ok_any_h( $memb_hash_ref, 'baker',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'camera', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'delta',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'edward', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'fargo',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'golfer', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'hilton', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'icon',   0 ));
-ok(ok_any_h( $memb_hash_ref, 'jerky',  0 ));
-ok(ok_any_h( $memb_hash_ref, 'zebra',  0 ));
+ok(wrap_are_members_any(
+    $memb_hash_ref,
+    {
+        abel    => 1,
+        baker   => 1,
+        camera  => 1,
+        delta   => 1,
+        edward  => 1,
+        fargo   => 1,
+        golfer  => 1,
+        hilton  => 1,
+        icon    => 0,
+        jerky   => 0,
+        zebra   => 0,
+    },
+), "are_members_any() returned all expected values");
 
 $vers = $lcu->get_version;
-ok($vers);
+ok($vers, "get_version() returned true value");
 
 my $lcu_s  = List::Compare->new('-u', \@a2, \@a3);
 
-ok($lcu_s);
+ok($lcu_s, "constructor returned true value");
 
 $LR = $lcu_s->is_LsubsetR;
-ok(! $LR);
+ok(! $LR, "non-subset correctly determined");
 
 $LR = $lcu_s->is_AsubsetB;
-ok(! $LR);
+ok(! $LR, "non-subset correctly determined");
 
 $RL = $lcu_s->is_RsubsetL;
-ok($RL);
+ok($RL, "subset correctly determined");
 
 $RL = $lcu_s->is_BsubsetA;
-ok($RL);
+ok($RL, "subset correctly determined");
 
 $eqv = $lcu_s->is_LequivalentR;
-ok(! $eqv);
+ok(! $eqv, "non-equivalence correctly determined");
 
 $eqv = $lcu_s->is_LeqvlntR;
-ok(! $eqv);
+ok(! $eqv, "non-equivalence correctly determined");
 
 $disj = $lcu_s->is_LdisjointR;
-ok(! $disj);
+ok(! $disj, "non-disjoint correctly determined");
 
 my $lcu_e  = List::Compare->new('-u', \@a3, \@a4);
 
-ok($lcu_e);
+ok($lcu_e, "constructor returned true value");
 
 $eqv = $lcu_e->is_LequivalentR;
-ok($eqv);
+ok($eqv, "Got expected equivalent relationship");
 
 $eqv = $lcu_e->is_LeqvlntR;
-ok($eqv);
+ok($eqv, "Got expected equivalent relationship");
 
 $disj = $lcu_e->is_LdisjointR;
-ok(! $disj);
+ok(! $disj, "Got expected disjoint relationship");
 
 my $lcu_dj  = List::Compare->new('-u', \@a4, \@a8);
 
-ok($lcu_dj);
+ok($lcu_dj, "constructor returned true value");
 
-ok(0 == $lcu_dj->get_intersection);
-ok(0 == scalar(@{$lcu_dj->get_intersection_ref}));
+ok(0 == $lcu_dj->get_intersection, "no intersection, as expected");
+ok(0 == scalar(@{$lcu_dj->get_intersection_ref}),
+    "no intersection, as expected");
 $disj = $lcu_dj->is_LdisjointR;
-ok($disj);
+ok($disj, "disjoint correctly determined");
 
 ########## BELOW:  Tests for '--unsorted' option ##########
 
 my $lcun    = List::Compare->new('--unsorted', \@a0, \@a1);
-ok($lcun);
+ok($lcun, "constructor returned true value");
 
 my $lcun_s  = List::Compare->new('--unsorted', \@a2, \@a3);
-ok($lcun_s);
+ok($lcun_s, "constructor returned true value");
 
 my $lcun_e  = List::Compare->new('--unsorted', \@a3, \@a4);
-ok($lcun_e);
+ok($lcun_e, "constructor returned true value");
 
 ########## BELOW:  Test for bad arguments to constructor ##########
 
@@ -776,17 +761,14 @@ my %h5 = (
 );
 
 eval { $lc_bad = List::Compare->new(\@a0, \%h5) };
-ok(ok_capture_error($@));
+ok(ok_capture_error($@), "error message captured");
 
 eval { $lc_bad = List::Compare->new(\%h5, \@a0) };
-ok(ok_capture_error($@));
+ok(ok_capture_error($@), "error message captured");
 
 my $scalar = 'test';
 eval { $lc_bad = List::Compare->new(\$scalar, \@a0) };
-ok(ok_capture_error($@));
+ok(ok_capture_error($@), "error message captured");
 
 eval { $lc_bad = List::Compare->new(\@a0) };
-ok(ok_capture_error($@));
-
-__END__
-
+ok(ok_capture_error($@), "error message captured");

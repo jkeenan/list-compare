@@ -5,15 +5,24 @@ require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(
     ok_capture_error ok_seen_a  ok_seen_h ok_any_h _capture
-    getseen unseen wrap_is_member_which wrap_is_member_which_ref
+    getseen unseen
+    wrap_is_member_which
+    wrap_is_member_which_ref
     wrap_are_members_which
+    wrap_is_member_any
     wrap_are_members_any
  );
-our %EXPORT_TAGS = ( seen => [ qw(
-    ok_capture_error ok_seen_a  ok_seen_h ok_any_h _capture
-    getseen unseen wrap_is_member_which wrap_is_member_which_ref
-    wrap_are_members_which
-    wrap_are_members_any
+our %EXPORT_TAGS = (
+    seen => [ qw(
+        ok_capture_error ok_seen_a  ok_seen_h ok_any_h _capture
+        getseen unseen
+    ) ],
+    wrap => [ qw(
+        wrap_is_member_which
+        wrap_is_member_which_ref
+        wrap_are_members_which
+        wrap_is_member_any
+        wrap_are_members_any
     ) ],
 );
 
@@ -110,6 +119,16 @@ sub wrap_are_members_which {
     my $correct = 0;
     foreach my $v ( keys %{ $args } ) {
         $correct++ if ok_seen_h( $memb_hash_ref, $v, @{ $args->{$v} } );
+    }
+    ($correct == scalar keys %{ $args }) ? 1 : 0;
+}
+
+sub wrap_is_member_any {
+    my $obj = shift;
+    my $args = shift;
+    my $correct = 0;
+    foreach my $v ( keys %{ $args } ) {
+        $correct++ if ($obj->is_member_any( $v )) == $args->{$v};
     }
     ($correct == scalar keys %{ $args }) ? 1 : 0;
 }
