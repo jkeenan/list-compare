@@ -1,23 +1,16 @@
-# 02_accelerated.t # as of 8/4/2004
-
-# Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl test.pl'
-
-######################### We start with some black magic to print on failure.
-
-END {print "not ok 1\n" unless $loaded;} 
-use Test::Simple tests =>
-892;
-use lib ("./t");
+# perl
+#$Id$
+# 02_accelerated.t
+use Test::More qw(no_plan); # tests => 884;
 use List::Compare;
-use Test::ListCompareSpecial qw(:seen);
+use lib ("./t");
+use Test::ListCompareSpecial qw( :seen :wrap );
+use IO::CaptureOutput qw( capture );
 
-$loaded = 1;
-ok($loaded);
-
-######################### End of black magic.
-
+my @pred = ();
 my %seen = ();
+my %pred = ();
+my @unpred = ();
 my (@unique, @complement, @intersection, @union, @symmetric_difference, @bag);
 my ($unique_ref, $complement_ref, $intersection_ref, $union_ref, $symmetric_difference_ref, $bag_ref);
 my ($LR, $RL, $eqv, $disj, $return);
@@ -32,1455 +25,868 @@ my @a3 = qw(fargo golfer hilton icon icon);
 my @a4 = qw(fargo fargo golfer hilton icon);
 my @a8 = qw(kappa lambda mu);
 
-my $lca   = List::Compare->new('-a', \@a0, \@a1);
-ok($lca);
+my $lc   = List::Compare->new('-a', \@a0, \@a1);
+ok($lc, "List::Compare constructor returned true value");
 
-@union = $lca->get_union;
-ok($union[0] eq 'abel');
-ok($union[1] eq 'baker');
-ok($union[2] eq 'camera');
-ok($union[3] eq 'delta');
-ok($union[4] eq 'edward');
-ok($union[5] eq 'fargo');
-ok($union[6] eq 'golfer');
-ok($union[-1] eq 'hilton');
+@pred = qw(abel baker camera delta edward fargo golfer hilton);
+@union = $lc->get_union;
+is_deeply( \@union, \@pred, "Got expected union");
 
-$seen{$_}++ foreach (@union);
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$union_ref = $lca->get_union_ref;
-ok(${$union_ref}[0] eq 'abel');
-ok(${$union_ref}[1] eq 'baker');
-ok(${$union_ref}[2] eq 'camera');
-ok(${$union_ref}[3] eq 'delta');
-ok(${$union_ref}[4] eq 'edward');
-ok(${$union_ref}[5] eq 'fargo');
-ok(${$union_ref}[6] eq 'golfer');
-ok(${$union_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$union_ref});
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+$union_ref = $lc->get_union_ref;
+is_deeply( $union_ref, \@pred, "Got expected union");
 
 {
-    local $SIG{__WARN__} = \&_capture;
-    @shared = $lca->get_shared;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { @shared = $lc->get_shared; },
+        \$stdout,
+        \$stderr,
+    );
+    is_deeply( \@shared, \@pred, "Got expected shared");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-ok($shared[0] eq 'abel');
-ok($shared[1] eq 'baker');
-ok($shared[2] eq 'camera');
-ok($shared[3] eq 'delta');
-ok($shared[4] eq 'edward');
-ok($shared[5] eq 'fargo');
-ok($shared[6] eq 'golfer');
-ok($shared[-1] eq 'hilton');
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $shared_ref = $lc->get_shared_ref; },
+        \$stdout,
+        \$stderr,
+    );
+    is_deeply( $shared_ref, \@pred, "Got expected shared");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
+}
 
-$seen{$_}++ foreach (@shared);
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+@pred = qw( baker camera delta edward fargo golfer );
+@intersection = $lc->get_intersection;
+is_deeply(\@intersection, \@pred, "Got expected intersection");
+
+$intersection_ref = $lc->get_intersection_ref;
+is_deeply($intersection_ref, \@pred, "Got expected intersection");
+
+@pred = qw( abel );
+@unique = $lc->get_unique;
+is_deeply(\@unique, \@pred, "Got expected unique");
+
+$unique_ref = $lc->get_unique_ref;
+is_deeply($unique_ref, \@pred, "Got expected unique");
+
+@unique = $lc->get_Lonly;
+is_deeply(\@unique, \@pred, "Got expected unique");
+
+$unique_ref = $lc->get_Lonly_ref;
+is_deeply($unique_ref, \@pred, "Got expected unique");
+
+@unique = $lc->get_Aonly;
+is_deeply(\@unique, \@pred, "Got expected unique");
+
+$unique_ref = $lc->get_Aonly_ref;
+is_deeply($unique_ref, \@pred, "Got expected unique");
+
+@pred = qw ( hilton );
+@complement = $lc->get_complement;
+is_deeply(\@complement, \@pred, "Got expected complement");
+
+$complement_ref = $lc->get_complement_ref;
+is_deeply($complement_ref, \@pred, "Got expected complement");
+
+@complement = $lc->get_Ronly;
+is_deeply(\@complement, \@pred, "Got expected complement");
+
+$complement_ref = $lc->get_Ronly_ref;
+is_deeply($complement_ref, \@pred, "Got expected complement");
+
+@complement = $lc->get_Bonly;
+is_deeply(\@complement, \@pred, "Got expected complement");
+
+$complement_ref = $lc->get_Bonly_ref;
+is_deeply($complement_ref, \@pred, "Got expected complement");
+
+@pred = qw( abel hilton );
+@symmetric_difference = $lc->get_symmetric_difference;
+is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
+
+$symmetric_difference_ref = $lc->get_symmetric_difference_ref;
+is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
+
+@symmetric_difference = $lc->get_symdiff;
+is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
+
+$symmetric_difference_ref = $lc->get_symdiff_ref;
+is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
+
+@symmetric_difference = $lc->get_LorRonly;
+is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
+
+$symmetric_difference_ref = $lc->get_LorRonly_ref;
+is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
+
+@symmetric_difference = $lc->get_AorBonly;
+is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
+
+$symmetric_difference_ref = $lc->get_AorBonly_ref;
+is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
+
+@pred = qw( abel hilton );
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { @nonintersection = $lc->get_nonintersection; },
+        \$stdout,
+        \$stderr,
+    );
+    is_deeply( \@nonintersection, \@pred, "Got expected nonintersection");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
+}
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $nonintersection_ref = $lc->get_nonintersection_ref; },
+        \$stdout,
+        \$stderr,
+    );
+    is_deeply($nonintersection_ref, \@pred, "Got expected nonintersection");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
+}
+
+@pred = qw( abel abel baker baker camera camera delta delta delta edward
+edward fargo fargo golfer golfer hilton );
+@bag = $lc->get_bag;
+is_deeply(\@bag, \@pred, "Got expected bag");
+
+$bag_ref = $lc->get_bag_ref;
+is_deeply($bag_ref, \@pred, "Got expected bag");
+
+$LR = $lc->is_LsubsetR;
+ok(! $LR, "Got expected subset relationship");
+
+$LR = $lc->is_AsubsetB;
+ok(! $LR, "Got expected subset relationship");
+
+$RL = $lc->is_RsubsetL;
+ok(! $RL, "Got expected subset relationship");
+
+$RL = $lc->is_BsubsetA;
+ok(! $RL, "Got expected subset relationship");
+
+$eqv = $lc->is_LequivalentR;
+ok(! $eqv, "Got expected equivalent relationship");
+
+$eqv = $lc->is_LeqvlntR;
+ok(! $eqv, "Got expected equivalent relationship");
+
+$disj = $lc->is_LdisjointR;
+ok(! $disj, "Got expected disjoint relationship");
 
 {
-    local $SIG{__WARN__} = \&_capture;
-    $shared_ref = $lca->get_shared_ref;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $rv = $lc->print_subset_chart; },
+        \$stdout,
+    );
+    ok($rv, "print_subset_chart() returned true value");
+    like($stdout, qr/Subset Relationships/,
+        "Got expected chart header");
 }
-ok(${$shared_ref}[0] eq 'abel');
-ok(${$shared_ref}[1] eq 'baker');
-ok(${$shared_ref}[2] eq 'camera');
-ok(${$shared_ref}[3] eq 'delta');
-ok(${$shared_ref}[4] eq 'edward');
-ok(${$shared_ref}[5] eq 'fargo');
-ok(${$shared_ref}[6] eq 'golfer');
-ok(${$shared_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$shared_ref});
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@intersection = $lca->get_intersection;
-ok($intersection[0] eq 'baker');
-ok($intersection[1] eq 'camera');
-ok($intersection[2] eq 'delta');
-ok($intersection[3] eq 'edward');
-ok($intersection[4] eq 'fargo');
-ok($intersection[-1] eq 'golfer');
-
-$seen{$_}++ foreach (@intersection);
-ok(! exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$intersection_ref = $lca->get_intersection_ref;
-ok(${$intersection_ref}[0] eq 'baker');
-ok(${$intersection_ref}[1] eq 'camera');
-ok(${$intersection_ref}[2] eq 'delta');
-ok(${$intersection_ref}[3] eq 'edward');
-ok(${$intersection_ref}[4] eq 'fargo');
-ok(${$intersection_ref}[-1] eq 'golfer');
-
-$seen{$_}++ foreach (@{$intersection_ref});
-ok(! exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@unique = $lca->get_unique;
-ok($unique[-1] eq 'abel');
-
-$seen{$_}++ foreach (@unique);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$unique_ref = $lca->get_unique_ref;
-ok(${$unique_ref}[-1] eq 'abel');
-
-$seen{$_}++ foreach (@{$unique_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@unique = $lca->get_Lonly;
-ok($unique[-1] eq 'abel');
-
-$seen{$_}++ foreach (@unique);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$unique_ref = $lca->get_Lonly_ref;
-ok(${$unique_ref}[-1] eq 'abel');
-
-$seen{$_}++ foreach (@{$unique_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@unique = $lca->get_Aonly;
-ok($unique[-1] eq 'abel');
-
-$seen{$_}++ foreach (@unique);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$unique_ref = $lca->get_Aonly_ref;
-ok(${$unique_ref}[-1] eq 'abel');
-
-$seen{$_}++ foreach (@{$unique_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@complement = $lca->get_complement;
-ok($complement[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@complement);
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$complement_ref = $lca->get_complement_ref;
-ok(${$complement_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$complement_ref});
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@complement = $lca->get_Ronly;
-ok($complement[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@complement);
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$complement_ref = $lca->get_Ronly_ref;
-ok(${$complement_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$complement_ref});
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@complement = $lca->get_Bonly;
-ok($complement[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@complement);
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$complement_ref = $lca->get_Bonly_ref;
-ok(${$complement_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$complement_ref});
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@symmetric_difference = $lca->get_symmetric_difference;
-ok($symmetric_difference[0] eq 'abel');
-ok($symmetric_difference[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$symmetric_difference_ref = $lca->get_symmetric_difference_ref;
-ok(${$symmetric_difference_ref}[0] eq 'abel');
-ok(${$symmetric_difference_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@symmetric_difference = $lca->get_symdiff;
-ok($symmetric_difference[0] eq 'abel');
-ok($symmetric_difference[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$symmetric_difference_ref = $lca->get_symdiff_ref;
-ok(${$symmetric_difference_ref}[0] eq 'abel');
-ok(${$symmetric_difference_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@symmetric_difference = $lca->get_LorRonly;
-ok(${$symmetric_difference_ref}[0] eq 'abel');
-ok(${$symmetric_difference_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$symmetric_difference_ref = $lca->get_LorRonly_ref;
-ok(${$symmetric_difference_ref}[0] eq 'abel');
-ok(${$symmetric_difference_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@symmetric_difference = $lca->get_AorBonly;
-ok($symmetric_difference[0] eq 'abel');
-ok($symmetric_difference[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-$symmetric_difference_ref = $lca->get_AorBonly_ref;
-ok(${$symmetric_difference_ref}[0] eq 'abel');
-ok(${$symmetric_difference_ref}[-1] eq 'hilton');
-
-$seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
 {
-    local $SIG{__WARN__} = \&_capture;
-    @nonintersection = $lca->get_nonintersection;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $rv = $lc->print_equivalence_chart; },
+        \$stdout,
+    );
+    ok($rv, "print_equivalence_chart() returned true value");
+    like($stdout, qr/Equivalence Relationships/,
+        "Got expected chart header");
 }
-ok($nonintersection[0] eq 'abel');
-ok($nonintersection[-1] eq 'hilton');
+     
+ok(wrap_is_member_which(
+    $lc,
+    {
+        abel      => [ 1, [ qw< 0   > ] ],
+        baker     => [ 2, [ qw< 0 1 > ] ],
+        camera    => [ 2, [ qw< 0 1 > ] ],
+        delta     => [ 2, [ qw< 0 1 > ] ],
+        edward    => [ 2, [ qw< 0 1 > ] ],
+        fargo     => [ 2, [ qw< 0 1 > ] ],
+        golfer    => [ 2, [ qw< 0 1 > ] ],
+        hilton    => [ 1, [ qw<   1 > ] ],
+        icon      => [ 0, [ qw<     > ] ],
+        jerky     => [ 0, [ qw<     > ] ],
+        zebra     => [ 0, [ qw<     > ] ],
+    },
+), "is_member_which() returned all expected values");
 
-$seen{$_}++ foreach (@nonintersection);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+eval { $memb_arr_ref = $lc->is_member_which('jerky', 'zebra') };
+like($@, qr/Method call requires exactly 1 argument \(no references\)/,
+        "is_member_which() correctly generated error message");
 
-{
-    local $SIG{__WARN__} = \&_capture;
-    $nonintersection_ref = $lca->get_nonintersection_ref;
-}
-ok(${$nonintersection_ref}[0] eq 'abel');
-ok(${$nonintersection_ref}[-1] eq 'hilton');
+ok(wrap_is_member_which_ref(
+    $lc,
+    {
+        abel      => [ 1, [ qw< 0   > ] ],
+        baker     => [ 2, [ qw< 0 1 > ] ],
+        camera    => [ 2, [ qw< 0 1 > ] ],
+        delta     => [ 2, [ qw< 0 1 > ] ],
+        edward    => [ 2, [ qw< 0 1 > ] ],
+        fargo     => [ 2, [ qw< 0 1 > ] ],
+        golfer    => [ 2, [ qw< 0 1 > ] ],
+        hilton    => [ 1, [ qw<   1 > ] ],
+        icon      => [ 0, [ qw<     > ] ],
+        jerky     => [ 0, [ qw<     > ] ],
+        zebra     => [ 0, [ qw<     > ] ],
+    },
+), "is_member_which_ref() returned all expected values");
 
-$seen{$_}++ foreach (@{$nonintersection_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+eval { $memb_arr_ref = $lc->is_member_which_ref('jerky', 'zebra') };
+like($@, qr/Method call requires exactly 1 argument \(no references\)/,
+        "is_member_which_ref() correctly generated error message");
 
-@bag = $lca->get_bag;
-ok($bag[0] eq 'abel');
-ok($bag[1] eq 'abel');
-ok($bag[2] eq 'baker');
-ok($bag[3] eq 'baker');
-ok($bag[4] eq 'camera');
-ok($bag[5] eq 'camera');
-ok($bag[6] eq 'delta');
-ok($bag[7] eq 'delta');
-ok($bag[8] eq 'delta');
-ok($bag[9] eq 'edward');
-ok($bag[10] eq 'edward');
-ok($bag[11] eq 'fargo');
-ok($bag[12] eq 'fargo');
-ok($bag[13] eq 'golfer');
-ok($bag[14] eq 'golfer');
-ok($bag[-1] eq 'hilton');
+$memb_hash_ref =
+    $lc->are_members_which( [ qw|
+        abel baker camera delta edward fargo golfer hilton icon jerky zebra
+    | ] );
+ok(wrap_are_members_which(
+    $memb_hash_ref,
+    {
+        abel      => [ 1, [ qw< 0   > ] ],
+        baker     => [ 2, [ qw< 0 1 > ] ],
+        camera    => [ 2, [ qw< 0 1 > ] ],
+        delta     => [ 2, [ qw< 0 1 > ] ],
+        edward    => [ 2, [ qw< 0 1 > ] ],
+        fargo     => [ 2, [ qw< 0 1 > ] ],
+        golfer    => [ 2, [ qw< 0 1 > ] ],
+        hilton    => [ 1, [ qw<   1 > ] ],
+        icon      => [ 0, [ qw<     > ] ],
+        jerky     => [ 0, [ qw<     > ] ],
+        zebra     => [ 0, [ qw<     > ] ],
+    },
+), "are_members_which() returned all expected value");
 
-$seen{$_}++ foreach (@bag);
-ok($seen{'abel'} == 2);
-ok($seen{'baker'} == 2);
-ok($seen{'camera'} == 2);
-ok($seen{'delta'} == 3);
-ok($seen{'edward'} == 2);
-ok($seen{'fargo'} == 2);
-ok($seen{'golfer'} == 2);
-ok($seen{'hilton'} == 1);
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+eval { $memb_hash_ref = $lc->are_members_which( { key => 'value' } ) };
+like($@,
+    qr/Method call requires exactly 1 argument which must be an array reference/,
+    "are_members_which() correctly generated error message");
 
-$bag_ref = $lca->get_bag_ref;
-ok(${$bag_ref}[0] eq 'abel');
-ok(${$bag_ref}[1] eq 'abel');
-ok(${$bag_ref}[2] eq 'baker');
-ok(${$bag_ref}[3] eq 'baker');
-ok(${$bag_ref}[4] eq 'camera');
-ok(${$bag_ref}[5] eq 'camera');
-ok(${$bag_ref}[6] eq 'delta');
-ok(${$bag_ref}[7] eq 'delta');
-ok(${$bag_ref}[8] eq 'delta');
-ok(${$bag_ref}[9] eq 'edward');
-ok(${$bag_ref}[10] eq 'edward');
-ok(${$bag_ref}[11] eq 'fargo');
-ok(${$bag_ref}[12] eq 'fargo');
-ok(${$bag_ref}[13] eq 'golfer');
-ok(${$bag_ref}[14] eq 'golfer');
-ok(${$bag_ref}[-1] eq 'hilton');
+ok(wrap_is_member_any(
+    $lc,
+    {
+        abel    => 1,
+        baker   => 1,
+        camera  => 1,
+        delta   => 1,
+        edward  => 1,
+        fargo   => 1,
+        golfer  => 1,
+        hilton  => 1,
+        icon    => 0,
+        jerky   => 0,
+        zebra   => 0,
+    },
+), "is_member_any() returned all expected values");
 
-$seen{$_}++ foreach (@{$bag_ref});
-ok($seen{'abel'} == 2);
-ok($seen{'baker'} == 2);
-ok($seen{'camera'} == 2);
-ok($seen{'delta'} == 3);
-ok($seen{'edward'} == 2);
-ok($seen{'fargo'} == 2);
-ok($seen{'golfer'} == 2);
-ok($seen{'hilton'} == 1);
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
+eval { $lc->is_member_any('jerky', 'zebra') };
+like($@,
+    qr/Method call requires exactly 1 argument \(no references\)/,
+    "is_member_any() correctly generated error message");
 
-$LR = $lca->is_LsubsetR;
-ok(! $LR);
-
-$LR = $lca->is_AsubsetB;
-ok(! $LR);
-
-$RL = $lca->is_RsubsetL;
-ok(! $RL);
-
-$RL = $lca->is_BsubsetA;
-ok(! $RL);
-
-$eqv = $lca->is_LequivalentR;
-ok(! $eqv);
-
-$eqv = $lca->is_LeqvlntR;
-ok(! $eqv);
-
-$disj = $lca->is_LdisjointR;
-ok(! $disj);
-
-$return = $lca->print_subset_chart;
-ok($return);
-
-$return = $lca->print_equivalence_chart;
-ok($return);
-
-@memb_arr = $lca->is_member_which('abel');
-ok(ok_seen_a( \@memb_arr, 'abel',   1, [ qw< 0   > ] ));
-
-@memb_arr = $lca->is_member_which('baker');
-ok(ok_seen_a( \@memb_arr, 'baker',  2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lca->is_member_which('camera');
-ok(ok_seen_a( \@memb_arr, 'camera', 2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lca->is_member_which('delta');
-ok(ok_seen_a( \@memb_arr, 'delta',  2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lca->is_member_which('edward');
-ok(ok_seen_a( \@memb_arr, 'edward', 2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lca->is_member_which('fargo');
-ok(ok_seen_a( \@memb_arr, 'fargo',  2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lca->is_member_which('golfer');
-ok(ok_seen_a( \@memb_arr, 'golfer', 2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lca->is_member_which('hilton');
-ok(ok_seen_a( \@memb_arr, 'hilton', 1, [ qw<   1 > ] ));
-
-@memb_arr = $lca->is_member_which('icon');
-ok(ok_seen_a( \@memb_arr, 'icon',   0, [ qw<     > ] ));
-
-@memb_arr = $lca->is_member_which('jerky');
-ok(ok_seen_a( \@memb_arr, 'jerky',  0, [ qw<     > ] ));
-
-@memb_arr = $lca->is_member_which('zebra');
-ok(ok_seen_a( \@memb_arr, 'zebra',  0, [ qw<     > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('abel');
-ok(ok_seen_a( $memb_arr_ref, 'abel',   1, [ qw< 0   > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('baker');
-ok(ok_seen_a( $memb_arr_ref, 'baker',  2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('camera');
-ok(ok_seen_a( $memb_arr_ref, 'camera', 2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('delta');
-ok(ok_seen_a( $memb_arr_ref, 'delta',  2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('edward');
-ok(ok_seen_a( $memb_arr_ref, 'edward', 2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('fargo');
-ok(ok_seen_a( $memb_arr_ref, 'fargo',  2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('golfer');
-ok(ok_seen_a( $memb_arr_ref, 'golfer', 2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('hilton');
-ok(ok_seen_a( $memb_arr_ref, 'hilton', 1, [ qw<   1 > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('icon');
-ok(ok_seen_a( $memb_arr_ref, 'icon',   0, [ qw<     > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('jerky');
-ok(ok_seen_a( $memb_arr_ref, 'jerky',  0, [ qw<     > ] ));
-
-$memb_arr_ref = $lca->is_member_which_ref('zebra');
-ok(ok_seen_a( $memb_arr_ref, 'zebra',  0, [ qw<     > ] ));
-
-eval { $memb_arr_ref = $lca->is_member_which_ref('jerky', 'zebra') };
-ok(ok_capture_error($@));
-
-
-$memb_hash_ref = $lca->are_members_which(
+$memb_hash_ref = $lc->are_members_any(
     [ qw| abel baker camera delta edward fargo 
           golfer hilton icon jerky zebra | ] );
-ok(ok_seen_h( $memb_hash_ref, 'abel',   1, [ qw< 0   > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'baker',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'camera', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'delta',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'edward', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'fargo',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'golfer', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'hilton', 1, [ qw<   1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'icon',   0, [ qw<     > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'jerky',  0, [ qw<     > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'zebra',  0, [ qw<     > ] ));
+ok(wrap_are_members_any(
+    $memb_hash_ref,
+    {
+        abel    => 1,
+        baker   => 1,
+        camera  => 1,
+        delta   => 1,
+        edward  => 1,
+        fargo   => 1,
+        golfer  => 1,
+        hilton  => 1,
+        icon    => 0,
+        jerky   => 0,
+        zebra   => 0,
+    },
+), "are_members_any() returned all expected values");
 
-eval { $memb_hash_ref = $lca->are_members_which( { key => 'value' } ) };
-ok(ok_capture_error($@));
+eval { $memb_hash_ref = $lc->are_members_any( { key => 'value' } ) };
+like($@,
+    qr/Method call requires exactly 1 argument which must be an array reference/,
+    "are_members_any() correctly generated error message");
 
+$vers = $lc->get_version;
+ok($vers, "get_version() returned true value");
 
-ok($lca->is_member_any('abel'));
-ok($lca->is_member_any('baker'));
-ok($lca->is_member_any('camera'));
-ok($lca->is_member_any('delta'));
-ok($lca->is_member_any('edward'));
-ok($lca->is_member_any('fargo'));
-ok($lca->is_member_any('golfer'));
-ok($lca->is_member_any('hilton'));
-ok(! $lca->is_member_any('icon' ));
-ok(! $lca->is_member_any('jerky'));
-ok(! $lca->is_member_any('zebra'));
+my $lc_s  = List::Compare->new('-a', \@a2, \@a3);
+ok($lc_s, "constructor returned true value");
 
-eval { $lca->is_member_any('jerky', 'zebra') };
-ok(ok_capture_error($@));
+$LR = $lc_s->is_LsubsetR;
+ok(! $LR, "non-subset correctly determined");
 
+$LR = $lc_s->is_AsubsetB;
+ok(! $LR, "non-subset correctly determined");
 
-$memb_hash_ref = $lca->are_members_any(
-    [ qw| abel baker camera delta edward fargo 
-          golfer hilton icon jerky zebra | ] );
+$RL = $lc_s->is_RsubsetL;
+ok($RL, "subset correctly determined");
 
-ok(ok_any_h( $memb_hash_ref, 'abel',   1 ));
-ok(ok_any_h( $memb_hash_ref, 'baker',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'camera', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'delta',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'edward', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'fargo',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'golfer', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'hilton', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'icon',   0 ));
-ok(ok_any_h( $memb_hash_ref, 'jerky',  0 ));
-ok(ok_any_h( $memb_hash_ref, 'zebra',  0 ));
+$RL = $lc_s->is_BsubsetA;
+ok($RL, "subset correctly determined");
 
-eval { $memb_hash_ref = $lca->are_members_any( { key => 'value' } ) };
-ok(ok_capture_error($@));
+$eqv = $lc_s->is_LequivalentR;
+ok(! $eqv, "non-equivalence correctly determined");
 
-$vers = $lca->get_version;
-ok($vers);
+$eqv = $lc_s->is_LeqvlntR;
+ok(! $eqv, "non-equivalence correctly determined");
 
-my $lca_s  = List::Compare->new('-a', \@a2, \@a3);
-ok($lca_s);
+$disj = $lc_s->is_LdisjointR;
+ok(! $disj, "non-disjoint correctly determined");
 
-$LR = $lca_s->is_LsubsetR;
-ok(! $LR);
+my $lc_e  = List::Compare->new('-a', \@a3, \@a4);
+ok($lc_e, "constructor returned true value");
 
-$LR = $lca_s->is_AsubsetB;
-ok(! $LR);
+$eqv = $lc_e->is_LequivalentR;
+ok($eqv, "equivalence correctly determined");
 
-$RL = $lca_s->is_RsubsetL;
-ok($RL);
+$eqv = $lc_e->is_LeqvlntR;
+ok($eqv, "equivalence correctly determined");
 
-$RL = $lca_s->is_BsubsetA;
-ok($RL);
+$disj = $lc_e->is_LdisjointR;
+ok(! $disj, "non-disjoint correctly determined");
 
-$eqv = $lca_s->is_LequivalentR;
-ok(! $eqv);
+my $lc_dj  = List::Compare->new('-a', \@a4, \@a8);
+ok($lc_dj, "constructor returned true value");
 
-$eqv = $lca_s->is_LeqvlntR;
-ok(! $eqv);
-
-$disj = $lca_s->is_LdisjointR;
-ok(! $disj);
-
-my $lca_e  = List::Compare->new('-a', \@a3, \@a4);
-ok($lca_e);
-
-$eqv = $lca_e->is_LequivalentR;
-ok($eqv);
-
-$eqv = $lca_e->is_LeqvlntR;
-ok($eqv);
-
-$disj = $lca_e->is_LdisjointR;
-ok(! $disj);
-
-my $lca_dj  = List::Compare->new('-a', \@a4, \@a8);
-
-ok($lca_dj);
-
-ok(0 == $lca_dj->get_intersection);
-ok(0 == scalar(@{$lca_dj->get_intersection_ref}));
-$disj = $lca_dj->is_LdisjointR;
-ok($disj);
+ok(0 == $lc_dj->get_intersection, "no intersection, as expected");
+ok(0 == scalar(@{$lc_dj->get_intersection_ref}),
+    "no intersection, as expected");
+$disj = $lc_dj->is_LdisjointR;
+ok($disj, "disjoint correctly determined");
 
 ########## BELOW:  Tests for '--accelerated' option ##########
 
 my $lcacc   = List::Compare->new('--accelerated', \@a0, \@a1);
-ok($lcacc);
+ok($lcacc, "Constructor worked with --accelerated option");
 
 my $lcacc_s  = List::Compare->new('--accelerated', \@a2, \@a3);
-ok($lcacc_s);
+ok($lcacc_s, "Constructor worked with --accelerated option");
 
 my $lcacc_e  = List::Compare->new('--accelerated', \@a3, \@a4);
-ok($lcacc_e);
+ok($lcacc_e, "Constructor worked with --accelerated option");
 
 ########## BELOW:  Tests for '-u' option ##########
 
-my $lcau   = List::Compare->new('-u', '-a', \@a0, \@a1);
-ok($lcau);
+my $lcu   = List::Compare->new('-u', '-a', \@a0, \@a1);
+ok($lcu, "constructor returned true value");
 
-@union = $lcau->get_union;
+%pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton );
+@unpred = qw| icon jerky |;
+@union = $lcu->get_union;
 $seen{$_}++ foreach (@union);
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected union");
+ok(unseen(\%seen, \@unpred),
+    "union:  All non-expected elements correctly excluded");
 %seen = ();
 
-$union_ref = $lcau->get_union_ref;
+$union_ref = $lcu->get_union_ref;
 $seen{$_}++ foreach (@{$union_ref});
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected union");
+ok(unseen(\%seen, \@unpred),
+    "union:  All non-expected elements correctly excluded");
+%seen = ();
+
+%pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton );
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { @shared = $lcu->get_shared; },
+        \$stdout,
+        \$stderr,
+    );
+    $seen{$_}++ foreach (@shared);
+    is_deeply(\%seen, \%pred, "unsorted:  got expected shared");
+    ok(unseen(\%seen, \@unpred),
+        "shared:  All non-expected elements correctly excluded");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
+}
 %seen = ();
 
 {
-    local $SIG{__WARN__} = \&_capture;
-    @shared = $lcau->get_shared;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $shared_ref = $lcu->get_shared_ref; },
+        \$stdout,
+        \$stderr,
+    );
+    $seen{$_}++ foreach (@{$shared_ref});
+    is_deeply(\%seen, \%pred, "unsorted:  got expected shared");
+    ok(unseen(\%seen, \@unpred),
+        "shared:  All non-expected elements correctly excluded");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-$seen{$_}++ foreach (@shared);
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
 %seen = ();
 
-{
-    local $SIG{__WARN__} = \&_capture;
-    $shared_ref = $lcau->get_shared_ref;
-}
-$seen{$_}++ foreach (@{$shared_ref});
-ok(exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
-%seen = ();
-
-@intersection = $lcau->get_intersection;
+%pred = map {$_, 1} qw( baker camera delta edward fargo golfer );
+@unpred = qw| abel hilton icon jerky |;
+@intersection = $lcu->get_intersection;
 $seen{$_}++ foreach (@intersection);
-ok(! exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected intersection");
+ok(unseen(\%seen, \@unpred),
+    "intersection:  All non-expected elements correctly excluded");
 %seen = ();
 
-$intersection_ref = $lcau->get_intersection_ref;
+$intersection_ref = $lcu->get_intersection_ref;
 $seen{$_}++ foreach (@{$intersection_ref});
-ok(! exists $seen{'abel'});
-ok(exists $seen{'baker'});
-ok(exists $seen{'camera'});
-ok(exists $seen{'delta'});
-ok(exists $seen{'edward'});
-ok(exists $seen{'fargo'});
-ok(exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected intersection");
+ok(unseen(\%seen, \@unpred),
+    "intersection:  All non-expected elements correctly excluded");
 %seen = ();
 
-@unique = $lcau->get_unique;
+%pred = map {$_, 1} qw( abel );
+@unpred = qw| baker camera delta edward fargo golfer hilton icon jerky |;
+@unique = $lcu->get_unique;
 $seen{$_}++ foreach (@unique);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected unique");
+ok(unseen(\%seen, \@unpred),
+    "unique:  All non-expected elements correctly excluded");
 %seen = ();
 
-$unique_ref = $lcau->get_unique_ref;
+$unique_ref = $lcu->get_unique_ref;
 $seen{$_}++ foreach (@{$unique_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected unique");
+ok(unseen(\%seen, \@unpred),
+    "unique:  All non-expected elements correctly excluded");
 %seen = ();
 
-@unique = $lcau->get_Lonly;
+@unique = $lcu->get_Lonly;
 $seen{$_}++ foreach (@unique);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected unique");
+ok(unseen(\%seen, \@unpred),
+    "unique:  All non-expected elements correctly excluded");
 %seen = ();
 
-$unique_ref = $lcau->get_Lonly_ref;
+$unique_ref = $lcu->get_Lonly_ref;
 $seen{$_}++ foreach (@{$unique_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected unique");
+ok(unseen(\%seen, \@unpred),
+    "unique:  All non-expected elements correctly excluded");
 %seen = ();
 
-@unique = $lcau->get_Aonly;
+@unique = $lcu->get_Aonly;
 $seen{$_}++ foreach (@unique);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected unique");
+ok(unseen(\%seen, \@unpred),
+    "unique:  All non-expected elements correctly excluded");
 %seen = ();
 
-$unique_ref = $lcau->get_Aonly_ref;
+$unique_ref = $lcu->get_Aonly_ref;
 $seen{$_}++ foreach (@{$unique_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(! exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected unique");
+ok(unseen(\%seen, \@unpred),
+    "unique:  All non-expected elements correctly excluded");
 %seen = ();
 
-@complement = $lcau->get_complement;
+%pred = map {$_, 1} qw( hilton );
+@unpred = qw| abel baker camera delta edward fargo golfer icon jerky |;
+@complement = $lcu->get_complement;
 $seen{$_}++ foreach (@complement);
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected complement");
+ok(unseen(\%seen, \@unpred),
+    "complement:  All non-expected elements correctly excluded");
 %seen = ();
 
-$complement_ref = $lcau->get_complement_ref;
+$complement_ref = $lcu->get_complement_ref;
 $seen{$_}++ foreach (@{$complement_ref});
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected complement");
+ok(unseen(\%seen, \@unpred),
+    "complement:  All non-expected elements correctly excluded");
 %seen = ();
 
-@complement = $lcau->get_Ronly;
+@complement = $lcu->get_Ronly;
 $seen{$_}++ foreach (@complement);
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected complement");
+ok(unseen(\%seen, \@unpred),
+    "complement:  All non-expected elements correctly excluded");
 %seen = ();
 
-$complement_ref = $lcau->get_Ronly_ref;
+$complement_ref = $lcu->get_Ronly_ref;
 $seen{$_}++ foreach (@{$complement_ref});
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected complement");
+ok(unseen(\%seen, \@unpred),
+    "complement:  All non-expected elements correctly excluded");
 %seen = ();
 
-@complement = $lcau->get_Bonly;
+@complement = $lcu->get_Bonly;
 $seen{$_}++ foreach (@complement);
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected complement");
+ok(unseen(\%seen, \@unpred),
+    "complement:  All non-expected elements correctly excluded");
 %seen = ();
 
-$complement_ref = $lcau->get_Bonly_ref;
+$complement_ref = $lcu->get_Bonly_ref;
 $seen{$_}++ foreach (@{$complement_ref});
-ok(! exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  got expected complement");
+ok(unseen(\%seen, \@unpred),
+    "complement:  All non-expected elements correctly excluded");
 %seen = ();
 
-@symmetric_difference = $lcau->get_symmetric_difference;
+%pred = map {$_, 1} qw( abel hilton );
+@unpred = qw| baker camera delta edward fargo golfer icon jerky |;
+@symmetric_difference = $lcu->get_symmetric_difference;
 $seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  Got expected symmetric difference");
+ok(unseen(\%seen, \@unpred),
+    "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
-$symmetric_difference_ref = $lcau->get_symmetric_difference_ref;
+$symmetric_difference_ref = $lcu->get_symmetric_difference_ref;
 $seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  Got expected symmetric difference");
+ok(unseen(\%seen, \@unpred),
+    "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
-@symmetric_difference = $lcau->get_symdiff;
+@symmetric_difference = $lcu->get_symdiff;
 $seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  Got expected symmetric difference");
+ok(unseen(\%seen, \@unpred),
+    "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
-$symmetric_difference_ref = $lcau->get_symdiff_ref;
+$symmetric_difference_ref = $lcu->get_symdiff_ref;
 $seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  Got expected symmetric difference");
+ok(unseen(\%seen, \@unpred),
+    "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
-@symmetric_difference = $lcau->get_LorRonly;
+@symmetric_difference = $lcu->get_LorRonly;
 $seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  Got expected symmetric difference");
+ok(unseen(\%seen, \@unpred),
+    "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
-$symmetric_difference_ref = $lcau->get_LorRonly_ref;
+$symmetric_difference_ref = $lcu->get_LorRonly_ref;
 $seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  Got expected symmetric difference");
+ok(unseen(\%seen, \@unpred),
+    "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
-@symmetric_difference = $lcau->get_AorBonly;
+@symmetric_difference = $lcu->get_AorBonly;
 $seen{$_}++ foreach (@symmetric_difference);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  Got expected symmetric difference");
+ok(unseen(\%seen, \@unpred),
+    "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
-$symmetric_difference_ref = $lcau->get_AorBonly_ref;
+$symmetric_difference_ref = $lcu->get_AorBonly_ref;
 $seen{$_}++ foreach (@{$symmetric_difference_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "unsorted:  Got expected symmetric difference");
+ok(unseen(\%seen, \@unpred),
+    "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
+%pred = map {$_, 1} qw( abel hilton );
+@unpred = qw| baker camera delta edward fargo golfer icon jerky |;
 {
-    local $SIG{__WARN__} = \&_capture;
-    @nonintersection = $lcau->get_nonintersection;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { @nonintersection = $lcu->get_nonintersection; },
+        \$stdout,
+        \$stderr,
+    );
+    $seen{$_}++ foreach (@nonintersection);
+    is_deeply(\%seen, \%pred, "unsorted:  Got expected nonintersection");
+    ok(unseen(\%seen, \@unpred),
+        "nonintersection:  All non-expected elements correctly excluded");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-$seen{$_}++ foreach (@nonintersection);
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
 %seen = ();
-
 {
-    local $SIG{__WARN__} = \&_capture;
-    $nonintersection_ref = $lcau->get_nonintersection_ref;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $nonintersection_ref = $lcu->get_nonintersection_ref; },
+        \$stdout,
+        \$stderr,
+    );
+    $seen{$_}++ foreach (@{$nonintersection_ref});
+    is_deeply(\%seen, \%pred, "unsorted:  Got expected nonintersection");
+    ok(unseen(\%seen, \@unpred),
+        "nonintersection:  All non-expected elements correctly excluded");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-$seen{$_}++ foreach (@{$nonintersection_ref});
-ok(exists $seen{'abel'});
-ok(! exists $seen{'baker'});
-ok(! exists $seen{'camera'});
-ok(! exists $seen{'delta'});
-ok(! exists $seen{'edward'});
-ok(! exists $seen{'fargo'});
-ok(! exists $seen{'golfer'});
-ok(exists $seen{'hilton'});
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
 %seen = ();
 
-@bag = $lcau->get_bag;
+%pred = (
+    abel    => 2,
+    baker   => 2,
+    camera  => 2,
+    delta   => 3,
+    edward  => 2,
+    fargo   => 2,
+    golfer  => 2,
+    hilton  => 1,
+);
+@unpred = qw| icon jerky |;
+@bag = $lcu->get_bag;
 $seen{$_}++ foreach (@bag);
-ok($seen{'abel'} == 2);
-ok($seen{'baker'} == 2);
-ok($seen{'camera'} == 2);
-ok($seen{'delta'} == 3);
-ok($seen{'edward'} == 2);
-ok($seen{'fargo'} == 2);
-ok($seen{'golfer'} == 2);
-ok($seen{'hilton'} == 1);
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "Got predicted quantities in bag");
+ok(unseen(\%seen, \@unpred),
+    "bag:  All non-expected elements correctly excluded");
 %seen = ();
 
-$bag_ref = $lcau->get_bag_ref;
+$bag_ref = $lcu->get_bag_ref;
 $seen{$_}++ foreach (@{$bag_ref});
-ok($seen{'abel'} == 2);
-ok($seen{'baker'} == 2);
-ok($seen{'camera'} == 2);
-ok($seen{'delta'} == 3);
-ok($seen{'edward'} == 2);
-ok($seen{'fargo'} == 2);
-ok($seen{'golfer'} == 2);
-ok($seen{'hilton'} == 1);
-ok(! exists $seen{'icon'});
-ok(! exists $seen{'jerky'});
+is_deeply(\%seen, \%pred, "Got predicted quantities in bag");
+ok(unseen(\%seen, \@unpred),
+    "bag:  All non-expected elements correctly excluded");
 %seen = ();
 
-$LR = $lcau->is_LsubsetR;
-ok(! $LR);
 
-$LR = $lcau->is_AsubsetB;
-ok(! $LR);
+$LR = $lcu->is_LsubsetR;
+ok(! $LR, "Got expected subset relationship");
 
-$RL = $lcau->is_RsubsetL;
-ok(! $RL);
+$LR = $lcu->is_AsubsetB;
+ok(! $LR, "Got expected subset relationship");
 
-$RL = $lcau->is_BsubsetA;
-ok(! $RL);
+$RL = $lcu->is_RsubsetL;
+ok(! $RL, "Got expected subset relationship");
 
-$eqv = $lcau->is_LequivalentR;
-ok(! $eqv);
+$RL = $lcu->is_BsubsetA;
+ok(! $RL, "Got expected subset relationship");
 
-$eqv = $lcau->is_LeqvlntR;
-ok(! $eqv);
+$eqv = $lcu->is_LequivalentR;
+ok(! $eqv, "Got expected equivalent relationship");
 
-$disj = $lcau->is_LdisjointR;
-ok(! $disj);
+$eqv = $lcu->is_LeqvlntR;
+ok(! $eqv, "Got expected equivalent relationship");
 
-$return = $lcau->print_subset_chart;
-ok($return);
+$disj = $lcu->is_LdisjointR;
+ok(! $disj, "Got expected disjoint relationship");
 
-$return = $lcau->print_equivalence_chart;
-ok($return);
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $rv = $lcu->print_subset_chart; },
+        \$stdout,
+    );
+    ok($rv, "print_subset_chart() returned true value");
+    like($stdout, qr/Subset Relationships/,
+        "Got expected chart header");
+}
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $rv = $lcu->print_equivalence_chart; },
+        \$stdout,
+    );
+    ok($rv, "print_equivalence_chart() returned true value");
+    like($stdout, qr/Equivalence Relationships/,
+        "Got expected chart header");
+}
+ok(wrap_is_member_which(
+    $lcu,
+    {
+        abel      => [ 1, [ qw< 0   > ] ],
+        baker     => [ 2, [ qw< 0 1 > ] ],
+        camera    => [ 2, [ qw< 0 1 > ] ],
+        delta     => [ 2, [ qw< 0 1 > ] ],
+        edward    => [ 2, [ qw< 0 1 > ] ],
+        fargo     => [ 2, [ qw< 0 1 > ] ],
+        golfer    => [ 2, [ qw< 0 1 > ] ],
+        hilton    => [ 1, [ qw<   1 > ] ],
+        icon      => [ 0, [ qw<     > ] ],
+        jerky     => [ 0, [ qw<     > ] ],
+        zebra     => [ 0, [ qw<     > ] ],
+    },
+), "is_member_which() returned all expected values");
 
-@memb_arr = $lcau->is_member_which('abel');
-ok(ok_seen_a( \@memb_arr, 'abel',   1, [ qw< 0   > ] ));
+ok(wrap_is_member_which_ref(
+    $lcu,
+    {
+        abel      => [ 1, [ qw< 0   > ] ],
+        baker     => [ 2, [ qw< 0 1 > ] ],
+        camera    => [ 2, [ qw< 0 1 > ] ],
+        delta     => [ 2, [ qw< 0 1 > ] ],
+        edward    => [ 2, [ qw< 0 1 > ] ],
+        fargo     => [ 2, [ qw< 0 1 > ] ],
+        golfer    => [ 2, [ qw< 0 1 > ] ],
+        hilton    => [ 1, [ qw<   1 > ] ],
+        icon      => [ 0, [ qw<     > ] ],
+        jerky     => [ 0, [ qw<     > ] ],
+        zebra     => [ 0, [ qw<     > ] ],
+    },
+), "is_member_which_ref() returned all expected values");
 
-@memb_arr = $lcau->is_member_which('baker');
-ok(ok_seen_a( \@memb_arr, 'baker',  2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcau->is_member_which('camera');
-ok(ok_seen_a( \@memb_arr, 'camera', 2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcau->is_member_which('delta');
-ok(ok_seen_a( \@memb_arr, 'delta',  2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcau->is_member_which('edward');
-ok(ok_seen_a( \@memb_arr, 'edward', 2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcau->is_member_which('fargo');
-ok(ok_seen_a( \@memb_arr, 'fargo',  2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcau->is_member_which('golfer');
-ok(ok_seen_a( \@memb_arr, 'golfer', 2, [ qw< 0 1 > ] ));
-
-@memb_arr = $lcau->is_member_which('hilton');
-ok(ok_seen_a( \@memb_arr, 'hilton', 1, [ qw<   1 > ] ));
-
-@memb_arr = $lcau->is_member_which('icon');
-ok(ok_seen_a( \@memb_arr, 'icon',   0, [ qw<     > ] ));
-
-@memb_arr = $lcau->is_member_which('jerky');
-ok(ok_seen_a( \@memb_arr, 'jerky',  0, [ qw<     > ] ));
-
-@memb_arr = $lcau->is_member_which('zebra');
-ok(ok_seen_a( \@memb_arr, 'zebra',  0, [ qw<     > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('abel');
-ok(ok_seen_a( $memb_arr_ref, 'abel',   1, [ qw< 0   > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('baker');
-ok(ok_seen_a( $memb_arr_ref, 'baker',  2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('camera');
-ok(ok_seen_a( $memb_arr_ref, 'camera', 2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('delta');
-ok(ok_seen_a( $memb_arr_ref, 'delta',  2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('edward');
-ok(ok_seen_a( $memb_arr_ref, 'edward', 2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('fargo');
-ok(ok_seen_a( $memb_arr_ref, 'fargo',  2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('golfer');
-ok(ok_seen_a( $memb_arr_ref, 'golfer', 2, [ qw< 0 1 > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('hilton');
-ok(ok_seen_a( $memb_arr_ref, 'hilton', 1, [ qw<   1 > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('icon');
-ok(ok_seen_a( $memb_arr_ref, 'icon',   0, [ qw<     > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('jerky');
-ok(ok_seen_a( $memb_arr_ref, 'jerky',  0, [ qw<     > ] ));
-
-$memb_arr_ref = $lcau->is_member_which_ref('zebra');
-ok(ok_seen_a( $memb_arr_ref, 'zebra',  0, [ qw<     > ] ));
-
-$memb_hash_ref = $lcau->are_members_which(
+$memb_hash_ref = $lcu->are_members_which(
     [ qw| abel baker camera delta edward fargo 
           golfer hilton icon jerky zebra | ] );
-ok(ok_seen_h( $memb_hash_ref, 'abel',   1, [ qw< 0   > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'baker',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'camera', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'delta',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'edward', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'fargo',  2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'golfer', 2, [ qw< 0 1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'hilton', 1, [ qw<   1 > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'icon',   0, [ qw<     > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'jerky',  0, [ qw<     > ] ));
-ok(ok_seen_h( $memb_hash_ref, 'zebra',  0, [ qw<     > ] ));
+ok(wrap_are_members_which(
+    $memb_hash_ref,
+    {
+        abel      => [ 1, [ qw< 0   > ] ],
+        baker     => [ 2, [ qw< 0 1 > ] ],
+        camera    => [ 2, [ qw< 0 1 > ] ],
+        delta     => [ 2, [ qw< 0 1 > ] ],
+        edward    => [ 2, [ qw< 0 1 > ] ],
+        fargo     => [ 2, [ qw< 0 1 > ] ],
+        golfer    => [ 2, [ qw< 0 1 > ] ],
+        hilton    => [ 1, [ qw<   1 > ] ],
+        icon      => [ 0, [ qw<     > ] ],
+        jerky     => [ 0, [ qw<     > ] ],
+        zebra     => [ 0, [ qw<     > ] ],
+    },
+), "are_members_which() returned all expected value");
 
-ok($lcau->is_member_any('abel'));
-ok($lcau->is_member_any('baker'));
-ok($lcau->is_member_any('camera'));
-ok($lcau->is_member_any('delta'));
-ok($lcau->is_member_any('edward'));
-ok($lcau->is_member_any('fargo'));
-ok($lcau->is_member_any('golfer'));
-ok($lcau->is_member_any('hilton'));
-ok(! $lcau->is_member_any('icon' ));
-ok(! $lcau->is_member_any('jerky'));
-ok(! $lcau->is_member_any('zebra'));
+ok(wrap_is_member_any(
+    $lcu,
+    {
+        abel    => 1,
+        baker   => 1,
+        camera  => 1,
+        delta   => 1,
+        edward  => 1,
+        fargo   => 1,
+        golfer  => 1,
+        hilton  => 1,
+        icon    => 0,
+        jerky   => 0,
+        zebra   => 0,
+    },
+), "is_member_any() returned all expected values");
 
-$memb_hash_ref = $lcau->are_members_any(
+$memb_hash_ref = $lcu->are_members_any(
     [ qw| abel baker camera delta edward fargo 
           golfer hilton icon jerky zebra | ] );
-ok(ok_any_h( $memb_hash_ref, 'abel',   1 ));
-ok(ok_any_h( $memb_hash_ref, 'baker',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'camera', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'delta',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'edward', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'fargo',  1 ));
-ok(ok_any_h( $memb_hash_ref, 'golfer', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'hilton', 1 ));
-ok(ok_any_h( $memb_hash_ref, 'icon',   0 ));
-ok(ok_any_h( $memb_hash_ref, 'jerky',  0 ));
-ok(ok_any_h( $memb_hash_ref, 'zebra',  0 ));
+ok(wrap_are_members_any(
+    $memb_hash_ref,
+    {
+        abel    => 1,
+        baker   => 1,
+        camera  => 1,
+        delta   => 1,
+        edward  => 1,
+        fargo   => 1,
+        golfer  => 1,
+        hilton  => 1,
+        icon    => 0,
+        jerky   => 0,
+        zebra   => 0,
+    },
+), "are_members_any() returned all expected values");
 
-$vers = $lcau->get_version;
-ok($vers);
+$vers = $lcu->get_version;
+ok($vers, "get_version() returned true value");
 
-my $lcau_s  = List::Compare->new('-u', '-a', \@a2, \@a3);
-ok($lcau_s);
 
-$LR = $lcau_s->is_LsubsetR;
-ok(! $LR);
+my $lcu_s  = List::Compare->new('-u', '-a', \@a2, \@a3);
+ok($lcu_s, "constructor returned true value");
 
-$LR = $lcau_s->is_AsubsetB;
-ok(! $LR);
+$LR = $lcu_s->is_LsubsetR;
+ok(! $LR, "non-subset correctly determined");
 
-$RL = $lcau_s->is_RsubsetL;
-ok($RL);
+$LR = $lcu_s->is_AsubsetB;
+ok(! $LR, "non-subset correctly determined");
 
-$RL = $lcau_s->is_BsubsetA;
-ok($RL);
+$RL = $lcu_s->is_RsubsetL;
+ok($RL, "subset correctly determined");
 
-$eqv = $lcau_s->is_LequivalentR;
-ok(! $eqv);
+$RL = $lcu_s->is_BsubsetA;
+ok($RL, "subset correctly determined");
 
-$eqv = $lcau_s->is_LeqvlntR;
-ok(! $eqv);
+$eqv = $lcu_s->is_LequivalentR;
+ok(! $eqv, "non-equivalence correctly determined");
 
-$disj = $lcau_s->is_LdisjointR;
-ok(! $disj);
+$eqv = $lcu_s->is_LeqvlntR;
+ok(! $eqv, "non-equivalence correctly determined");
 
-my $lcau_e  = List::Compare->new('-u', '-a', \@a3, \@a4);
-ok($lcau_e);
+$disj = $lcu_s->is_LdisjointR;
+ok(! $disj, "non-disjoint correctly determined");
 
-$eqv = $lcau_e->is_LequivalentR;
-ok($eqv);
 
-$eqv = $lcau_e->is_LeqvlntR;
-ok($eqv);
+my $lcu_e  = List::Compare->new('-u', '-a', \@a3, \@a4);
+ok($lcu_e, "constructor returned true value");
 
-$disj = $lcau_e->is_LdisjointR;
-ok(! $disj);
+$eqv = $lcu_e->is_LequivalentR;
+ok($eqv, "Got expected equivalent relationship");
 
-my $lcau_dj  = List::Compare->new('-u', \@a4, \@a8);
+$eqv = $lcu_e->is_LeqvlntR;
+ok($eqv, "Got expected equivalent relationship");
 
-ok($lcau_dj);
+$disj = $lcu_e->is_LdisjointR;
+ok(! $disj, "Got expected disjoint relationship");
 
-ok(0 == $lcau_dj->get_intersection);
-ok(0 == scalar(@{$lcau_dj->get_intersection_ref}));
-$disj = $lcau_dj->is_LdisjointR;
-ok($disj);
+
+my $lcu_dj  = List::Compare->new('-u', \@a4, \@a8);
+ok($lcu_dj, "constructor returned true value");
+
+ok(0 == $lcu_dj->get_intersection, "no intersection, as expected");
+ok(0 == scalar(@{$lcu_dj->get_intersection_ref}),
+    "no intersection, as expected");
+$disj = $lcu_dj->is_LdisjointR;
+ok($disj, "disjoint correctly determined");
 
 ########## BELOW:  Tests for '--unsorted' and '--accelerated' options ##########
 
 my $lcaun   = List::Compare->new('--unsorted', '-a', \@a0, \@a1);
-ok($lcaun);
+ok($lcaun, "Constructor worked with --unsorted and -a options");
 
 my $lcaun_s  = List::Compare->new('--unsorted', '-a', \@a2, \@a3);
-ok($lcaun_s);
+ok($lcaun_s, "Constructor worked with --unsorted and -a options");
 
 my $lcaun_e  = List::Compare->new('--unsorted', '-a', \@a3, \@a4);
-ok($lcaun_e);
+ok($lcaun_e, "Constructor worked with --unsorted and -a options");
 
 my $lcaccun   = List::Compare->new('--unsorted', '--accelerated', \@a0, \@a1);
-ok($lcaccun);
+ok($lcaccun, "Constructor worked with --unsorted and --accelerated options");
 
 my $lcaccun_s  = List::Compare->new('--unsorted', '--accelerated', \@a2, \@a3);
-ok($lcaccun_s);
+ok($lcaccun_s, "Constructor worked with --unsorted and --accelerated options");
 
 my $lcaccun_e  = List::Compare->new('--unsorted', '--accelerated', \@a3, \@a4);
-ok($lcaccun_e);
+ok($lcaccun_e, "Constructor worked with --unsorted and --accelerated options");
 
 my $lcaccu   = List::Compare->new('-u', '--accelerated', \@a0, \@a1);
-ok($lcaccu);
+ok($lcaccu, "Constructor worked with -u and --accelerated options");
 
 my $lcaccu_s  = List::Compare->new('-u', '--accelerated', \@a2, \@a3);
-ok($lcaccu_s);
+ok($lcaccu_s, "Constructor worked with -u and --accelerated options");
 
 my $lcaccu_e  = List::Compare->new('-u', '--accelerated', \@a3, \@a4);
-ok($lcaccu_e);
+ok($lcaccu_e, "Constructor worked with -u and --accelerated options");
 
 ########## BELOW:  Test for bad arguments to constructor ##########
 
-my ($lca_bad);
+my ($lc_bad);
 my %h5 = (
     golfer   => 1,
     lambda   => 0,
 );
 
-eval { $lca_bad = List::Compare->new('-a', \@a0, \%h5) };
-ok(ok_capture_error($@));
+eval { $lc_bad = List::Compare->new('-a', \@a0, \%h5) };
+like($@, qr/Must pass all array references or all hash references/,
+    "Got expected error message from bad constructor");
 
-eval { $lca_bad = List::Compare->new('-a', \%h5, \@a0) };
-ok(ok_capture_error($@));
+eval { $lc_bad = List::Compare->new('-a', \%h5, \@a0) };
+like($@, qr/Must pass all array references or all hash references/,
+    "Got expected error message from bad constructor");
 
 my $scalar = 'test';
-eval { $lca_bad = List::Compare->new('-a', \$scalar, \@a0) };
-ok(ok_capture_error($@));
+eval { $lc_bad = List::Compare->new('-a', \$scalar, \@a0) };
+like($@, qr/Must pass all array references or all hash references/,
+    "Got expected error message from bad constructor");
+
+eval { $lc_bad = List::Compare->new('-a', \@a0) };
+like($@, qr/Must pass at least 2 references/,
+    "Got expected error message from bad constructor");
 
 
 

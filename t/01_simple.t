@@ -373,7 +373,6 @@ ok($disj, "disjoint correctly determined");
 ########## BELOW:  Tests for '-u' option ##########
 
 my $lcu    = List::Compare->new('-u', \@a0, \@a1);
-
 ok($lcu, "constructor returned true value");
 
 %pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton );
