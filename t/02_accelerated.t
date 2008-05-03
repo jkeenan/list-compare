@@ -25,6 +25,34 @@ my @a3 = qw(fargo golfer hilton icon icon);
 my @a4 = qw(fargo fargo golfer hilton icon);
 my @a8 = qw(kappa lambda mu);
 
+my $test_members_which =  {
+    abel      => [ 1, [ qw< 0   > ] ],
+    baker     => [ 2, [ qw< 0 1 > ] ],
+    camera    => [ 2, [ qw< 0 1 > ] ],
+    delta     => [ 2, [ qw< 0 1 > ] ],
+    edward    => [ 2, [ qw< 0 1 > ] ],
+    fargo     => [ 2, [ qw< 0 1 > ] ],
+    golfer    => [ 2, [ qw< 0 1 > ] ],
+    hilton    => [ 1, [ qw<   1 > ] ],
+    icon      => [ 0, [ qw<     > ] ],
+    jerky     => [ 0, [ qw<     > ] ],
+    zebra     => [ 0, [ qw<     > ] ],
+};
+
+my $test_members_any = {
+    abel    => 1,
+    baker   => 1,
+    camera  => 1,
+    delta   => 1,
+    edward  => 1,
+    fargo   => 1,
+    golfer  => 1,
+    hilton  => 1,
+    icon    => 0,
+    jerky   => 0,
+    zebra   => 0,
+};
+
 ### new ###
 my $lc   = List::Compare->new('-a', \@a0, \@a1);
 ok($lc, "List::Compare constructor returned true value");
@@ -205,19 +233,7 @@ ok(! $disj, "Got expected disjoint relationship");
      
 ok(wrap_is_member_which(
     $lc,
-    {
-        abel      => [ 1, [ qw< 0   > ] ],
-        baker     => [ 2, [ qw< 0 1 > ] ],
-        camera    => [ 2, [ qw< 0 1 > ] ],
-        delta     => [ 2, [ qw< 0 1 > ] ],
-        edward    => [ 2, [ qw< 0 1 > ] ],
-        fargo     => [ 2, [ qw< 0 1 > ] ],
-        golfer    => [ 2, [ qw< 0 1 > ] ],
-        hilton    => [ 1, [ qw<   1 > ] ],
-        icon      => [ 0, [ qw<     > ] ],
-        jerky     => [ 0, [ qw<     > ] ],
-        zebra     => [ 0, [ qw<     > ] ],
-    },
+    $test_members_which,
 ), "is_member_which() returned all expected values");
 
 eval { $memb_arr_ref = $lc->is_member_which('jerky', 'zebra') };
@@ -226,19 +242,7 @@ like($@, qr/Method call requires exactly 1 argument \(no references\)/,
 
 ok(wrap_is_member_which_ref(
     $lc,
-    {
-        abel      => [ 1, [ qw< 0   > ] ],
-        baker     => [ 2, [ qw< 0 1 > ] ],
-        camera    => [ 2, [ qw< 0 1 > ] ],
-        delta     => [ 2, [ qw< 0 1 > ] ],
-        edward    => [ 2, [ qw< 0 1 > ] ],
-        fargo     => [ 2, [ qw< 0 1 > ] ],
-        golfer    => [ 2, [ qw< 0 1 > ] ],
-        hilton    => [ 1, [ qw<   1 > ] ],
-        icon      => [ 0, [ qw<     > ] ],
-        jerky     => [ 0, [ qw<     > ] ],
-        zebra     => [ 0, [ qw<     > ] ],
-    },
+    $test_members_which,
 ), "is_member_which_ref() returned all expected values");
 
 eval { $memb_arr_ref = $lc->is_member_which_ref('jerky', 'zebra') };
@@ -251,19 +255,7 @@ $memb_hash_ref =
     | ] );
 ok(wrap_are_members_which(
     $memb_hash_ref,
-    {
-        abel      => [ 1, [ qw< 0   > ] ],
-        baker     => [ 2, [ qw< 0 1 > ] ],
-        camera    => [ 2, [ qw< 0 1 > ] ],
-        delta     => [ 2, [ qw< 0 1 > ] ],
-        edward    => [ 2, [ qw< 0 1 > ] ],
-        fargo     => [ 2, [ qw< 0 1 > ] ],
-        golfer    => [ 2, [ qw< 0 1 > ] ],
-        hilton    => [ 1, [ qw<   1 > ] ],
-        icon      => [ 0, [ qw<     > ] ],
-        jerky     => [ 0, [ qw<     > ] ],
-        zebra     => [ 0, [ qw<     > ] ],
-    },
+    $test_members_which,
 ), "are_members_which() returned all expected value");
 
 eval { $memb_hash_ref = $lc->are_members_which( { key => 'value' } ) };
@@ -273,19 +265,7 @@ like($@,
 
 ok(wrap_is_member_any(
     $lc,
-    {
-        abel    => 1,
-        baker   => 1,
-        camera  => 1,
-        delta   => 1,
-        edward  => 1,
-        fargo   => 1,
-        golfer  => 1,
-        hilton  => 1,
-        icon    => 0,
-        jerky   => 0,
-        zebra   => 0,
-    },
+    $test_members_any,
 ), "is_member_any() returned all expected values");
 
 eval { $lc->is_member_any('jerky', 'zebra') };
@@ -298,19 +278,7 @@ $memb_hash_ref = $lc->are_members_any(
           golfer hilton icon jerky zebra | ] );
 ok(wrap_are_members_any(
     $memb_hash_ref,
-    {
-        abel    => 1,
-        baker   => 1,
-        camera  => 1,
-        delta   => 1,
-        edward  => 1,
-        fargo   => 1,
-        golfer  => 1,
-        hilton  => 1,
-        icon    => 0,
-        jerky   => 0,
-        zebra   => 0,
-    },
+    $test_members_any,
 ), "are_members_any() returned all expected values");
 
 eval { $memb_hash_ref = $lc->are_members_any( { key => 'value' } ) };
@@ -699,36 +667,12 @@ ok(! $disj, "Got expected disjoint relationship");
 }
 ok(wrap_is_member_which(
     $lcu,
-    {
-        abel      => [ 1, [ qw< 0   > ] ],
-        baker     => [ 2, [ qw< 0 1 > ] ],
-        camera    => [ 2, [ qw< 0 1 > ] ],
-        delta     => [ 2, [ qw< 0 1 > ] ],
-        edward    => [ 2, [ qw< 0 1 > ] ],
-        fargo     => [ 2, [ qw< 0 1 > ] ],
-        golfer    => [ 2, [ qw< 0 1 > ] ],
-        hilton    => [ 1, [ qw<   1 > ] ],
-        icon      => [ 0, [ qw<     > ] ],
-        jerky     => [ 0, [ qw<     > ] ],
-        zebra     => [ 0, [ qw<     > ] ],
-    },
+    $test_members_which,
 ), "is_member_which() returned all expected values");
 
 ok(wrap_is_member_which_ref(
     $lcu,
-    {
-        abel      => [ 1, [ qw< 0   > ] ],
-        baker     => [ 2, [ qw< 0 1 > ] ],
-        camera    => [ 2, [ qw< 0 1 > ] ],
-        delta     => [ 2, [ qw< 0 1 > ] ],
-        edward    => [ 2, [ qw< 0 1 > ] ],
-        fargo     => [ 2, [ qw< 0 1 > ] ],
-        golfer    => [ 2, [ qw< 0 1 > ] ],
-        hilton    => [ 1, [ qw<   1 > ] ],
-        icon      => [ 0, [ qw<     > ] ],
-        jerky     => [ 0, [ qw<     > ] ],
-        zebra     => [ 0, [ qw<     > ] ],
-    },
+    $test_members_which,
 ), "is_member_which_ref() returned all expected values");
 
 $memb_hash_ref = $lcu->are_members_which(
@@ -736,36 +680,12 @@ $memb_hash_ref = $lcu->are_members_which(
           golfer hilton icon jerky zebra | ] );
 ok(wrap_are_members_which(
     $memb_hash_ref,
-    {
-        abel      => [ 1, [ qw< 0   > ] ],
-        baker     => [ 2, [ qw< 0 1 > ] ],
-        camera    => [ 2, [ qw< 0 1 > ] ],
-        delta     => [ 2, [ qw< 0 1 > ] ],
-        edward    => [ 2, [ qw< 0 1 > ] ],
-        fargo     => [ 2, [ qw< 0 1 > ] ],
-        golfer    => [ 2, [ qw< 0 1 > ] ],
-        hilton    => [ 1, [ qw<   1 > ] ],
-        icon      => [ 0, [ qw<     > ] ],
-        jerky     => [ 0, [ qw<     > ] ],
-        zebra     => [ 0, [ qw<     > ] ],
-    },
+    $test_members_which,
 ), "are_members_which() returned all expected value");
 
 ok(wrap_is_member_any(
     $lcu,
-    {
-        abel    => 1,
-        baker   => 1,
-        camera  => 1,
-        delta   => 1,
-        edward  => 1,
-        fargo   => 1,
-        golfer  => 1,
-        hilton  => 1,
-        icon    => 0,
-        jerky   => 0,
-        zebra   => 0,
-    },
+    $test_members_any,
 ), "is_member_any() returned all expected values");
 
 $memb_hash_ref = $lcu->are_members_any(
@@ -773,19 +693,7 @@ $memb_hash_ref = $lcu->are_members_any(
           golfer hilton icon jerky zebra | ] );
 ok(wrap_are_members_any(
     $memb_hash_ref,
-    {
-        abel    => 1,
-        baker   => 1,
-        camera  => 1,
-        delta   => 1,
-        edward  => 1,
-        fargo   => 1,
-        golfer  => 1,
-        hilton  => 1,
-        icon    => 0,
-        jerky   => 0,
-        zebra   => 0,
-    },
+    $test_members_any,
 ), "are_members_any() returned all expected values");
 
 $vers = $lcu->get_version;
@@ -892,9 +800,3 @@ like($@, qr/Must pass all array references or all hash references/,
 eval { $lc_bad = List::Compare->new('-a', \@a0) };
 like($@, qr/Must pass at least 2 references/,
     "Got expected error message from bad constructor");
-
-
-
-
-
-

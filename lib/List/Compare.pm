@@ -1276,7 +1276,7 @@ sub print_subset_chart {
     my $class = shift;
     my %data = %$class;
     my @subset_array = @{$data{'xsubset'}};
-    my $title = 'subset';
+    my $title = 'Subset';
     _chart_engine_multiple(\@subset_array, $title);
 }
 
