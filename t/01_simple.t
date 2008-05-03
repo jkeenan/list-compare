@@ -5,6 +5,7 @@ use Test::More qw(no_plan); # tests => 884;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
+use IO::CaptureOutput qw( capture );
 
 my @pred = ();
 my %seen = ();
@@ -37,16 +38,27 @@ $union_ref = $lc->get_union_ref;
 is_deeply( $union_ref, \@pred, "Got expected union");
 
 {
-    local $SIG{__WARN__} = \&_capture;
-    @shared = $lc->get_shared;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { @shared = $lc->get_shared; },
+        \$stdout,
+        \$stderr,
+    );
+    is_deeply( \@shared, \@pred, "Got expected shared");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-is_deeply( \@shared, \@pred, "Got expected shared");
-
 {
-    local $SIG{__WARN__} = \&_capture;
-    $shared_ref = $lc->get_shared_ref;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $shared_ref = $lc->get_shared_ref; },
+        \$stdout,
+        \$stderr,
+    );
+    is_deeply( $shared_ref, \@pred, "Got expected shared");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-is_deeply( $shared_ref, \@pred, "Got expected shared");
 
 @pred = qw( baker camera delta edward fargo golfer );
 @intersection = $lc->get_intersection;
@@ -120,16 +132,27 @@ is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference"
 
 @pred = qw( abel hilton );
 {
-    local $SIG{__WARN__} = \&_capture;
-    @nonintersection = $lc->get_nonintersection;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { @nonintersection = $lc->get_nonintersection; },
+        \$stdout,
+        \$stderr,
+    );
+    is_deeply( \@nonintersection, \@pred, "Got expected nonintersection");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-is_deeply(\@nonintersection, \@pred, "Got expected nonintersection");
-
 {
-    local $SIG{__WARN__} = \&_capture;
-    $nonintersection_ref = $lc->get_nonintersection_ref;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $nonintersection_ref = $lc->get_nonintersection_ref; },
+        \$stdout,
+        \$stderr,
+    );
+    is_deeply($nonintersection_ref, \@pred, "Got expected nonintersection");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-is_deeply($nonintersection_ref, \@pred, "Got expected nonintersection");
 
 @pred = qw( abel abel baker baker camera camera delta delta delta edward
 edward fargo fargo golfer golfer hilton );
@@ -160,9 +183,27 @@ ok(! $eqv, "Got expected equivalent relationship");
 $disj = $lc->is_LdisjointR;
 ok(! $disj, "Got expected disjoint relationship");
 
-ok( $lc->print_subset_chart, "print_subset_chart() returned true value");
-ok( $lc->print_equivalence_chart, "print_equivalence_chart() returned true value");
-
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $rv = $lc->print_subset_chart; },
+        \$stdout,
+    );
+    ok($rv, "print_subset_chart() returned true value");
+    like($stdout, qr/Subset Relationships/,
+        "Got expected chart header");
+}
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $rv = $lc->print_equivalence_chart; },
+        \$stdout,
+    );
+    ok($rv, "print_equivalence_chart() returned true value");
+    like($stdout, qr/Equivalence Relationships/,
+        "Got expected chart header");
+}
+     
 ok(wrap_is_member_which(
     $lc,
     {
@@ -181,7 +222,8 @@ ok(wrap_is_member_which(
 ), "is_member_which() returned all expected values");
 
 eval { $memb_arr_ref = $lc->is_member_which('jerky', 'zebra') };
-ok(ok_capture_error($@), "is_member_which() correctly generated error message");
+like($@, qr/Method call requires exactly 1 argument \(no references\)/,
+        "is_member_which() correctly generated error message");
 
 ok(wrap_is_member_which_ref(
     $lc,
@@ -201,8 +243,8 @@ ok(wrap_is_member_which_ref(
 ), "is_member_which_ref() returned all expected values");
 
 eval { $memb_arr_ref = $lc->is_member_which_ref('jerky', 'zebra') };
-ok(ok_capture_error($@), "is_member_which_ref() correctly generated error message");
-
+like($@, qr/Method call requires exactly 1 argument \(no references\)/,
+        "is_member_which_ref() correctly generated error message");
 
 $memb_hash_ref =
     $lc->are_members_which( [ qw|
@@ -225,8 +267,10 @@ ok(wrap_are_members_which(
     },
 ), "are_members_which() returned all expected value");
 
-eval { $memb_hash_ref = $lc->are_members_which( { key => 'value' } ) };
-ok(ok_capture_error($@), "are_members_which correctly generated error message");
+#eval { $memb_hash_ref = $lc->are_members_which( { key => 'value' } ) };
+#ok(ok_capture_error($@), "are_members_which correctly generated error message");
+
+__END__
 
 ok(wrap_is_member_any(
     $lc,
@@ -245,8 +289,8 @@ ok(wrap_is_member_any(
     },
 ), "is_member_any() returned all expected values");
 
-eval { $lc->is_member_any('jerky', 'zebra') };
-ok(ok_capture_error($@), "is_member_any() correctly generated error message");
+#eval { $lc->is_member_any('jerky', 'zebra') };
+#ok(ok_capture_error($@), "is_member_any() correctly generated error message");
 
 $memb_hash_ref = $lc->are_members_any(
     [ qw| abel baker camera delta edward fargo 
@@ -268,8 +312,8 @@ ok(wrap_are_members_any(
     },
 ), "are_members_any() returned all expected values");
 
-eval { $memb_hash_ref = $lc->are_members_any( { key => 'value' } ) };
-ok(ok_capture_error($@), "are_members_any() correctly generated error message");
+#eval { $memb_hash_ref = $lc->are_members_any( { key => 'value' } ) };
+#ok(ok_capture_error($@), "are_members_any() correctly generated error message");
 
 $vers = $lc->get_version;
 ok($vers, "get_version() returned true value");
@@ -346,24 +390,37 @@ ok(unseen(\%seen, \@unpred),
 
 %pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton );
 {
-    local $SIG{__WARN__} = \&_capture;
-    @shared = $lcu->get_shared;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { @shared = $lcu->get_shared; },
+        \$stdout,
+        \$stderr,
+    );
+    $seen{$_}++ foreach (@shared);
+    is_deeply(\%seen, \%pred, "unsorted:  got expected shared");
+    ok(unseen(\%seen, \@unpred),
+        "shared:  All non-expected elements correctly excluded");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-$seen{$_}++ foreach (@shared);
-is_deeply(\%seen, \%pred, "unsorted:  got expected shared");
-ok(unseen(\%seen, \@unpred),
-    "union:  All non-expected elements correctly excluded");
 %seen = ();
 
 {
-    local $SIG{__WARN__} = \&_capture;
-    $shared_ref = $lcu->get_shared_ref;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $shared_ref = $lcu->get_shared_ref; },
+        \$stdout,
+        \$stderr,
+    );
+    $seen{$_}++ foreach (@{$shared_ref});
+    is_deeply(\%seen, \%pred, "unsorted:  got expected shared");
+    ok(unseen(\%seen, \@unpred),
+        "shared:  All non-expected elements correctly excluded");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-$seen{$_}++ foreach (@{$shared_ref});
-is_deeply(\%seen, \%pred, "unsorted:  got expected shared");
-ok(unseen(\%seen, \@unpred),
-    "union:  All non-expected elements correctly excluded");
 %seen = ();
+__END__
 
 %pred = map {$_, 1} qw( baker camera delta edward fargo golfer );
 @unpred = qw| abel hilton icon jerky |;
@@ -530,23 +587,34 @@ ok(unseen(\%seen, \@unpred),
 %pred = map {$_, 1} qw( abel hilton );
 @unpred = qw| baker camera delta edward fargo golfer icon jerky |;
 {
-    local $SIG{__WARN__} = \&_capture;
-    @nonintersection = $lcu->get_nonintersection;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { @nonintersection = $lcu->get_nonintersection; },
+        \$stdout,
+        \$stderr,
+    );
+    $seen{$_}++ foreach (@nonintersection);
+    is_deeply(\%seen, \%pred, "unsorted:  Got expected nonintersection");
+    ok(unseen(\%seen, \@unpred),
+        "nonintersection:  All non-expected elements correctly excluded");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-$seen{$_}++ foreach (@nonintersection);
-is_deeply(\%seen, \%pred, "unsorted:  Got expected nonintersection");
-ok(unseen(\%seen, \@unpred),
-    "nonintersection:  All non-expected elements correctly excluded");
 %seen = ();
-
 {
-    local $SIG{__WARN__} = \&_capture;
-    $nonintersection_ref = $lcu->get_nonintersection_ref;
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $nonintersection_ref = $lcu->get_nonintersection_ref; },
+        \$stdout,
+        \$stderr,
+    );
+    $seen{$_}++ foreach (@{$nonintersection_ref});
+    is_deeply(\%seen, \%pred, "unsorted:  Got expected nonintersection");
+    ok(unseen(\%seen, \@unpred),
+        "nonintersection:  All non-expected elements correctly excluded");
+    like($stderr, qr/please consider re-coding/,
+        "Got expected warning");
 }
-$seen{$_}++ foreach (@{$nonintersection_ref});
-is_deeply(\%seen, \%pred, "unsorted:  Got expected nonintersection");
-ok(unseen(\%seen, \@unpred),
-    "nonintersection:  All non-expected elements correctly excluded");
 %seen = ();
 
 %pred = (
@@ -596,9 +664,26 @@ ok(! $eqv, "Got expected equivalent relationship");
 $disj = $lcu->is_LdisjointR;
 ok(! $disj, "Got expected disjoint relationship");
 
-ok( $lcu->print_subset_chart, "print_subset_chart() returned true value");
-ok( $lcu->print_equivalence_chart, "print_equivalence_chart() returned true value");
-
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $rv = $lcu->print_subset_chart; },
+        \$stdout,
+    );
+    ok($rv, "print_subset_chart() returned true value");
+    like($stdout, qr/Subset Relationships/,
+        "Got expected chart header");
+}
+{
+    my ($rv, $stdout, $stderr);
+    capture(
+        sub { $rv = $lcu->print_equivalence_chart; },
+        \$stdout,
+    );
+    ok($rv, "print_equivalence_chart() returned true value");
+    like($stdout, qr/Equivalence Relationships/,
+        "Got expected chart header");
+}
 ok(wrap_is_member_which(
     $lcu,
     {
@@ -760,15 +845,15 @@ my %h5 = (
     lambda   => 0,
 );
 
-eval { $lc_bad = List::Compare->new(\@a0, \%h5) };
-ok(ok_capture_error($@), "error message captured");
-
-eval { $lc_bad = List::Compare->new(\%h5, \@a0) };
-ok(ok_capture_error($@), "error message captured");
-
-my $scalar = 'test';
-eval { $lc_bad = List::Compare->new(\$scalar, \@a0) };
-ok(ok_capture_error($@), "error message captured");
-
-eval { $lc_bad = List::Compare->new(\@a0) };
-ok(ok_capture_error($@), "error message captured");
+#eval { $lc_bad = List::Compare->new(\@a0, \%h5) };
+#ok(ok_capture_error($@), "error message captured");
+#
+#eval { $lc_bad = List::Compare->new(\%h5, \@a0) };
+#ok(ok_capture_error($@), "error message captured");
+#
+#my $scalar = 'test';
+#eval { $lc_bad = List::Compare->new(\$scalar, \@a0) };
+#ok(ok_capture_error($@), "error message captured");
+#
+#eval { $lc_bad = List::Compare->new(\@a0) };
+#ok(ok_capture_error($@), "error message captured");
