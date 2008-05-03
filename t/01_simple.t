@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 01_simple.t
-use Test::More qw(no_plan); # tests => 884;
+use Test::More tests => 178;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
