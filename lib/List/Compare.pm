@@ -567,7 +567,7 @@ sub is_member_which_ref {
 
 sub are_members_which {
     my $class = shift;
-    croak "Method call requires exactly 1 argument which must be an anonymous array\n    holding the items to be tested:  $!"
+    croak "Method call requires exactly 1 argument which must be an array reference\n    holding the items to be tested:  $!"
         unless (@_ == 1 and ref($_[0]) eq 'ARRAY');
     my %data = %$class;
     my (@args);
@@ -585,7 +585,7 @@ sub is_member_any {
 
 sub are_members_any {
     my $class = shift;
-    croak "Method call requires exactly 1 argument which must be an anonymous array\n    holding the items to be tested:  $!"
+    croak "Method call requires exactly 1 argument which must be an array reference\n    holding the items to be tested:  $!"
         unless (@_ == 1 and ref($_[0]) eq 'ARRAY');
     my %data = %$class;
     my (@args);
@@ -1221,7 +1221,7 @@ sub is_member_which_ref {
 
 sub are_members_which {
     my $class = shift;
-    croak "Method call requires exactly 1 argument which must be an anonymous array\n    holding the items to be tested:  $!"
+    croak "Method call requires exactly 1 argument which must be an array reference\n    holding the items to be tested:  $!"
         unless (@_ == 1 and ref($_[0]) eq 'ARRAY');
     my %data = %$class;
     my %seen = %{$data{'seen'}};
@@ -1255,7 +1255,7 @@ sub is_member_any {
 
 sub are_members_any {
     my $class = shift;
-    croak "Method call requires exactly 1 argument which must be an anonymous array\n    holding the items to be tested:  $!"
+    croak "Method call requires exactly 1 argument which must be an array reference\n    holding the items to be tested:  $!"
         unless (@_ == 1 and ref($_[0]) eq 'ARRAY');
     my %data = %$class;
     my %seen = %{$data{'seen'}};
@@ -1624,7 +1624,7 @@ sub is_member_which_ref {
 sub are_members_which {
     my $class = shift;
 #    croak "Method call needs at least one argument:  $!" unless (@_);
-    croak "Method call requires exactly 1 argument which must be an anonymous array\n    holding the items to be tested:  $!"
+    croak "Method call requires exactly 1 argument which must be an array reference\n    holding the items to be tested:  $!"
         unless (@_ == 1 and ref($_[0]) eq 'ARRAY');
     my %data = %{$class};
     my $aref = _prepare_listrefs(\%data);
@@ -1664,7 +1664,7 @@ sub is_member_any {
 sub are_members_any {
     my $class = shift;
 #    croak "Method call needs at least one argument:  $!" unless (@_);
-    croak "Method call requires exactly 1 argument which must be an anonymous array\n    holding the items to be tested:  $!"
+    croak "Method call requires exactly 1 argument which must be an array reference\n    holding the items to be tested:  $!"
         unless (@_ == 1 and ref($_[0]) eq 'ARRAY');
     my %data = %$class;
     my $aref = _prepare_listrefs(\%data);
