@@ -267,10 +267,10 @@ ok(wrap_are_members_which(
     },
 ), "are_members_which() returned all expected value");
 
-#eval { $memb_hash_ref = $lc->are_members_which( { key => 'value' } ) };
-#ok(ok_capture_error($@), "are_members_which correctly generated error message");
-
-__END__
+eval { $memb_hash_ref = $lc->are_members_which( { key => 'value' } ) };
+like($@,
+    qr/Method call requires exactly 1 argument which must be an array reference/,
+    "are_members_which() correctly generated error message");
 
 ok(wrap_is_member_any(
     $lc,
@@ -289,8 +289,10 @@ ok(wrap_is_member_any(
     },
 ), "is_member_any() returned all expected values");
 
-#eval { $lc->is_member_any('jerky', 'zebra') };
-#ok(ok_capture_error($@), "is_member_any() correctly generated error message");
+eval { $lc->is_member_any('jerky', 'zebra') };
+like($@,
+    qr/Method call requires exactly 1 argument \(no references\)/,
+    "is_member_any() correctly generated error message");
 
 $memb_hash_ref = $lc->are_members_any(
     [ qw| abel baker camera delta edward fargo 
@@ -312,8 +314,10 @@ ok(wrap_are_members_any(
     },
 ), "are_members_any() returned all expected values");
 
-#eval { $memb_hash_ref = $lc->are_members_any( { key => 'value' } ) };
-#ok(ok_capture_error($@), "are_members_any() correctly generated error message");
+eval { $memb_hash_ref = $lc->are_members_any( { key => 'value' } ) };
+like($@,
+    qr/Method call requires exactly 1 argument which must be an array reference/,
+    "are_members_any() correctly generated error message");
 
 $vers = $lc->get_version;
 ok($vers, "get_version() returned true value");
@@ -420,7 +424,6 @@ ok(unseen(\%seen, \@unpred),
         "Got expected warning");
 }
 %seen = ();
-__END__
 
 %pred = map {$_, 1} qw( baker camera delta edward fargo golfer );
 @unpred = qw| abel hilton icon jerky |;
@@ -845,15 +848,19 @@ my %h5 = (
     lambda   => 0,
 );
 
-#eval { $lc_bad = List::Compare->new(\@a0, \%h5) };
-#ok(ok_capture_error($@), "error message captured");
-#
-#eval { $lc_bad = List::Compare->new(\%h5, \@a0) };
-#ok(ok_capture_error($@), "error message captured");
-#
-#my $scalar = 'test';
-#eval { $lc_bad = List::Compare->new(\$scalar, \@a0) };
-#ok(ok_capture_error($@), "error message captured");
-#
-#eval { $lc_bad = List::Compare->new(\@a0) };
-#ok(ok_capture_error($@), "error message captured");
+eval { $lc_bad = List::Compare->new(\@a0, \%h5) };
+like($@, qr/Must pass all array references or all hash references/,
+    "Got expected error message from bad constructor");
+
+eval { $lc_bad = List::Compare->new(\%h5, \@a0) };
+like($@, qr/Must pass all array references or all hash references/,
+    "Got expected error message from bad constructor");
+
+my $scalar = 'test';
+eval { $lc_bad = List::Compare->new(\$scalar, \@a0) };
+like($@, qr/Must pass all array references or all hash references/,
+    "Got expected error message from bad constructor");
+
+eval { $lc_bad = List::Compare->new(\@a0) };
+like($@, qr/Must pass at least 2 references/,
+    "Got expected error message from bad constructor");
