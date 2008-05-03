@@ -26,8 +26,8 @@ my @a3 = qw(fargo golfer hilton icon icon);
 my @a4 = qw(fargo fargo golfer hilton icon);
 my @a8 = qw(kappa lambda mu);
 
+### new ###
 my $lc    = List::Compare->new(\@a0, \@a1);
-
 ok($lc, "List::Compare constructor returned true value");
 
 @pred = qw(abel baker camera delta edward fargo golfer hilton);
@@ -322,8 +322,8 @@ like($@,
 $vers = $lc->get_version;
 ok($vers, "get_version() returned true value");
 
+### new ###
 my $lc_s  = List::Compare->new(\@a2, \@a3);
-
 ok($lc_s, "constructor returned true value");
 
 $LR = $lc_s->is_LsubsetR;
@@ -347,8 +347,8 @@ ok(! $eqv, "non-equivalence correctly determined");
 $disj = $lc_s->is_LdisjointR;
 ok(! $disj, "non-disjoint correctly determined");
 
+### new ###
 my $lc_e  = List::Compare->new(\@a3, \@a4);
-
 ok($lc_e, "constructor returned true value");
 
 $eqv = $lc_e->is_LequivalentR;
@@ -360,8 +360,8 @@ ok($eqv, "equivalence correctly determined");
 $disj = $lc_e->is_LdisjointR;
 ok(! $disj, "non-disjoint correctly determined");
 
+### new ###
 my $lc_dj  = List::Compare->new(\@a4, \@a8);
-
 ok($lc_dj, "constructor returned true value");
 
 ok(0 == $lc_dj->get_intersection, "no intersection, as expected");
@@ -372,6 +372,7 @@ ok($disj, "disjoint correctly determined");
 
 ########## BELOW:  Tests for '-u' option ##########
 
+### new ###
 my $lcu    = List::Compare->new('-u', \@a0, \@a1);
 ok($lcu, "constructor returned true value");
 
@@ -780,8 +781,8 @@ ok(wrap_are_members_any(
 $vers = $lcu->get_version;
 ok($vers, "get_version() returned true value");
 
+### new ###
 my $lcu_s  = List::Compare->new('-u', \@a2, \@a3);
-
 ok($lcu_s, "constructor returned true value");
 
 $LR = $lcu_s->is_LsubsetR;
@@ -805,8 +806,8 @@ ok(! $eqv, "non-equivalence correctly determined");
 $disj = $lcu_s->is_LdisjointR;
 ok(! $disj, "non-disjoint correctly determined");
 
+### new ###
 my $lcu_e  = List::Compare->new('-u', \@a3, \@a4);
-
 ok($lcu_e, "constructor returned true value");
 
 $eqv = $lcu_e->is_LequivalentR;
@@ -818,8 +819,8 @@ ok($eqv, "Got expected equivalent relationship");
 $disj = $lcu_e->is_LdisjointR;
 ok(! $disj, "Got expected disjoint relationship");
 
+### new ###
 my $lcu_dj  = List::Compare->new('-u', \@a4, \@a8);
-
 ok($lcu_dj, "constructor returned true value");
 
 ok(0 == $lcu_dj->get_intersection, "no intersection, as expected");
