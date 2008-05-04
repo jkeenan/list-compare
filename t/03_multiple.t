@@ -1119,11 +1119,11 @@ my %h5 = (
     lambda   => 0,
 );
 
-eval { $lcm_bad = List::Compare->new('-a', \@a0, \@a1, \@a2, \@a3, \%h5) };
+eval { $lcm_bad = List::Compare->new('-u', \@a0, \@a1, \@a2, \@a3, \%h5) };
 like($@, qr/Must pass all array references or all hash references/,
     "Got expected error message from bad constructor");
 
-eval { $lcm_bad = List::Compare->new('-a', \%h5, \@a0, \@a1, \@a2, \@a3) };
+eval { $lcm_bad = List::Compare->new('-u', \%h5, \@a0, \@a1, \@a2, \@a3) };
 like($@, qr/Must pass all array references or all hash references/,
     "Got expected error message from bad constructor");
 
