@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 08_oo_lists_mult_acc_unsorted.t
-use Test::More tests => 109;
+use Test::More tests => 111;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
@@ -17,6 +17,7 @@ my ($LR, $RL, $eqv, $disj, $return);
 my (@nonintersection, @shared);
 my ($nonintersection_ref, @shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
+my ($unique_all_ref, $complement_all_ref, @seen);
 
 my @a0 = qw(abel abel baker camera delta edward fargo golfer);
 my @a1 = qw(baker camera delta delta edward fargo golfer hilton);
@@ -177,6 +178,21 @@ ok(unseen(\%seen, \@unpred),
         "Got expected warning"
     );
 }
+%seen = ();
+
+@pred = (
+    [ 'abel' ],
+    [  ],
+    [ 'jerky' ],
+    [ ],
+    [  ],
+);
+$unique_all_ref = $lcmu->get_unique_all();
+@seen = @{$unique_all_ref};
+is_deeply(
+    make_array_seen_hash($unique_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_unique_all()");
 %seen = ();
 
 %pred = map {$_, 1} qw( abel icon jerky );
@@ -411,6 +427,20 @@ ok(unseen(\%seen, \@unpred),
     ok(unseen(\%seen, \@unpred),
         "symmetric difference:  All non-expected elements correctly excluded");
 }
+%seen = ();
+
+@pred = (
+    [ qw( hilton icon jerky ) ],
+    [ qw( abel icon jerky ) ],
+    [ qw( abel baker camera delta edward ) ],
+    [ qw( abel baker camera delta edward jerky ) ],
+    [ qw( abel baker camera delta edward jerky ) ],
+);
+$complement_all_ref = $lcmu->get_complement_all();
+is_deeply(
+    make_array_seen_hash($complement_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_complement_all()");
 %seen = ();
 
 %pred = map {$_, 1} qw( abel baker camera delta edward hilton icon jerky );

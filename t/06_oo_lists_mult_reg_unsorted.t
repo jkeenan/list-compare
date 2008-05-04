@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 06_oo_lists_mult_reg_unsorted.t
-use Test::More tests => 108;
+use Test::More tests => 110;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
@@ -179,6 +179,19 @@ ok(unseen(\%seen, \@unpred),
     );
 }
 %seen = ();
+
+@pred = (
+    [ 'abel' ],
+    [  ],
+    [ 'jerky' ],
+    [ ],
+    [  ],
+);
+$unique_all_ref = $lcmu->get_unique_all();
+is_deeply(
+    make_array_seen_hash($unique_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_complement_all()");
 
 %pred = map {$_, 1} qw( abel icon jerky );
 @unpred = qw| baker camera delta edward fargo golfer hilton |;
@@ -412,6 +425,20 @@ ok(unseen(\%seen, \@unpred),
     ok(unseen(\%seen, \@unpred),
         "symmetric difference:  All non-expected elements correctly excluded");
 }
+%seen = ();
+
+@pred = (
+    [ qw( hilton icon jerky ) ],
+    [ qw( abel icon jerky ) ],
+    [ qw( abel baker camera delta edward ) ],
+    [ qw( abel baker camera delta edward jerky ) ],
+    [ qw( abel baker camera delta edward jerky ) ],
+);
+$complement_all_ref = $lcmu->get_complement_all();
+is_deeply(
+    make_array_seen_hash($complement_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_complement_all()");
 %seen = ();
 
 %pred = map {$_, 1} qw( abel baker camera delta edward hilton icon jerky );
