@@ -1,5 +1,6 @@
-#$Id$
+02_oo_lists_reg_sorted.t
 Changes
+FAQ
 lib/List/Compare.pm
 lib/List/Compare/Base/_Auxiliary.pm
 lib/List/Compare/Base/_Engine.pm
@@ -8,10 +9,14 @@ Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml			Module meta-data (added by MakeMaker)
+methodlist
 README
-t/01_simple.t
-t/02_accelerated.t
-t/03_multiple.t
+t/01_oo_lists_dual_reg_sorted.t
+t/02_oo_lists_dual_reg_unsorted.t
+t/03_oo_lists_dual_acc_sorted.t
+t/04_oo_lists_dual_acc_unsorted.t
+t/05_oo_lists_mult_reg_sorted.t
+t/06_oo_lists_mult_reg_unsorted.t
 t/07_functional.t
 t/08_functional_sh.t
 t/09_multaccel.t
@@ -37,4 +42,5 @@ t/29_unqall.t
 t/30_unqall_unsorted.t
 t/31_unqall_functional.t
 t/32_unqall_functional_unsorted.t
+t/Test/IO/CaptureOutput.pm
 t/Test/ListCompareSpecial.pm
