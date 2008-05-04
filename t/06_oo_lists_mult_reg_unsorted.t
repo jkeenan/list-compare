@@ -17,6 +17,7 @@ my ($LR, $RL, $eqv, $disj, $return);
 my (@nonintersection, @shared);
 my ($nonintersection_ref, @shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
+my ($unique_all_ref, $complement_all_ref, @seen);
 
 my @a0 = qw(abel abel baker camera delta edward fargo golfer);
 my @a1 = qw(baker camera delta delta edward fargo golfer hilton);
