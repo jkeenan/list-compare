@@ -1,4 +1,3 @@
-02_oo_lists_reg_sorted.t
 Changes
 FAQ
 lib/List/Compare.pm
@@ -9,7 +8,6 @@ Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml			Module meta-data (added by MakeMaker)
-methodlist
 README
 t/01_oo_lists_dual_reg_sorted.t
 t/02_oo_lists_dual_reg_unsorted.t
