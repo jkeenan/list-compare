@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 11_oo_lists_alt_dual_acc_sorted.t
-use Test::More tests =>  80;
+use Test::More tests =>  77;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
@@ -348,26 +348,6 @@ ok(0 == scalar(@{$lc_dj->get_intersection_ref}),
     "no intersection, as expected");
 $disj = $lc_dj->is_LdisjointR;
 ok($disj, "disjoint correctly determined");
-
-########## BELOW:  Tests for '--accelerated' option ##########
-
-my $lcacc   = List::Compare->new( {
-    accelerated => 1,
-    lists => [ \@a0, \@a1 ],
-} );
-ok($lcacc, "Constructor worked with --accelerated option");
-
-my $lcacc_s  = List::Compare->new( {
-    accelerated => 1,
-    lists => [ \@a2, \@a3 ],
-} );
-ok($lcacc_s, "Constructor worked with --accelerated option");
-
-my $lcacc_e  = List::Compare->new( {
-    accelerated => 1,
-    lists => [ \@a3, \@a4 ],
-} );
-ok($lcacc_e, "Constructor worked with --accelerated option");
 
 ########## BELOW:  Test for bad arguments to constructor ##########
 
