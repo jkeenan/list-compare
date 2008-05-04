@@ -1,7 +1,7 @@
 # perl
 #$Id$
-# 02_oo_lists_reg_unsorted.t
-use Test::More tests => 101;
+# 04_oo_lists_acc_unsorted.t
+use Test::More tests => 107;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
@@ -12,8 +12,7 @@ my %seen = ();
 my %pred = ();
 my @unpred = ();
 my (@unique, @complement, @intersection, @union, @symmetric_difference, @bag);
-my ($unique_ref, $complement_ref, $intersection_ref, $union_ref,
-$symmetric_difference_ref, $bag_ref);
+my ($unique_ref, $complement_ref, $intersection_ref, $union_ref, $symmetric_difference_ref, $bag_ref);
 my ($LR, $RL, $eqv, $disj, $return);
 my (@nonintersection, @shared);
 my ($nonintersection_ref, @shared_ref);
@@ -54,10 +53,8 @@ my $test_members_any = {
     zebra   => 0,
 };
 
-########## BELOW:  Tests for '-u' option ##########
-
 ### new ###
-my $lcu    = List::Compare->new('-u', \@a0, \@a1);
+my $lcu   = List::Compare->new('-u', '-a', \@a0, \@a1);
 ok($lcu, "constructor returned true value");
 
 %pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton );
@@ -373,12 +370,12 @@ ok(! $disj, "Got expected disjoint relationship");
 }
 ok(wrap_is_member_which(
     $lcu,
-    $test_member_which,
+    $test_members_which,
 ), "is_member_which() returned all expected values");
 
 ok(wrap_is_member_which_ref(
     $lcu,
-    $test_member_which,
+    $test_members_which,
 ), "is_member_which_ref() returned all expected values");
 
 $memb_hash_ref = $lcu->are_members_which(
@@ -386,7 +383,7 @@ $memb_hash_ref = $lcu->are_members_which(
           golfer hilton icon jerky zebra | ] );
 ok(wrap_are_members_which(
     $memb_hash_ref,
-    $test_member_which,
+    $test_members_which,
 ), "are_members_which() returned all expected value");
 
 ok(wrap_is_member_any(
@@ -406,7 +403,7 @@ $vers = $lcu->get_version;
 ok($vers, "get_version() returned true value");
 
 ### new ###
-my $lcu_s  = List::Compare->new('-u', \@a2, \@a3);
+my $lcu_s  = List::Compare->new('-u', '-a', \@a2, \@a3);
 ok($lcu_s, "constructor returned true value");
 
 $LR = $lcu_s->is_LsubsetR;
@@ -431,7 +428,7 @@ $disj = $lcu_s->is_LdisjointR;
 ok(! $disj, "non-disjoint correctly determined");
 
 ### new ###
-my $lcu_e  = List::Compare->new('-u', \@a3, \@a4);
+my $lcu_e  = List::Compare->new('-u', '-a', \@a3, \@a4);
 ok($lcu_e, "constructor returned true value");
 
 $eqv = $lcu_e->is_LequivalentR;
@@ -453,15 +450,32 @@ ok(0 == scalar(@{$lcu_dj->get_intersection_ref}),
 $disj = $lcu_dj->is_LdisjointR;
 ok($disj, "disjoint correctly determined");
 
-########## BELOW:  Tests for '--unsorted' option ##########
+########## BELOW:  Tests for '--unsorted' and '--accelerated' options ##########
 
-my $lcun    = List::Compare->new('--unsorted', \@a0, \@a1);
-ok($lcun, "constructor returned true value");
+my $lcaun   = List::Compare->new('--unsorted', '-a', \@a0, \@a1);
+ok($lcaun, "Constructor worked with --unsorted and -a options");
 
-my $lcun_s  = List::Compare->new('--unsorted', \@a2, \@a3);
-ok($lcun_s, "constructor returned true value");
+my $lcaun_s  = List::Compare->new('--unsorted', '-a', \@a2, \@a3);
+ok($lcaun_s, "Constructor worked with --unsorted and -a options");
 
-my $lcun_e  = List::Compare->new('--unsorted', \@a3, \@a4);
-ok($lcun_e, "constructor returned true value");
+my $lcaun_e  = List::Compare->new('--unsorted', '-a', \@a3, \@a4);
+ok($lcaun_e, "Constructor worked with --unsorted and -a options");
 
+my $lcaccun   = List::Compare->new('--unsorted', '--accelerated', \@a0, \@a1);
+ok($lcaccun, "Constructor worked with --unsorted and --accelerated options");
+
+my $lcaccun_s  = List::Compare->new('--unsorted', '--accelerated', \@a2, \@a3);
+ok($lcaccun_s, "Constructor worked with --unsorted and --accelerated options");
+
+my $lcaccun_e  = List::Compare->new('--unsorted', '--accelerated', \@a3, \@a4);
+ok($lcaccun_e, "Constructor worked with --unsorted and --accelerated options");
+
+my $lcaccu   = List::Compare->new('-u', '--accelerated', \@a0, \@a1);
+ok($lcaccu, "Constructor worked with -u and --accelerated options");
+
+my $lcaccu_s  = List::Compare->new('-u', '--accelerated', \@a2, \@a3);
+ok($lcaccu_s, "Constructor worked with -u and --accelerated options");
+
+my $lcaccu_e  = List::Compare->new('-u', '--accelerated', \@a3, \@a4);
+ok($lcaccu_e, "Constructor worked with -u and --accelerated options");
 
