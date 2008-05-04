@@ -1,6 +1,6 @@
 # perl
 #$Id$
-# 01_oo_lists_reg_sorted.t
+# 01_oo_lists_dual_reg_sorted.t
 use Test::More tests =>  78;
 use List::Compare;
 use lib ("./t");
