@@ -11,11 +11,13 @@ our @EXPORT_OK = qw(
     wrap_are_members_which
     wrap_is_member_any
     wrap_are_members_any
+    make_array_seen_hash
  );
 our %EXPORT_TAGS = (
     seen => [ qw(
         ok_capture_error ok_seen_a  ok_seen_h ok_any_h _capture
         getseen unseen
+        make_array_seen_hash
     ) ],
     wrap => [ qw(
         wrap_is_member_which
@@ -142,3 +144,17 @@ sub wrap_are_members_any {
     }
     ($correct == scalar keys %{ $args }) ? 1 : 0;
 }
+
+sub make_array_seen_hash {
+    my $arrayref = shift;
+    my @arrseen = ();
+    foreach my $el (@{$arrayref}) {
+        die "Each element must be an array ref"
+            unless ref($el) eq 'ARRAY';
+        my %seen;
+        $seen{$_}++ for @{$el};
+        push @arrseen, \%seen;
+    }
+    return \@arrseen;
+}
+
