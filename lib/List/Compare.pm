@@ -1690,7 +1690,7 @@ sub print_subset_chart {
     my %data = %$class;
     my $aref = _prepare_listrefs(\%data);
     my $xsubsetref = _subset_subengine($aref);
-    my $title = 'subset';
+    my $title = 'Subset';
     _chart_engine_multiple($xsubsetref, $title);
 }
 

@@ -1,6 +1,6 @@
 # perl
 #$Id$
-# 05_oo_lists_mult_reg_sorted.t
+# 07_oo_lists_mult_acc_sorted.t
 use Test::More tests => 104;
 use List::Compare;
 use lib ("./t");
@@ -40,7 +40,7 @@ my $test_members_which = {
 };
 
 ### new ###
-my $lcm   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4);
+my $lcm   = List::Compare->new('-a', \@a0, \@a1, \@a2, \@a3, \@a4);
 ok($lcm, "List::Compare constructor returned true value");
 
 @pred = qw(abel baker camera delta edward fargo golfer hilton icon jerky);
@@ -73,7 +73,7 @@ is_deeply($unique_ref, \@pred, "Got expected unique");
 
 eval { $unique_ref = $lcm->get_unique_ref('jerky') };
 like($@,
-    qr/Argument to method List::Compare::Multiple::get_unique_ref must be the array index/,
+    qr/Argument to method List::Compare::Multiple::Accelerated::get_unique_ref must be the array index/,
     "Got expected error message"
 );
 
@@ -199,7 +199,7 @@ is_deeply($complement_ref, \@pred, "Got expected complement");
 
 eval { $complement_ref = $lcm->get_complement_ref('jerky') };
 like($@,
-    qr/Argument to method List::Compare::Multiple::get_complement_ref must be the array index/,
+    qr/Argument to method List::Compare::Multiple::Accelerated::get_complement_ref must be the array index/,
     "Got expected error message"
 );
 
@@ -415,13 +415,13 @@ ok(! $LR, "Got expected subset relationship");
 
 eval { $LR = $lcm->is_LsubsetR(2) };
 like($@,
-    qr/Method List::Compare::Multiple::is_LsubsetR requires 2 arguments/,
+    qr/Method.*?requires 2 arguments/,
     "Got expected error message"
 );
 
 eval { $LR = $lcm->is_LsubsetR(8,9) };
 like($@,
-    qr/Each argument to method List::Compare::Multiple::is_LsubsetR must be a valid array index /,
+    qr/Each argument to method.*?must be a valid array index /,
     "Got expected error message"
 );
 
@@ -463,13 +463,13 @@ ok(! $eqv, "Got expected equivalence relationship");
 
 eval { $eqv = $lcm->is_LequivalentR(2) };
 like($@,
-    qr/Method List::Compare::Multiple::is_LequivalentR requires 2 arguments/,
+    qr/Method List::Compare::Multiple::Accelerated::is_LequivalentR requires 2 arguments/,
     "Got expected error message",
 );
 
 eval { $eqv = $lcm->is_LequivalentR(8,9) };
 like($@,
-    qr/Each argument to method List::Compare::Multiple::is_LequivalentR must be a valid array index/,
+    qr/Each argument to method List::Compare::Multiple::Accelerated::is_LequivalentR must be a valid array index/,
     "Got expected error message",
 );
 
@@ -552,7 +552,7 @@ $vers = $lcm->get_version;
 ok($vers, "get_version() returned true value");
 
 ### new ###
-my $lcm_dj   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4, \@a8);
+my $lcm_dj   = List::Compare->new('-a', \@a0, \@a1, \@a2, \@a3, \@a4, \@a8);
 ok($lcm_dj, "Constructor returned true value");
 
 $disj = $lcm_dj->is_LdisjointR;
@@ -565,7 +565,7 @@ $disj = $lcm_dj->is_LdisjointR(4,5);
 ok($disj, "Got expected disjoint relationship");
 
 eval { $disj = $lcm_dj->is_LdisjointR(2) };
-like($@, qr/Method List::Compare::Multiple::is_LdisjointR requires 2 arguments/,
+like($@, qr/Method List::Compare::Multiple::Accelerated::is_LdisjointR requires 2 arguments/,
     "Got expected error message");
 
 ########## BELOW:  Testfor bad arguments to constructor ##########
@@ -576,15 +576,15 @@ my %h5 = (
     lambda   => 0,
 );
 
-eval { $lcm_bad = List::Compare->new('-u', \@a0, \@a1, \@a2, \@a3, \%h5) };
+eval { $lcm_bad = List::Compare->new('-a', \@a0, \@a1, \@a2, \@a3, \%h5) };
 like($@, qr/Must pass all array references or all hash references/,
     "Got expected error message from bad constructor");
 
-eval { $lcm_bad = List::Compare->new('-u', \%h5, \@a0, \@a1, \@a2, \@a3) };
+eval { $lcm_bad = List::Compare->new('-a', \%h5, \@a0, \@a1, \@a2, \@a3) };
 like($@, qr/Must pass all array references or all hash references/,
     "Got expected error message from bad constructor");
 
 my $scalar = 'test';
-eval { $lcm_bad = List::Compare->new(\$scalar, \@a0, \@a1) };
+eval { $lcm_bad = List::Compare->new('-a', \$scalar, \@a0, \@a1) };
 like($@, qr/Must pass all array references or all hash references/,
     "Got expected error message from bad constructor");
