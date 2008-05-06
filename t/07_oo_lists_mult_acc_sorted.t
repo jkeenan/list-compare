@@ -199,12 +199,10 @@ is_deeply($unique_ref, \@pred, "Got expected unique");
     [  ],
 );
 $unique_all_ref = $lcm->get_unique_all();
-@seen = @{$unique_all_ref};
 is_deeply(
     make_array_seen_hash($unique_all_ref),
     make_array_seen_hash(\@pred),
     "Got expected values for get_unique_all()");
-%seen = ();
 
 @pred = qw( abel icon jerky );
 @complement = $lcm->get_complement(1);
@@ -411,7 +409,6 @@ is_deeply(
     make_array_seen_hash($complement_all_ref),
     make_array_seen_hash(\@pred),
     "Got expected values for get_complement_all()");
-%seen = ();
 
 @pred = qw( abel baker camera delta edward hilton icon jerky );
 @nonintersection = $lcm->get_nonintersection;

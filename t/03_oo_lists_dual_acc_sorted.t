@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 03_oo_lists_dual_acc_sorted.t
-use Test::More tests =>  88;
+use Test::More tests =>  82;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
@@ -102,17 +102,6 @@ is_deeply(\@unique, \@pred, "Got expected unique");
 $unique_ref = $lc->get_unique_ref;
 is_deeply($unique_ref, \@pred, "Got expected unique");
 
-$unique_all_ref = $lc->get_unique_all();
-@seen = @{$unique_all_ref};
-ok(@{$seen[0]} == 1,
-    "Got expected number of elements in inner array in unique_all()");
-ok($seen[0][0] eq 'abel',
-    "Got expected value in inner array in unique_all()");
-ok(@{$seen[1]} == 1,
-    "Got expected number of elements in inner array in unique_all()");
-ok($seen[1][0] eq 'hilton',
-    "Got expected value in inner array in unique_all()");
-
 @unique = $lc->get_Lonly;
 is_deeply(\@unique, \@pred, "Got expected unique");
 
@@ -125,23 +114,22 @@ is_deeply(\@unique, \@pred, "Got expected unique");
 $unique_ref = $lc->get_Aonly_ref;
 is_deeply($unique_ref, \@pred, "Got expected unique");
 
+@pred = (
+    [ 'abel' ],
+    [ 'hilton' ],
+);
+$unique_all_ref = $lc->get_unique_all();
+is_deeply(
+    make_array_seen_hash($unique_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_unique_all()");
+
 @pred = qw ( hilton );
 @complement = $lc->get_complement;
 is_deeply(\@complement, \@pred, "Got expected complement");
 
 $complement_ref = $lc->get_complement_ref;
 is_deeply($complement_ref, \@pred, "Got expected complement");
-
-$complement_all_ref = $lc->get_complement_all();
-@seen = @{$complement_all_ref};
-ok(@{$seen[0]} == 1,
-    "Got expected number of elements in inner array in complement_all()");
-ok($seen[0][0] eq 'hilton',
-    "Got expected value in inner array in complement_all()");
-ok(@{$seen[1]} == 1,
-    "Got expected number of elements in inner array in complement_all()");
-ok($seen[1][0] eq 'abel',
-    "Got expected value in inner array in complement_all()");
 
 @complement = $lc->get_Ronly;
 is_deeply(\@complement, \@pred, "Got expected complement");
@@ -154,6 +142,16 @@ is_deeply(\@complement, \@pred, "Got expected complement");
 
 $complement_ref = $lc->get_Bonly_ref;
 is_deeply($complement_ref, \@pred, "Got expected complement");
+
+@pred = (
+    [ qw( hilton ) ],
+    [ qw( abel ) ],
+);
+$complement_all_ref = $lc->get_complement_all();
+is_deeply(
+    make_array_seen_hash($complement_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_complement_all()");
 
 @pred = qw( abel hilton );
 @symmetric_difference = $lc->get_symmetric_difference;

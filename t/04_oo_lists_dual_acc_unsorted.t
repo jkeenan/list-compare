@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 04_oo_lists_dual_acc_unsorted.t
-use Test::More tests => 111;
+use Test::More tests => 109;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
@@ -139,13 +139,6 @@ ok(unseen(\%seen, \@unpred),
     "unique:  All non-expected elements correctly excluded");
 %seen = ();
 
-$unique_all_ref = $lcu->get_unique_all();
-@seen = getseen($unique_all_ref);
-ok( exists $seen[0]{'abel'},
-    "Got expected value in get_unique_all()" );
-ok( exists $seen[1]{'hilton'},
-    "Got expected value in get_unique_all()" );
-
 @unique = $lcu->get_Lonly;
 $seen{$_}++ foreach (@unique);
 is_deeply(\%seen, \%pred, "unsorted:  got expected unique");
@@ -174,6 +167,16 @@ ok(unseen(\%seen, \@unpred),
     "unique:  All non-expected elements correctly excluded");
 %seen = ();
 
+@pred = (
+    [ 'abel' ],
+    [ 'hilton' ],
+);
+$unique_all_ref = $lcu->get_unique_all();
+is_deeply(
+    make_array_seen_hash($unique_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_unique_all()");
+
 %pred = map {$_, 1} qw( hilton );
 @unpred = qw| abel baker camera delta edward fargo golfer icon jerky |;
 @complement = $lcu->get_complement;
@@ -189,13 +192,6 @@ is_deeply(\%seen, \%pred, "unsorted:  got expected complement");
 ok(unseen(\%seen, \@unpred),
     "complement:  All non-expected elements correctly excluded");
 %seen = ();
-
-$complement_all_ref = $lcu->get_complement_all();
-@seen = getseen($complement_all_ref);
-ok( exists $seen[0]{'hilton'},
-    "Got expected value in get_complement_all()" );
-ok( exists $seen[1]{'abel'},
-    "Got expected value in get_complement_all()" );
 
 @complement = $lcu->get_Ronly;
 $seen{$_}++ foreach (@complement);
@@ -224,6 +220,16 @@ is_deeply(\%seen, \%pred, "unsorted:  got expected complement");
 ok(unseen(\%seen, \@unpred),
     "complement:  All non-expected elements correctly excluded");
 %seen = ();
+
+@pred = (
+    [ qw( hilton ) ],
+    [ qw( abel ) ],
+);
+$complement_all_ref = $lcu->get_complement_all();
+is_deeply(
+    make_array_seen_hash($complement_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_complement_all()");
 
 %pred = map {$_, 1} qw( abel hilton );
 @unpred = qw| baker camera delta edward fargo golfer icon jerky |;

@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 10_oo_lists_alt_dual_reg_unsorted.t
-use Test::More tests => 101;
+use Test::More tests => 103;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
@@ -18,6 +18,7 @@ my ($LR, $RL, $eqv, $disj, $return);
 my (@nonintersection, @shared);
 my ($nonintersection_ref, @shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
+my ($unique_all_ref, $complement_all_ref, @seen);
 
 my @a0 = qw(abel abel baker camera delta edward fargo golfer);
 my @a1 = qw(baker camera delta delta edward fargo golfer hilton);
@@ -172,6 +173,16 @@ ok(unseen(\%seen, \@unpred),
     "unique:  All non-expected elements correctly excluded");
 %seen = ();
 
+@pred = (
+    [ 'abel' ],
+    [ 'hilton' ],
+);
+$unique_all_ref = $lcu->get_unique_all();
+is_deeply(
+    make_array_seen_hash($unique_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_complement_all()");
+
 %pred = map {$_, 1} qw( hilton );
 @unpred = qw| abel baker camera delta edward fargo golfer icon jerky |;
 @complement = $lcu->get_complement;
@@ -215,6 +226,16 @@ is_deeply(\%seen, \%pred, "unsorted:  got expected complement");
 ok(unseen(\%seen, \@unpred),
     "complement:  All non-expected elements correctly excluded");
 %seen = ();
+
+@pred = (
+    [ qw( hilton ) ],
+    [ qw( abel ) ],
+);
+$complement_all_ref = $lcu->get_complement_all();
+is_deeply(
+    make_array_seen_hash($complement_all_ref),
+    make_array_seen_hash(\@pred),
+    "Got expected values for get_complement_all()");
 
 %pred = map {$_, 1} qw( abel hilton );
 @unpred = qw| baker camera delta edward fargo golfer icon jerky |;

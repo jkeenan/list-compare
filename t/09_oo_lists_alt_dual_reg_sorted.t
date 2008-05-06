@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 09_oo_lists_alt_dual_reg_sorted.t
-use Test::More tests =>  77;
+use Test::More tests =>  79;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
@@ -18,6 +18,7 @@ my ($LR, $RL, $eqv, $disj, $return);
 my (@nonintersection, @shared);
 my ($nonintersection_ref, @shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
+my ($unique_all_ref, $complement_all_ref);
 
 my @a0 = qw(abel abel baker camera delta edward fargo golfer);
 my @a1 = qw(baker camera delta delta edward fargo golfer hilton);
@@ -114,6 +115,14 @@ is_deeply(\@unique, \@pred, "Got expected unique");
 $unique_ref = $lc->get_Aonly_ref;
 is_deeply($unique_ref, \@pred, "Got expected unique");
 
+@pred = (
+    [ 'abel' ],
+    [ 'hilton' ],
+);
+$unique_all_ref = $lc->get_unique_all();
+is_deeply($unique_all_ref, [ @pred ],
+    "Got expected values for get_unique_all()");
+
 @pred = qw ( hilton );
 @complement = $lc->get_complement;
 is_deeply(\@complement, \@pred, "Got expected complement");
@@ -132,6 +141,14 @@ is_deeply(\@complement, \@pred, "Got expected complement");
 
 $complement_ref = $lc->get_Bonly_ref;
 is_deeply($complement_ref, \@pred, "Got expected complement");
+
+@pred = (
+    [ qw( hilton ) ],
+    [ qw( abel ) ],
+);
+$complement_all_ref = $lc->get_complement_all();
+is_deeply($complement_all_ref, [ @pred ],
+    "Got expected values for get_complement_all()");
 
 @pred = qw( abel hilton );
 @symmetric_difference = $lc->get_symmetric_difference;

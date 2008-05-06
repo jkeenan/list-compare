@@ -188,12 +188,10 @@ ok(unseen(\%seen, \@unpred),
     [  ],
 );
 $unique_all_ref = $lcmu->get_unique_all();
-@seen = @{$unique_all_ref};
 is_deeply(
     make_array_seen_hash($unique_all_ref),
     make_array_seen_hash(\@pred),
     "Got expected values for get_unique_all()");
-%seen = ();
 
 %pred = map {$_, 1} qw( abel icon jerky );
 @unpred = qw| baker camera delta edward fargo golfer hilton |;
@@ -441,7 +439,6 @@ is_deeply(
     make_array_seen_hash($complement_all_ref),
     make_array_seen_hash(\@pred),
     "Got expected values for get_complement_all()");
-%seen = ();
 
 %pred = map {$_, 1} qw( abel baker camera delta edward hilton icon jerky );
 @unpred = qw| fargo golfer |;
