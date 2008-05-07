@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 07_oo_lists_mult_acc_sorted.t
-use Test::More qw(no_plan); # tests => 104;
+use Test::More tests => 106;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );

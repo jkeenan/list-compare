@@ -1,7 +1,7 @@
 # perl
 #$Id$
-# 08_oo_lists_mult_acc_unsorted.t
-use Test::More tests => 111;
+# t/16_oo_lists_alt_mult_acc_unsorted.t
+use Test::More tests => 110;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap );
@@ -41,7 +41,11 @@ my $test_members_which = {
 };
 
 ### new ###
-my $lcmu   = List::Compare->new('-u', '-a', \@a0, \@a1, \@a2, \@a3, \@a4);
+my $lcmu   = List::Compare->new( {
+    unsorted =>1,
+    accelerated => 1,
+    lists => [ \@a0, \@a1, \@a2, \@a3, \@a4 ],
+} );
 ok($lcmu, "List::Compare constructor returned true value");
 
 %pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton icon jerky );
@@ -590,7 +594,11 @@ $vers = $lcmu->get_version;
 ok($vers, "get_version() returned true value");
 
 ### new ###
-my $lcmu_dj   = List::Compare->new('-u', '-a', \@a0, \@a1, \@a2, \@a3, \@a4, \@a8);
+my $lcmu_dj   = List::Compare->new( {
+    unsorted =>1,
+    accelerated => 1,
+    lists => [ \@a0, \@a1, \@a2, \@a3, \@a4, \@a8 ],
+} );
 ok($lcmu_dj, "List::Compare constructor returned true value");
 
 $disj = $lcmu_dj->is_LdisjointR;
@@ -604,10 +612,9 @@ ok($disj, "Got expected disjoint relationship");
 
 ########## BELOW:  Test for '--unsorted' option ##########
 
-my $lcmuna   = List::Compare->new(
-    '--unsorted', '-a', \@a0, \@a1, \@a2, \@a3, \@a4);
-ok($lcmuna, "List::Compare constructor returned true value");
-
-$lcmuna   = List::Compare->new(
-    '--unsorted', '--accelerated', \@a0, \@a1, \@a2, \@a3, \@a4);
+my $lcmuna   = List::Compare->new( {
+    unsorted =>1,
+    accelerated => 1,
+    lists => [ \@a0, \@a1, \@a2, \@a3, \@a4 ],
+} );
 ok($lcmuna, "List::Compare constructor returned true value");

@@ -1,6 +1,6 @@
 # perl
 #$Id$
-# 06_oo_lists_mult_reg_unsorted.t
+# 14_oo_lists_alt_mult_reg_unsorted.t
 use Test::More tests => 110;
 use List::Compare;
 use lib ("./t");
@@ -41,7 +41,10 @@ my $test_members_which = {
 };
 
 ### new ###
-my $lcmu   = List::Compare->new('-u', \@a0, \@a1, \@a2, \@a3, \@a4);
+my $lcmu   = List::Compare->new( {
+    unsorted => 1,
+    lists => [ \@a0, \@a1, \@a2, \@a3, \@a4 ],
+} );
 ok($lcmu, "List::Compare constructor returned true value");
 
 %pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton icon jerky );
@@ -591,7 +594,10 @@ $vers = $lcmu->get_version;
 ok($vers, "get_version() returned true value");
 
 ### new ###
-my $lcmu_dj   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4, \@a8);
+my $lcmu_dj   = List::Compare->new( {
+    unsorted => 1,
+    lists => [ \@a0, \@a1, \@a2, \@a3, \@a4, \@a8 ],
+} );
 ok($lcmu_dj, "List::Compare constructor returned true value");
 
 $disj = $lcmu_dj->is_LdisjointR;
@@ -602,8 +608,4 @@ ok(! $disj, "Got expected disjoint relationship");
 
 $disj = $lcmu_dj->is_LdisjointR(4,5);
 ok($disj, "Got expected disjoint relationship");
-
-########## BELOW:  Test for '--unsorted' option ##########
-
-my $lcmun   = List::Compare->new('--unsorted', \@a0, \@a1, \@a2, \@a3, \@a4);
 ok($lcmu_dj, "List::Compare constructor returned true value");

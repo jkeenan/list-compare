@@ -1,6 +1,6 @@
 # perl
 #$Id$
-# 05_oo_lists_mult_reg_sorted.t
+# t/13_oo_lists_alt_mult_reg_sorted.t
 use Test::More tests => 106;
 use List::Compare;
 use lib ("./t");
@@ -41,7 +41,7 @@ my $test_members_which = {
 };
 
 ### new ###
-my $lcm   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4);
+my $lcm   = List::Compare->new( { lists => [ \@a0, \@a1, \@a2, \@a3, \@a4 ] } );
 ok($lcm, "List::Compare constructor returned true value");
 
 @pred = qw(abel baker camera delta edward fargo golfer hilton icon jerky);
@@ -575,7 +575,8 @@ $vers = $lcm->get_version;
 ok($vers, "get_version() returned true value");
 
 ### new ###
-my $lcm_dj   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4, \@a8);
+my $lcm_dj   = List::Compare->new( { lists => [ \@a0, \@a1, \@a2, \@a3, \@a4,
+\@a8 ] } );
 ok($lcm_dj, "Constructor returned true value");
 
 $disj = $lcm_dj->is_LdisjointR;
@@ -599,15 +600,19 @@ my %h5 = (
     lambda   => 0,
 );
 
-eval { $lcm_bad = List::Compare->new('-u', \@a0, \@a1, \@a2, \@a3, \%h5) };
+eval { $lcm_bad = List::Compare->new( {
+    lists => [ \@a0, \@a1, \@a2, \@a3, \%h5 ],
+} ); };
 like($@, qr/Must pass all array references or all hash references/,
     "Got expected error message from bad constructor");
 
-eval { $lcm_bad = List::Compare->new('-u', \%h5, \@a0, \@a1, \@a2, \@a3) };
+eval { $lcm_bad = List::Compare->new( {
+    lists => [ \%h5, \@a0, \@a1, \@a2, \@a3 ],
+} ); };
 like($@, qr/Must pass all array references or all hash references/,
     "Got expected error message from bad constructor");
 
 my $scalar = 'test';
-eval { $lcm_bad = List::Compare->new(\$scalar, \@a0, \@a1) };
+eval { $lcm_bad = List::Compare->new( { lists => [ \$scalar, \@a0, \@a1 ] } ); };
 like($@, qr/Must pass all array references or all hash references/,
     "Got expected error message from bad constructor");
