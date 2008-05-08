@@ -1,6 +1,5 @@
 package Test::ListCompareSpecial;
 # Contains test subroutines for distribution with List::Compare
-# As of:  May 1, 2008
 require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(
@@ -12,6 +11,8 @@ our @EXPORT_OK = qw(
     wrap_is_member_any
     wrap_are_members_any
     make_array_seen_hash
+    @a0 @a1 @a2 @a3 @a4             @a8
+    %h0 %h1 %h2 %h3 %h4 %h5 %h6 %h7 %h8
  );
 our %EXPORT_TAGS = (
     seen => [ qw(
@@ -25,6 +26,12 @@ our %EXPORT_TAGS = (
         wrap_are_members_which
         wrap_is_member_any
         wrap_are_members_any
+    ) ],
+    hashes => [ qw(
+        %h0 %h1 %h2 %h3 %h4 %h5 %h6 %h7 %h8
+    ) ],
+    arrays => [ qw(
+        @a0 @a1 @a2 @a3 @a4             @a8
     ) ],
 );
 
@@ -158,3 +165,68 @@ sub make_array_seen_hash {
     return \@arrseen;
 }
 
+@a0 = qw(abel abel baker camera delta edward fargo golfer);
+@a1 = qw(baker camera delta delta edward fargo golfer hilton);
+@a2 = qw(fargo golfer hilton icon icon jerky);
+@a3 = qw(fargo golfer hilton icon icon);
+@a4 = qw(fargo fargo golfer hilton icon);
+@a8 = qw(kappa lambda mu);
+
+%h0 = (
+	abel     => 2,
+	baker    => 1,
+	camera   => 1,
+	delta    => 1,
+	edward   => 1,
+	fargo    => 1,
+	golfer   => 1,
+);
+
+%h1 = (
+	baker    => 1,
+	camera   => 1,
+	delta    => 2,
+	edward   => 1,
+	fargo    => 1,
+	golfer   => 1,
+	hilton   => 1,
+);
+
+%h2 = (
+	fargo    => 1,
+	golfer   => 1,
+	hilton   => 1,
+	icon     => 2,
+	jerky    => 1,	
+);
+
+%h3 = (
+	fargo    => 1,
+	golfer   => 1,
+	hilton   => 1,
+	icon     => 2,
+);
+
+%h4 = (
+	fargo    => 2,
+	golfer   => 1,
+	hilton   => 1,
+	icon     => 1,
+);
+
+%h5 = (
+	golfer   => 1,
+	lambda   => 0,
+);
+
+%h6 = (
+	golfer   => 1,
+	mu       => 00,
+);
+
+%h7 = (
+	golfer   => 1,
+	nu       => 'nothing',
+);
+
+%h8 = map {$_, 1} qw(kappa lambda mu);
