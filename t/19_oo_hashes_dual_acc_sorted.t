@@ -1,10 +1,10 @@
 # perl
 #$Id$
-# 01_oo_lists_dual_reg_sorted.t
-use Test::More tests =>  80;
+# 19_oo_hashes_dual_acc_sorted.t
+use Test::More tests =>  79;
 use List::Compare;
 use lib ("./t");
-use Test::ListCompareSpecial qw( :seen :wrap :arrays );
+use Test::ListCompareSpecial qw( :seen :wrap :hashes );
 use IO::CaptureOutput qw( capture );
 
 my @pred = ();
@@ -12,13 +12,19 @@ my %seen = ();
 my %pred = ();
 my @unpred = ();
 my (@unique, @complement, @intersection, @union, @symmetric_difference, @bag);
-my ($unique_ref, $complement_ref, $intersection_ref, $union_ref,
-$symmetric_difference_ref, $bag_ref);
+my ($unique_ref, $complement_ref, $intersection_ref, $union_ref, $symmetric_difference_ref, $bag_ref);
 my ($LR, $RL, $eqv, $disj, $return);
 my (@nonintersection, @shared);
 my ($nonintersection_ref, @shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
-my ($unique_all_ref, $complement_all_ref);
+my ($unique_all_ref, $complement_all_ref, @seen);
+
+my @a0 = qw(abel abel baker camera delta edward fargo golfer);
+my @a1 = qw(baker camera delta delta edward fargo golfer hilton);
+my @a2 = qw(fargo golfer hilton icon icon jerky);
+my @a3 = qw(fargo golfer hilton icon icon);
+my @a4 = qw(fargo fargo golfer hilton icon);
+my @a8 = qw(kappa lambda mu);
 
 my $test_members_which =  {
     abel      => [ 1, [ qw< 0   > ] ],
@@ -49,12 +55,8 @@ my $test_members_any = {
 };
 
 ### new ###
-my $lc  = List::Compare->new(\@a0, \@a1);
+my $lc   = List::Compare->new('-a', \%h0, \%h1);
 ok($lc, "List::Compare constructor returned true value");
-
-my $alc = List::Compare->new( { lists => [ \@a0, \@a1 ] } );
-is_deeply($lc, $alc,
-    "Regular and alternative constructors produce same object");
 
 @pred = qw(abel baker camera delta edward fargo golfer hilton);
 @union = $lc->get_union;
@@ -117,7 +119,9 @@ is_deeply($unique_ref, \@pred, "Got expected unique");
     [ 'hilton' ],
 );
 $unique_all_ref = $lc->get_unique_all();
-is_deeply($unique_all_ref, [ @pred ],
+is_deeply(
+    make_array_seen_hash($unique_all_ref),
+    make_array_seen_hash(\@pred),
     "Got expected values for get_unique_all()");
 
 @pred = qw ( hilton );
@@ -144,7 +148,9 @@ is_deeply($complement_ref, \@pred, "Got expected complement");
     [ qw( abel ) ],
 );
 $complement_all_ref = $lc->get_complement_all();
-is_deeply($complement_all_ref, [ @pred ],
+is_deeply(
+    make_array_seen_hash($complement_all_ref),
+    make_array_seen_hash(\@pred),
     "Got expected values for get_complement_all()");
 
 @pred = qw( abel hilton );
@@ -305,7 +311,7 @@ $vers = $lc->get_version;
 ok($vers, "get_version() returned true value");
 
 ### new ###
-my $lc_s  = List::Compare->new(\@a2, \@a3);
+my $lc_s  = List::Compare->new('-a', \%h2, \%h3);
 ok($lc_s, "constructor returned true value");
 
 $LR = $lc_s->is_LsubsetR;
@@ -330,7 +336,7 @@ $disj = $lc_s->is_LdisjointR;
 ok(! $disj, "non-disjoint correctly determined");
 
 ### new ###
-my $lc_e  = List::Compare->new(\@a3, \@a4);
+my $lc_e  = List::Compare->new('-a', \%h3, \%h4);
 ok($lc_e, "constructor returned true value");
 
 $eqv = $lc_e->is_LequivalentR;
@@ -343,7 +349,7 @@ $disj = $lc_e->is_LdisjointR;
 ok(! $disj, "non-disjoint correctly determined");
 
 ### new ###
-my $lc_dj  = List::Compare->new(\@a4, \@a8);
+my $lc_dj  = List::Compare->new('-a', \%h4, \%h8);
 ok($lc_dj, "constructor returned true value");
 
 ok(0 == $lc_dj->get_intersection, "no intersection, as expected");
@@ -352,27 +358,20 @@ ok(0 == scalar(@{$lc_dj->get_intersection_ref}),
 $disj = $lc_dj->is_LdisjointR;
 ok($disj, "disjoint correctly determined");
 
+########## BELOW:  Tests for '--accelerated' option ##########
+
+my $lcacc   = List::Compare->new('--accelerated', \%h0, \%h1);
+ok($lcacc, "Constructor worked with --accelerated option");
+
+my $lcacc_s  = List::Compare->new('--accelerated', \%h2, \%h3);
+ok($lcacc_s, "Constructor worked with --accelerated option");
+
+my $lcacc_e  = List::Compare->new('--accelerated', \%h3, \%h4);
+ok($lcacc_e, "Constructor worked with --accelerated option");
+
 ########## BELOW:  Test for bad arguments to constructor ##########
 
 my ($lc_bad);
-my %h5 = (
-    golfer   => 1,
-    lambda   => 0,
-);
-
-eval { $lc_bad = List::Compare->new(\@a0, \%h5) };
-like($@, qr/Must pass all array references or all hash references/,
-    "Got expected error message from bad constructor");
-
-eval { $lc_bad = List::Compare->new(\%h5, \@a0) };
-like($@, qr/Must pass all array references or all hash references/,
-    "Got expected error message from bad constructor");
-
-my $scalar = 'test';
-eval { $lc_bad = List::Compare->new(\$scalar, \@a0) };
-like($@, qr/Must pass all array references or all hash references/,
-    "Got expected error message from bad constructor");
-
-eval { $lc_bad = List::Compare->new(\@a0) };
+eval { $lc_bad = List::Compare->new('-a', \%h0) };
 like($@, qr/Must pass at least 2 references/,
     "Got expected error message from bad constructor");

@@ -1,10 +1,10 @@
 # perl
 #$Id$
-# 02_oo_lists_dual_reg_unsorted.t
+# 18_oo_hashes_dual_reg_unsorted.t
 use Test::More tests => 103;
 use List::Compare;
 use lib ("./t");
-use Test::ListCompareSpecial qw( :seen :wrap :arrays );
+use Test::ListCompareSpecial qw( :seen :wrap :hashes );
 use IO::CaptureOutput qw( capture );
 
 my @pred = ();
@@ -19,6 +19,13 @@ my (@nonintersection, @shared);
 my ($nonintersection_ref, @shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref, @seen);
+
+my @a0 = qw(abel abel baker camera delta edward fargo golfer);
+my @a1 = qw(baker camera delta delta edward fargo golfer hilton);
+my @a2 = qw(fargo golfer hilton icon icon jerky);
+my @a3 = qw(fargo golfer hilton icon icon);
+my @a4 = qw(fargo fargo golfer hilton icon);
+my @a8 = qw(kappa lambda mu);
 
 my $test_members_which =  {
     abel      => [ 1, [ qw< 0   > ] ],
@@ -51,7 +58,7 @@ my $test_members_any = {
 ########## BELOW:  Tests for '-u' option ##########
 
 ### new ###
-my $lcu    = List::Compare->new('-u', \@a0, \@a1);
+my $lcu    = List::Compare->new('-u', \%h0, \%h1);
 ok($lcu, "constructor returned true value");
 
 %pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton );
@@ -420,7 +427,7 @@ $vers = $lcu->get_version;
 ok($vers, "get_version() returned true value");
 
 ### new ###
-my $lcu_s  = List::Compare->new('-u', \@a2, \@a3);
+my $lcu_s  = List::Compare->new('-u', \%h2, \%h3);
 ok($lcu_s, "constructor returned true value");
 
 $LR = $lcu_s->is_LsubsetR;
@@ -445,7 +452,7 @@ $disj = $lcu_s->is_LdisjointR;
 ok(! $disj, "non-disjoint correctly determined");
 
 ### new ###
-my $lcu_e  = List::Compare->new('-u', \@a3, \@a4);
+my $lcu_e  = List::Compare->new('-u', \%h3, \%h4);
 ok($lcu_e, "constructor returned true value");
 
 $eqv = $lcu_e->is_LequivalentR;
@@ -458,7 +465,7 @@ $disj = $lcu_e->is_LdisjointR;
 ok(! $disj, "Got expected disjoint relationship");
 
 ### new ###
-my $lcu_dj  = List::Compare->new('-u', \@a4, \@a8);
+my $lcu_dj  = List::Compare->new('-u', \%h4, \%h8);
 ok($lcu_dj, "constructor returned true value");
 
 ok(0 == $lcu_dj->get_intersection, "no intersection, as expected");
@@ -469,13 +476,13 @@ ok($disj, "disjoint correctly determined");
 
 ########## BELOW:  Tests for '--unsorted' option ##########
 
-my $lcun    = List::Compare->new('--unsorted', \@a0, \@a1);
+my $lcun    = List::Compare->new('--unsorted', \%h0, \%h1);
 ok($lcun, "constructor returned true value");
 
-my $lcun_s  = List::Compare->new('--unsorted', \@a2, \@a3);
+my $lcun_s  = List::Compare->new('--unsorted', \%h2, \%h3);
 ok($lcun_s, "constructor returned true value");
 
-my $lcun_e  = List::Compare->new('--unsorted', \@a3, \@a4);
+my $lcun_e  = List::Compare->new('--unsorted', \%h3, \%h4);
 ok($lcun_e, "constructor returned true value");
 
 

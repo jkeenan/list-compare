@@ -4,7 +4,7 @@
 use Test::More tests =>  79;
 use List::Compare;
 use lib ("./t");
-use Test::ListCompareSpecial qw( :seen :wrap );
+use Test::ListCompareSpecial qw( :seen :wrap :arrays );
 use IO::CaptureOutput qw( capture );
 
 my @pred = ();
@@ -18,13 +18,6 @@ my (@nonintersection, @shared);
 my ($nonintersection_ref, @shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref, @seen);
-
-my @a0 = qw(abel abel baker camera delta edward fargo golfer);
-my @a1 = qw(baker camera delta delta edward fargo golfer hilton);
-my @a2 = qw(fargo golfer hilton icon icon jerky);
-my @a3 = qw(fargo golfer hilton icon icon);
-my @a4 = qw(fargo fargo golfer hilton icon);
-my @a8 = qw(kappa lambda mu);
 
 my $test_members_which =  {
     abel      => [ 1, [ qw< 0   > ] ],
