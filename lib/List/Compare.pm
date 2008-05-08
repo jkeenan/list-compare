@@ -14,13 +14,15 @@ sub new {
     my (@args, $unsorted, $accelerated, $self, $dataref, $unsortflag);
     my ($argument_error_status, $nextarg, @testargs);
     if (@_ == 1 and (ref($_[0]) eq 'HASH')) {
-       my $argref = shift;
-       die "Need to define 'lists' key properly: $!"
-           unless ( ${$argref}{'lists'}
-                and (ref(${$argref}{'lists'}) eq 'ARRAY') );
-       @args = @{${$argref}{'lists'}};
-       $unsorted = ${$argref}{'unsorted'} ? 1 : '';
-       $accelerated = ${$argref}{'accelerated'} ? 1 : '';
+        my $argref = shift;
+        die "Need to pass references to 2 or more seen-hashes or \n  to provide a 'lists' key within the single hash being passed by reference"
+            unless exists ${$argref}{'lists'};
+        die "Need to define 'lists' key properly: $!"
+            unless ( ${$argref}{'lists'}
+                 and (ref(${$argref}{'lists'}) eq 'ARRAY') );
+        @args = @{${$argref}{'lists'}};
+        $unsorted = ${$argref}{'unsorted'} ? 1 : '';
+        $accelerated = ${$argref}{'accelerated'} ? 1 : '';
     } else {
         @args = @_;
         $unsorted = ($args[0] eq '-u' or $args[0] eq '--unsorted')
