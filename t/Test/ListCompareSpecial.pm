@@ -13,6 +13,7 @@ our @EXPORT_OK = qw(
     make_array_seen_hash
     @a0 @a1 @a2 @a3 @a4             @a8
     %h0 %h1 %h2 %h3 %h4 %h5 %h6 %h7 %h8
+    func_wrap_is_member_which
  );
 our %EXPORT_TAGS = (
     seen => [ qw(
@@ -33,6 +34,12 @@ our %EXPORT_TAGS = (
     arrays => [ qw(
         @a0 @a1 @a2 @a3 @a4             @a8
     ) ],
+    func_wrap => [ qw(
+        func_wrap_is_member_which
+    ) ],
+);
+use List::Compare::Functional qw(
+    is_member_which
 );
 
 sub ok_capture_error {
@@ -230,3 +237,15 @@ sub make_array_seen_hash {
 );
 
 %h8 = map {$_, 1} qw(kappa lambda mu);
+
+sub func_wrap_is_member_which {
+    my $data = shift;
+    my $args = shift;
+    my $correct = 0;
+    foreach my $v ( keys %{ $args } ) {
+        my @found = is_member_which( $data, [ $v ]);
+        $correct++ if ok_seen_a( \@found, $v, @{ $args->{$v} } );
+    }
+    ($correct == scalar keys %{ $args }) ? 1 : 0;
+}
+

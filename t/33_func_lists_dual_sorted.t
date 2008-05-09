@@ -4,7 +4,7 @@
 use Test::More qw(no_plan); # tests =>  80;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
-use Test::ListCompareSpecial qw( :seen :wrap :arrays );
+use Test::ListCompareSpecial qw( :seen :func_wrap :arrays );
 use IO::CaptureOutput qw( capture );
 
 my @pred = ();
@@ -185,65 +185,65 @@ ok(! $disj, "Got expected disjoint relationship");
         "Got expected chart header");
 }
      
-__END__
-ok(wrap_is_member_which(
-    $lc,
+ok(func_wrap_is_member_which(
+    [ \@a0, \@a1 ],
     $test_members_which,
 ), "is_member_which() returned all expected values");
 
-eval { $memb_arr_ref = is_member_which('jerky', 'zebra') };
-like($@, qr/Method call requires exactly 1 argument \(no references\)/,
-        "is_member_which() correctly generated error message");
+#eval { $memb_arr_ref = is_member_which('jerky', 'zebra') };
+#like($@, qr/Method call requires exactly 1 argument \(no references\)/,
+#        "is_member_which() correctly generated error message");
 
-ok(wrap_is_member_which_ref(
-    $lc,
-    $test_members_which,
-), "is_member_which_ref() returned all expected values");
-
-eval { $memb_arr_ref = is_member_which_ref('jerky', 'zebra') };
-like($@, qr/Method call requires exactly 1 argument \(no references\)/,
-        "is_member_which_ref() correctly generated error message");
-
-$memb_hash_ref =
-    are_members_which( [ qw|
-        abel baker camera delta edward fargo golfer hilton icon jerky zebra
-    | ] );
-ok(wrap_are_members_which(
-    $memb_hash_ref,
-    $test_members_which,
-), "are_members_which() returned all expected value");
-
-eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
-like($@,
-    qr/Method call requires exactly 1 argument which must be an array reference/,
-    "are_members_which() correctly generated error message");
-
-ok(wrap_is_member_any(
-    $lc,
-    $test_members_any,
-), "is_member_any() returned all expected values");
-
-eval { is_member_any('jerky', 'zebra') };
-like($@,
-    qr/Method call requires exactly 1 argument \(no references\)/,
-    "is_member_any() correctly generated error message");
-
-$memb_hash_ref = are_members_any(
-    [ qw| abel baker camera delta edward fargo 
-          golfer hilton icon jerky zebra | ] );
-ok(wrap_are_members_any(
-    $memb_hash_ref,
-    $test_members_any,
-), "are_members_any() returned all expected values");
-
-eval { $memb_hash_ref = are_members_any( { key => 'value' } ) };
-like($@,
-    qr/Method call requires exactly 1 argument which must be an array reference/,
-    "are_members_any() correctly generated error message");
+#ok(wrap_is_member_which_ref(
+#    $lc,
+#    $test_members_which,
+#), "is_member_which_ref() returned all expected values");
+#
+#eval { $memb_arr_ref = is_member_which_ref('jerky', 'zebra') };
+#like($@, qr/Method call requires exactly 1 argument \(no references\)/,
+#        "is_member_which_ref() correctly generated error message");
+#
+#$memb_hash_ref =
+#    are_members_which( [ qw|
+#        abel baker camera delta edward fargo golfer hilton icon jerky zebra
+#    | ] );
+#ok(wrap_are_members_which(
+#    $memb_hash_ref,
+#    $test_members_which,
+#), "are_members_which() returned all expected value");
+#
+#eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
+#like($@,
+#    qr/Method call requires exactly 1 argument which must be an array reference/,
+#    "are_members_which() correctly generated error message");
+#
+#ok(wrap_is_member_any(
+#    $lc,
+#    $test_members_any,
+#), "is_member_any() returned all expected values");
+#
+#eval { is_member_any('jerky', 'zebra') };
+#like($@,
+#    qr/Method call requires exactly 1 argument \(no references\)/,
+#    "is_member_any() correctly generated error message");
+#
+#$memb_hash_ref = are_members_any(
+#    [ qw| abel baker camera delta edward fargo 
+#          golfer hilton icon jerky zebra | ] );
+#ok(wrap_are_members_any(
+#    $memb_hash_ref,
+#    $test_members_any,
+#), "are_members_any() returned all expected values");
+#
+#eval { $memb_hash_ref = are_members_any( { key => 'value' } ) };
+#like($@,
+#    qr/Method call requires exactly 1 argument which must be an array reference/,
+#    "are_members_any() correctly generated error message");
 
 $vers = get_version;
 ok($vers, "get_version() returned true value");
 
+__END__
 ### new ###
 #my $lc_s  = List::Compare->new(\@a2, \@a3);
 #ok($lc_s, "constructor returned true value");
