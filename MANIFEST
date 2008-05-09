@@ -51,5 +51,6 @@ t/31_oo_hashes_alt_mult_acc_sorted.t
 t/31_unqall_functional.t
 t/32_oo_hashes_alt_mult_acc_unsorted.t
 t/32_unqall_functional_unsorted.t
+t/33_func_lists_dual_sorted.t
 t/Test/IO/CaptureOutput.pm
 t/Test/ListCompareSpecial.pm
