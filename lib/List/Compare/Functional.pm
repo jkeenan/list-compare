@@ -390,7 +390,7 @@ sub print_equivalence_chart {
 sub _print_equivalence_chart_engine {
     my $seenrefsref = _calc_seen1(@_);
     my $xequivalentref = _equivalent_subengine($seenrefsref);
-    my $title = 'Subset';
+    my $title = 'Equivalence';
     _chart_engine_multiple($xequivalentref, $title);
 }    
 
