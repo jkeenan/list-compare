@@ -26,10 +26,7 @@ t/11_oo_lists_alt_dual_acc_sorted.t
 t/12_functional_multiple_sh.t
 t/12_oo_lists_alt_dual_acc_unsorted.t
 t/13_oo_lists_alt_mult_reg_sorted.t
-t/13_simple_sh_rev.t
-t/14_accelerated_sh_rev.t
 t/14_oo_lists_alt_mult_reg_unsorted.t
-t/15_multiple_sh_rev.t
 t/15_oo_lists_alt_mult_acc_sorted.t
 t/16_multaccel_sh_rev.t
 t/16_oo_lists_alt_mult_acc_unsorted.t
@@ -56,9 +53,7 @@ t/27_oo_hashes_alt_dual_acc_sorted.t
 t/28_alt_functional_multiple_sh.t
 t/28_oo_hashes_alt_dual_acc_unsorted.t
 t/29_oo_hashes_alt_mult_reg_sorted.t
-t/29_unqall.t
 t/30_oo_hashes_alt_mult_reg_unsorted.t
-t/30_unqall_unsorted.t
 t/31_oo_hashes_alt_mult_acc_sorted.t
 t/31_unqall_functional.t
 t/32_oo_hashes_alt_mult_acc_unsorted.t
