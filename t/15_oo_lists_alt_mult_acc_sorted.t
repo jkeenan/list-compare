@@ -1,10 +1,11 @@
 # perl
 #$Id$
 # t/15_oo_lists_alt_mult_acc_sorted.t
+use strict;
 use Test::More tests => 106;
 use List::Compare;
 use lib ("./t");
-use Test::ListCompareSpecial qw( :seen :wrap :arrays );
+use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
 use IO::CaptureOutput qw( capture );
 
 my @pred = ();
@@ -13,25 +14,12 @@ my %pred = ();
 my @unpred = ();
 my (@unique, @complement, @intersection, @union, @symmetric_difference, @bag);
 my ($unique_ref, $complement_ref, $intersection_ref, $union_ref, $symmetric_difference_ref, $bag_ref);
-my ($LR, $RL, $eqv, $disj, $return);
+my ($LR, $RL, $eqv, $disj, $return, $vers);
 my (@nonintersection, @shared);
-my ($nonintersection_ref, @shared_ref);
+my ($nonintersection_ref, $shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref, @seen);
-
-my $test_members_which = {
-    abel        => [ 1, [ qw< 0         > ] ],
-    baker       => [ 2, [ qw< 0 1       > ] ],
-    camera      => [ 2, [ qw< 0 1       > ] ],
-    delta       => [ 2, [ qw< 0 1       > ] ],
-    edward      => [ 2, [ qw< 0 1       > ] ],
-    fargo       => [ 5, [ qw< 0 1 2 3 4 > ] ],
-    golfer      => [ 5, [ qw< 0 1 2 3 4 > ] ],
-    hilton      => [ 4, [ qw<   1 2 3 4 > ] ],
-    icon        => [ 3, [ qw<     2 3 4 > ] ],
-    jerky       => [ 1, [ qw<     2     > ] ],
-    zebra       => [ 0, [ qw<           > ] ],
-};
+my @args;
 
 ### new ###
 my $lcm   = List::Compare->new( {
@@ -518,53 +506,42 @@ like($@,
         "Got expected chart header");
 }
 
-ok(wrap_is_member_which(
-    $lcm,
-    $test_members_which,
-), "is_member_which() returned all expected values");
+@args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
+is_deeply( all_is_member_which( $lcm, \@args), $test_member_which,
+    "is_member_which() returned all expected values");
 
 eval { $memb_arr_ref = $lcm->is_member_which('jerky', 'zebra') };
 like($@, qr/Method call requires exactly 1 argument \(no references\)/,
         "is_member_which() correctly generated error message");
 
-ok(wrap_is_member_which_ref(
-    $lcm,
-    $test_members_which,
-), "is_member_which_ref() returned all expected values");
+is_deeply( all_is_member_which_ref( $lcm, \@args), $test_member_which,
+    "is_member_which_ref() returned all expected values");
 
 eval { $memb_arr_ref = $lcm->is_member_which_ref('jerky', 'zebra') };
 like($@, qr/Method call requires exactly 1 argument \(no references\)/,
         "is_member_which_ref() correctly generated error message");
 
-$memb_hash_ref = $lcm->are_members_which(
-  [ qw| abel baker camera delta edward fargo
-    golfer hilton icon jerky zebra | ]
-);
-ok(wrap_are_members_which(
-    $memb_hash_ref,
-    $test_members_which,
-), "are_members_which() returned all expected values");
+$memb_hash_ref = $lcm->are_members_which( \@args );
+is_deeply($memb_hash_ref, $test_members_which_mult,
+   "are_members_which() returned all expected values");
 
 eval { $memb_hash_ref = $lcm->are_members_which( { key => 'value' } ) };
 like($@,
     qr/Method call requires exactly 1 argument which must be an array reference/,
     "are_members_which() correctly generated error message");
 
-ok(wrap_is_member_any(
-    $lcm,
-    $test_members_any,
-), "is_member_any() returned all expected values");
+is_deeply( all_is_member_any( $lcm, \@args), $test_member_any,
+    "is_member_which() returned all expected values");
 
 eval { $lcm->is_member_any('jerky', 'zebra') };
 like($@,
     qr/Method call requires exactly 1 argument \(no references\)/,
     "is_member_any() correctly generated error message");
 
-$memb_hash_ref = $lcm->are_members_any(
-    [ qw| abel baker camera delta edward fargo golfer hilton icon jerky zebra | ] );
+$memb_hash_ref = $lcm->are_members_any( \@args );
 ok(wrap_are_members_any(
     $memb_hash_ref,
-    $test_members_any,
+    $test_members_any_mult,
 ), "are_members_any() returned all expected values");
 
 eval { $memb_hash_ref = $lcm->are_members_any( { key => 'value' } ) };

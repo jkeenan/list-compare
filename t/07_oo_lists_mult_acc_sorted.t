@@ -545,6 +545,7 @@ eval { $memb_hash_ref = $lcm->are_members_any( { key => 'value' } ) };
 like($@,
     qr/Method call requires exactly 1 argument which must be an array reference/,
     "are_members_any() correctly generated error message");
+
 $vers = $lcm->get_version;
 ok($vers, "get_version() returned true value");
 

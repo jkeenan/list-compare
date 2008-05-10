@@ -557,6 +557,7 @@ $memb_hash_ref = $lcmu->are_members_any(
           golfer hilton icon jerky zebra | ] );
 is_deeply($memb_hash_ref, $test_members_any_mult,
     "are_members_any() returned all expected values");
+
 $vers = $lcmu->get_version;
 ok($vers, "get_version() returned true value");
 
