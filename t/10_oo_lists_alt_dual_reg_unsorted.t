@@ -1,10 +1,11 @@
 # perl
 #$Id$
 # 10_oo_lists_alt_dual_reg_unsorted.t
+use strict;
 use Test::More tests => 103;
 use List::Compare;
 use lib ("./t");
-use Test::ListCompareSpecial qw( :seen :wrap :arrays );
+use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
 use IO::CaptureOutput qw( capture );
 
 my @pred = ();
@@ -14,39 +15,39 @@ my @unpred = ();
 my (@unique, @complement, @intersection, @union, @symmetric_difference, @bag);
 my ($unique_ref, $complement_ref, $intersection_ref, $union_ref,
 $symmetric_difference_ref, $bag_ref);
-my ($LR, $RL, $eqv, $disj, $return);
+my ($LR, $RL, $eqv, $disj, $return, $vers);
 my (@nonintersection, @shared);
-my ($nonintersection_ref, @shared_ref);
+my ($nonintersection_ref, $shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref, @seen);
 
-my $test_members_which =  {
-    abel      => [ 1, [ qw< 0   > ] ],
-    baker     => [ 2, [ qw< 0 1 > ] ],
-    camera    => [ 2, [ qw< 0 1 > ] ],
-    delta     => [ 2, [ qw< 0 1 > ] ],
-    edward    => [ 2, [ qw< 0 1 > ] ],
-    fargo     => [ 2, [ qw< 0 1 > ] ],
-    golfer    => [ 2, [ qw< 0 1 > ] ],
-    hilton    => [ 1, [ qw<   1 > ] ],
-    icon      => [ 0, [ qw<     > ] ],
-    jerky     => [ 0, [ qw<     > ] ],
-    zebra     => [ 0, [ qw<     > ] ],
-};
-
-my $test_members_any = {
-    abel    => 1,
-    baker   => 1,
-    camera  => 1,
-    delta   => 1,
-    edward  => 1,
-    fargo   => 1,
-    golfer  => 1,
-    hilton  => 1,
-    icon    => 0,
-    jerky   => 0,
-    zebra   => 0,
-};
+#my $test_members_which =  {
+#    abel      => [ 1, [ qw< 0   > ] ],
+#    baker     => [ 2, [ qw< 0 1 > ] ],
+#    camera    => [ 2, [ qw< 0 1 > ] ],
+#    delta     => [ 2, [ qw< 0 1 > ] ],
+#    edward    => [ 2, [ qw< 0 1 > ] ],
+#    fargo     => [ 2, [ qw< 0 1 > ] ],
+#    golfer    => [ 2, [ qw< 0 1 > ] ],
+#    hilton    => [ 1, [ qw<   1 > ] ],
+#    icon      => [ 0, [ qw<     > ] ],
+#    jerky     => [ 0, [ qw<     > ] ],
+#    zebra     => [ 0, [ qw<     > ] ],
+#};
+#
+#my $test_members_any = {
+#    abel    => 1,
+#    baker   => 1,
+#    camera  => 1,
+#    delta   => 1,
+#    edward  => 1,
+#    fargo   => 1,
+#    golfer  => 1,
+#    hilton  => 1,
+#    icon    => 0,
+#    jerky   => 0,
+#    zebra   => 0,
+#};
 
 ########## BELOW:  Tests for '-u' option ##########
 
@@ -388,14 +389,15 @@ ok(! $disj, "Got expected disjoint relationship");
     like($stdout, qr/Equivalence Relationships/,
         "Got expected chart header");
 }
+
 ok(wrap_is_member_which(
     $lcu,
-    $test_member_which,
+    $test_members_which,
 ), "is_member_which() returned all expected values");
 
 ok(wrap_is_member_which_ref(
     $lcu,
-    $test_member_which,
+    $test_members_which,
 ), "is_member_which_ref() returned all expected values");
 
 $memb_hash_ref = $lcu->are_members_which(
@@ -403,7 +405,7 @@ $memb_hash_ref = $lcu->are_members_which(
           golfer hilton icon jerky zebra | ] );
 ok(wrap_are_members_which(
     $memb_hash_ref,
-    $test_member_which,
+    $test_members_which,
 ), "are_members_which() returned all expected value");
 
 ok(wrap_is_member_any(
