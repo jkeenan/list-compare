@@ -1,7 +1,7 @@
 # perl
 #$Id$
 # 33_func_lists_dual_sorted.t
-use Test::More qw(no_plan); # tests =>  80;
+use Test::More tests =>  46;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays );
@@ -47,10 +47,6 @@ my $test_members_any = {
     jerky   => 0,
     zebra   => 0,
 };
-
-### new ###
-#my $lc  = List::Compare->new(\@a0, \@a1);
-#ok($lc, "List::Compare constructor returned true value");
 
 @pred = qw(abel baker camera delta edward fargo golfer hilton);
 @union = get_union( [ \@a0, \@a1 ] );
@@ -213,29 +209,31 @@ ok(func_wrap_are_members_which(
     $test_members_which,
 ), "are_members_which() returned all expected values");
 
+# Problem:  error message about Need to define 'lists' not helpful
 #eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
 #like($@,
 #    qr/Method call requires exactly 1 argument which must be an array reference/,
 #    "are_members_which() correctly generated error message");
-#
-#ok(wrap_is_member_any(
-#    $lc,
-#    $test_members_any,
-#), "is_member_any() returned all expected values");
-#
+
+ok(func_wrap_is_member_any(
+    [ \@a0, \@a1 ] , 
+    $test_members_any,
+), "is_member_any() returned all expected values");
+
 #eval { is_member_any('jerky', 'zebra') };
 #like($@,
 #    qr/Method call requires exactly 1 argument \(no references\)/,
 #    "is_member_any() correctly generated error message");
-#
-#$memb_hash_ref = are_members_any(
-#    [ qw| abel baker camera delta edward fargo 
-#          golfer hilton icon jerky zebra | ] );
-#ok(wrap_are_members_any(
-#    $memb_hash_ref,
-#    $test_members_any,
-#), "are_members_any() returned all expected values");
-#
+
+$memb_hash_ref = are_members_any(
+    [ \@a0, \@a1 ] , 
+    [ qw| abel baker camera delta edward fargo 
+          golfer hilton icon jerky zebra | ] );
+ok(func_wrap_are_members_any(
+    $memb_hash_ref,
+    $test_members_any,
+), "are_members_any() returned all expected values");
+
 #eval { $memb_hash_ref = are_members_any( { key => 'value' } ) };
 #like($@,
 #    qr/Method call requires exactly 1 argument which must be an array reference/,
@@ -244,76 +242,35 @@ ok(func_wrap_are_members_which(
 $vers = get_version;
 ok($vers, "get_version() returned true value");
 
-__END__
-### new ###
-#my $lc_s  = List::Compare->new(\@a2, \@a3);
-#ok($lc_s, "constructor returned true value");
 
-$LR = $lc_s->is_LsubsetR;
+$LR = is_LsubsetR( [ \@a2, \@a3 ] );
 ok(! $LR, "non-subset correctly determined");
 
-$LR = $lc_s->is_AsubsetB;
-ok(! $LR, "non-subset correctly determined");
-
-$RL = $lc_s->is_RsubsetL;
+$RL = is_RsubsetL( [ \@a2, \@a3 ] );
 ok($RL, "subset correctly determined");
 
-$RL = $lc_s->is_BsubsetA;
-ok($RL, "subset correctly determined");
-
-$eqv = $lc_s->is_LequivalentR;
+$eqv = is_LequivalentR( [ \@a2, \@a3 ] );
 ok(! $eqv, "non-equivalence correctly determined");
 
-$eqv = $lc_s->is_LeqvlntR;
+$eqv = is_LeqvlntR( [ \@a2, \@a3 ] );
 ok(! $eqv, "non-equivalence correctly determined");
 
-$disj = $lc_s->is_LdisjointR;
+$disj = is_LdisjointR( [ \@a2, \@a3 ] );
 ok(! $disj, "non-disjoint correctly determined");
 
-### new ###
-#my $lc_e  = List::Compare->new(\@a3, \@a4);
-#ok($lc_e, "constructor returned true value");
 
-$eqv = $lc_e->is_LequivalentR;
+$eqv = is_LequivalentR( [ \@a3, \@a4 ] );
 ok($eqv, "equivalence correctly determined");
 
-$eqv = $lc_e->is_LeqvlntR;
+$eqv = is_LeqvlntR( [ \@a3, \@a4 ] );
 ok($eqv, "equivalence correctly determined");
 
-$disj = $lc_e->is_LdisjointR;
+$disj = is_LdisjointR( [ \@a3, \@a4 ] );
 ok(! $disj, "non-disjoint correctly determined");
 
-### new ###
-#my $lc_dj  = List::Compare->new(\@a4, \@a8);
-#ok($lc_dj, "constructor returned true value");
 
-ok(0 == $lc_dj->get_intersection, "no intersection, as expected");
-ok(0 == scalar(@{$lc_dj->get_intersection_ref}),
+ok(0 == get_intersection( [ \@a4, \@a8 ] ), "no intersection, as expected");
+ok(0 == scalar(@{get_intersection_ref( [ \@a4, \@a8 ] )}),
     "no intersection, as expected");
-$disj = $lc_dj->is_LdisjointR;
+$disj = is_LdisjointR( [ \@a4, \@a8 ] );
 ok($disj, "disjoint correctly determined");
-
-########## BELOW:  Test for bad arguments to constructor ##########
-
-my ($lc_bad);
-my %h5 = (
-    golfer   => 1,
-    lambda   => 0,
-);
-
-#eval { $lc_bad = List::Compare->new(\@a0, \%h5) };
-#like($@, qr/Must pass all array references or all hash references/,
-#    "Got expected error message from bad constructor");
-#
-#eval { $lc_bad = List::Compare->new(\%h5, \@a0) };
-#like($@, qr/Must pass all array references or all hash references/,
-#    "Got expected error message from bad constructor");
-#
-#my $scalar = 'test';
-#eval { $lc_bad = List::Compare->new(\$scalar, \@a0) };
-#like($@, qr/Must pass all array references or all hash references/,
-#    "Got expected error message from bad constructor");
-#
-#eval { $lc_bad = List::Compare->new(\@a0) };
-#like($@, qr/Must pass at least 2 references/,
-#    "Got expected error message from bad constructor");

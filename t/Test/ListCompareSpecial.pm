@@ -6,16 +6,27 @@ our @EXPORT_OK = qw(
     ok_capture_error ok_seen_a  ok_seen_h ok_any_h _capture
     getseen unseen
     wrap_is_member_which
+    all_is_member_which
     wrap_is_member_which_ref
+    all_is_member_which_ref
     wrap_are_members_which
     wrap_is_member_any
+    all_is_member_any
     wrap_are_members_any
     make_array_seen_hash
     @a0 @a1 @a2 @a3 @a4             @a8
     %h0 %h1 %h2 %h3 %h4 %h5 %h6 %h7 %h8
+    $test_member_which
+    $test_members_which
+    $test_member_any
+    $test_members_any
+    $test_members_any_mult
+    $test_members_which_mult
     func_wrap_is_member_which
     func_wrap_is_member_which_ref
     func_wrap_are_members_which
+    func_wrap_is_member_any
+    func_wrap_are_members_any
  );
 our %EXPORT_TAGS = (
     seen => [ qw(
@@ -25,9 +36,12 @@ our %EXPORT_TAGS = (
     ) ],
     wrap => [ qw(
         wrap_is_member_which
+        all_is_member_which
         wrap_is_member_which_ref
+        all_is_member_which_ref
         wrap_are_members_which
         wrap_is_member_any
+        all_is_member_any
         wrap_are_members_any
     ) ],
     hashes => [ qw(
@@ -40,11 +54,22 @@ our %EXPORT_TAGS = (
         func_wrap_is_member_which
         func_wrap_is_member_which_ref
         func_wrap_are_members_which
+        func_wrap_is_member_any
+        func_wrap_are_members_any
+    ) ],
+    results => [ qw(
+        $test_member_which
+        $test_members_which
+        $test_member_any
+        $test_members_any
+        $test_members_any_mult
+        $test_members_which_mult
     ) ],
 );
 use List::Compare::Functional qw(
     is_member_which
     is_member_which_ref
+    is_member_any
 );
 
 sub ok_capture_error {
@@ -123,6 +148,16 @@ sub wrap_is_member_which {
     ($correct == scalar keys %{ $args }) ? 1 : 0;
 }
 
+sub all_is_member_which {
+    my $obj = shift;
+    my $args = shift;
+    my @overall;
+    for my $v ( @{ $args } ) {
+        push @overall, [ $obj->is_member_which( $v ) ];
+    }
+    return \@overall;
+}
+
 sub wrap_is_member_which_ref {
     my $obj = shift;
     my $args = shift;
@@ -134,6 +169,15 @@ sub wrap_is_member_which_ref {
     ($correct == scalar keys %{ $args }) ? 1 : 0;
 }
 
+sub all_is_member_which_ref {
+    my $obj = shift;
+    my $args = shift;
+    my @overall;
+    for my $v ( @{ $args } ) {
+        push @overall, $obj->is_member_which_ref( $v );
+    }
+    return \@overall;
+}
 sub wrap_are_members_which {
     my $memb_hash_ref = shift;
     my $args = shift;
@@ -152,6 +196,18 @@ sub wrap_is_member_any {
         $correct++ if ($obj->is_member_any( $v )) == $args->{$v};
     }
     ($correct == scalar keys %{ $args }) ? 1 : 0;
+}
+
+#@args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
+
+sub all_is_member_any {
+    my $obj = shift;
+    my $args = shift;
+    my @overall;
+    for my $v ( @{ $args } ) {
+        push @overall, $obj->is_member_any( $v );
+    }
+    return \@overall;
 }
 
 sub wrap_are_members_any {
@@ -243,6 +299,92 @@ sub make_array_seen_hash {
 
 %h8 = map {$_, 1} qw(kappa lambda mu);
 
+$test_member_which = [
+  [ qw( 0         ) ],
+  [ qw( 0 1       ) ],
+  [ qw( 0 1       ) ],
+  [ qw( 0 1       ) ],
+  [ qw( 0 1       ) ],
+  [ qw( 0 1 2 3 4 ) ],
+  [ qw( 0 1 2 3 4 ) ],
+  [ qw(   1 2 3 4 ) ],
+  [ qw(     2 3 4 ) ],
+  [ qw(     2     ) ],
+  [ qw(           ) ],
+];
+
+$test_members_which =  {
+    abel      => [ 1, [ qw< 0   > ] ],
+    baker     => [ 2, [ qw< 0 1 > ] ],
+    camera    => [ 2, [ qw< 0 1 > ] ],
+    delta     => [ 2, [ qw< 0 1 > ] ],
+    edward    => [ 2, [ qw< 0 1 > ] ],
+    fargo     => [ 2, [ qw< 0 1 > ] ],
+    golfer    => [ 2, [ qw< 0 1 > ] ],
+    hilton    => [ 1, [ qw<   1 > ] ],
+    icon      => [ 0, [ qw<     > ] ],
+    jerky     => [ 0, [ qw<     > ] ],
+    zebra     => [ 0, [ qw<     > ] ],
+};
+
+$test_member_any = [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 ];
+
+$test_members_any = {
+    abel    => 1,
+    baker   => 1,
+    camera  => 1,
+    delta   => 1,
+    edward  => 1,
+    fargo   => 1,
+    golfer  => 1,
+    hilton  => 1,
+    icon    => 0,
+    jerky   => 0,
+    zebra   => 0,
+};
+
+$test_members_any_mult = {
+    abel    => 1,
+    baker   => 1,
+    camera  => 1,
+    delta   => 1,
+    edward  => 1,
+    fargo   => 1,
+    golfer  => 1,
+    hilton  => 1,
+    icon    => 1,
+    jerky   => 1,
+    zebra   => 0,
+};
+
+#$test_members_which_mult = {
+#    abel        => [ 1, [ qw< 0         > ] ],
+#    baker       => [ 2, [ qw< 0 1       > ] ],
+#    camera      => [ 2, [ qw< 0 1       > ] ],
+#    delta       => [ 2, [ qw< 0 1       > ] ],
+#    edward      => [ 2, [ qw< 0 1       > ] ],
+#    fargo       => [ 5, [ qw< 0 1 2 3 4 > ] ],
+#    golfer      => [ 5, [ qw< 0 1 2 3 4 > ] ],
+#    hilton      => [ 4, [ qw<   1 2 3 4 > ] ],
+#    icon        => [ 3, [ qw<     2 3 4 > ] ],
+#    jerky       => [ 1, [ qw<     2     > ] ],
+#    zebra       => [ 0, [ qw<           > ] ],
+#};
+
+$test_members_which_mult = {
+    abel        => [ qw< 0         > ],
+    baker       => [ qw< 0 1       > ],
+    camera      => [ qw< 0 1       > ],
+    delta       => [ qw< 0 1       > ],
+    edward      => [ qw< 0 1       > ],
+    fargo       => [ qw< 0 1 2 3 4 > ],
+    golfer      => [ qw< 0 1 2 3 4 > ],
+    hilton      => [ qw<   1 2 3 4 > ],
+    icon        => [ qw<     2 3 4 > ],
+    jerky       => [ qw<     2     > ],
+    zebra       => [ qw<           > ],
+};
+
 sub func_wrap_is_member_which {
     my $data = shift;
     my $args = shift;
@@ -271,6 +413,26 @@ sub func_wrap_are_members_which {
     my $correct = 0;
     foreach my $v ( keys %{ $args } ) {
         $correct++ if ok_seen_h( $memb_hash_ref, $v, @{ $args->{$v} } );
+    }
+    ($correct == scalar keys %{ $args }) ? 1 : 0;
+}
+
+sub func_wrap_is_member_any {
+    my $data = shift;
+    my $args = shift;
+    my $correct = 0;
+    foreach my $v ( keys %{ $args } ) {
+        $correct++ if (is_member_any( $data, [ $v  ])) == $args->{$v};
+    }
+    ($correct == scalar keys %{ $args }) ? 1 : 0;
+}
+
+sub func_wrap_are_members_any {
+    my $memb_hash_ref = shift;
+    my $args = shift;
+    my $correct = 0;
+    foreach my $v ( keys %{ $args } ) {
+        $correct++ if ok_any_h( $memb_hash_ref, $v, $args->{$v} );
     }
     ($correct == scalar keys %{ $args }) ? 1 : 0;
 }
