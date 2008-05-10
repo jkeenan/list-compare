@@ -22,34 +22,6 @@ my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref, @seen);
 my @args;
 
-#my $test_members_which =  {
-#    abel      => [ 1, [ qw< 0   > ] ],
-#    baker     => [ 2, [ qw< 0 1 > ] ],
-#    camera    => [ 2, [ qw< 0 1 > ] ],
-#    delta     => [ 2, [ qw< 0 1 > ] ],
-#    edward    => [ 2, [ qw< 0 1 > ] ],
-#    fargo     => [ 2, [ qw< 0 1 > ] ],
-#    golfer    => [ 2, [ qw< 0 1 > ] ],
-#    hilton    => [ 1, [ qw<   1 > ] ],
-#    icon      => [ 0, [ qw<     > ] ],
-#    jerky     => [ 0, [ qw<     > ] ],
-#    zebra     => [ 0, [ qw<     > ] ],
-#};
-#
-#my $test_members_any = {
-#    abel    => 1,
-#    baker   => 1,
-#    camera  => 1,
-#    delta   => 1,
-#    edward  => 1,
-#    fargo   => 1,
-#    golfer  => 1,
-#    hilton  => 1,
-#    icon    => 0,
-#    jerky   => 0,
-#    zebra   => 0,
-#};
-
 ########## BELOW:  Tests for '-u' option ##########
 
 ### new ###
