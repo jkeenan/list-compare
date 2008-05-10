@@ -19,7 +19,7 @@ my (@nonintersection, @shared);
 my ($nonintersection_ref, $shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref, @seen);
-
+my @args;
 
 ### new ###
 my $lc   = List::Compare->new('-a', \@a0, \@a1);
@@ -237,10 +237,8 @@ eval { $memb_arr_ref = $lc->is_member_which_ref('jerky', 'zebra') };
 like($@, qr/Method call requires exactly 1 argument \(no references\)/,
         "is_member_which_ref() correctly generated error message");
 
-$memb_hash_ref =
-    $lc->are_members_which( [ qw|
-        abel baker camera delta edward fargo golfer hilton icon jerky zebra
-    | ] );
+@args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
+$memb_hash_ref = $lc->are_members_which( \@args );
 ok(wrap_are_members_which(
     $memb_hash_ref,
     $test_members_which,
@@ -261,9 +259,7 @@ like($@,
     qr/Method call requires exactly 1 argument \(no references\)/,
     "is_member_any() correctly generated error message");
 
-$memb_hash_ref = $lc->are_members_any(
-    [ qw| abel baker camera delta edward fargo 
-          golfer hilton icon jerky zebra | ] );
+$memb_hash_ref = $lc->are_members_any( \@args );
 ok(wrap_are_members_any(
     $memb_hash_ref,
     $test_members_any,
