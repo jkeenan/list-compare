@@ -190,28 +190,29 @@ ok(func_wrap_is_member_which(
     $test_members_which,
 ), "is_member_which() returned all expected values");
 
-#eval { $memb_arr_ref = is_member_which('jerky', 'zebra') };
-#like($@, qr/Method call requires exactly 1 argument \(no references\)/,
-#        "is_member_which() correctly generated error message");
+eval { @memb_arr = is_member_which([ \@a0 ]) };
+like($@, qr/Subroutine call requires 2 references as arguments/,
+        "is_member_which() correctly generated error message");
 
-#ok(wrap_is_member_which_ref(
-#    $lc,
-#    $test_members_which,
-#), "is_member_which_ref() returned all expected values");
-#
-#eval { $memb_arr_ref = is_member_which_ref('jerky', 'zebra') };
-#like($@, qr/Method call requires exactly 1 argument \(no references\)/,
-#        "is_member_which_ref() correctly generated error message");
-#
-#$memb_hash_ref =
-#    are_members_which( [ qw|
-#        abel baker camera delta edward fargo golfer hilton icon jerky zebra
-#    | ] );
-#ok(wrap_are_members_which(
-#    $memb_hash_ref,
-#    $test_members_which,
-#), "are_members_which() returned all expected value");
-#
+ok(func_wrap_is_member_which_ref(
+    [ \@a0, \@a1 ],
+    $test_members_which,
+), "is_member_which_ref() returned all expected values");
+
+eval { $memb_arr_ref = is_member_which_ref([ \@a0 ]) };
+like($@, qr/Subroutine call requires 2 references as arguments/,
+        "is_member_which_ref() correctly generated error message");
+
+$memb_hash_ref =
+    are_members_which(
+        [ \@a0, \@a1 ] , 
+        [ qw|abel baker camera delta edward fargo golfer hilton icon jerky zebra
+    | ] );
+ok(func_wrap_are_members_which(
+    $memb_hash_ref,
+    $test_members_which,
+), "are_members_which() returned all expected values");
+
 #eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
 #like($@,
 #    qr/Method call requires exactly 1 argument which must be an array reference/,

@@ -14,6 +14,8 @@ our @EXPORT_OK = qw(
     @a0 @a1 @a2 @a3 @a4             @a8
     %h0 %h1 %h2 %h3 %h4 %h5 %h6 %h7 %h8
     func_wrap_is_member_which
+    func_wrap_is_member_which_ref
+    func_wrap_are_members_which
  );
 our %EXPORT_TAGS = (
     seen => [ qw(
@@ -36,10 +38,13 @@ our %EXPORT_TAGS = (
     ) ],
     func_wrap => [ qw(
         func_wrap_is_member_which
+        func_wrap_is_member_which_ref
+        func_wrap_are_members_which
     ) ],
 );
 use List::Compare::Functional qw(
     is_member_which
+    is_member_which_ref
 );
 
 sub ok_capture_error {
@@ -245,6 +250,27 @@ sub func_wrap_is_member_which {
     foreach my $v ( keys %{ $args } ) {
         my @found = is_member_which( $data, [ $v ]);
         $correct++ if ok_seen_a( \@found, $v, @{ $args->{$v} } );
+    }
+    ($correct == scalar keys %{ $args }) ? 1 : 0;
+}
+
+sub func_wrap_is_member_which_ref {
+    my $data = shift;
+    my $args = shift;
+    my $correct = 0;
+    foreach my $v ( keys %{ $args } ) {
+        my $memb_arr_ref = is_member_which_ref( $data, [ $v ]);
+        $correct++ if ok_seen_a( $memb_arr_ref, $v, @{ $args->{$v} } );
+    }
+    ($correct == scalar keys %{ $args }) ? 1 : 0;
+}
+
+sub func_wrap_are_members_which {
+    my $memb_hash_ref = shift;
+    my $args = shift;
+    my $correct = 0;
+    foreach my $v ( keys %{ $args } ) {
+        $correct++ if ok_seen_h( $memb_hash_ref, $v, @{ $args->{$v} } );
     }
     ($correct == scalar keys %{ $args }) ? 1 : 0;
 }
