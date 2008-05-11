@@ -2,7 +2,7 @@
 #$Id$
 # 34_func_lists_dual_unsorted.t
 use strict;
-use Test::More qw(no_plan); # tests =>  46;
+use Test::More tests =>  38;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -153,8 +153,7 @@ ok(unseen(\%seen, \@unpred),
     "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
-__END__
-@pred = qw( abel hilton );
+#@pred = qw( abel hilton );
 #{
 #    my ($rv, $stdout, $stderr);
 #    capture(
@@ -178,140 +177,44 @@ __END__
 #        "Got expected warning");
 #}
 
-@pred = qw( abel abel baker baker camera camera delta delta delta edward
-edward fargo fargo golfer golfer hilton );
+%pred = map {$_, 1} qw( abel hilton );
+@unpred = qw| baker camera delta edward fargo golfer icon jerky |;
+@nonintersection = get_nonintersection( '-u', [ \@a0, \@a1 ] );
+$seen{$_}++ foreach (@nonintersection);
+is_deeply(\%seen, \%pred, "unsorted:  Got expected nonintersection");
+ok(unseen(\%seen, \@unpred),
+    "nonintersection:  All non-expected elements correctly excluded");
+%seen = ();
+
+$nonintersection_ref = get_nonintersection_ref( '-u', [ \@a0, \@a1 ] );
+$seen{$_}++ foreach (@{$nonintersection_ref});
+is_deeply(\%seen, \%pred, "unsorted:  Got expected nonintersection");
+ok(unseen(\%seen, \@unpred),
+    "nonintersection:  All non-expected elements correctly excluded");
+%seen = ();
+
+%pred = (
+    abel    => 2,
+    baker   => 2,
+    camera  => 2,
+    delta   => 3,
+    edward  => 2,
+    fargo   => 2,
+    golfer  => 2,
+    hilton  => 1,
+);
+@unpred = qw| icon jerky |;
 @bag = get_bag( '-u', [ \@a0, \@a1 ] );
-is_deeply(\@bag, \@pred, "Got expected bag");
+$seen{$_}++ foreach (@bag);
+is_deeply(\%seen, \%pred, "Got predicted quantities in bag");
+ok(unseen(\%seen, \@unpred),
+    "bag:  All non-expected elements correctly excluded");
+%seen = ();
 
 $bag_ref = get_bag_ref( '-u', [ \@a0, \@a1 ] );
-is_deeply($bag_ref, \@pred, "Got expected bag");
+$seen{$_}++ foreach (@{$bag_ref});
+is_deeply(\%seen, \%pred, "Got predicted quantities in bag");
+ok(unseen(\%seen, \@unpred),
+    "bag:  All non-expected elements correctly excluded");
+%seen = ();
 
-$LR = is_LsubsetR( '-u', [ \@a0, \@a1 ] );
-ok(! $LR, "Got expected subset relationship");
-
-$RL = is_RsubsetL( '-u', [ \@a0, \@a1 ] );
-ok(! $RL, "Got expected subset relationship");
-
-$eqv = is_LequivalentR( '-u', [ \@a0, \@a1 ] );
-ok(! $eqv, "Got expected equivalent relationship");
-
-$eqv = is_LeqvlntR( '-u', [ \@a0, \@a1 ] );
-ok(! $eqv, "Got expected equivalent relationship");
-
-$disj = is_LdisjointR( '-u', [ \@a0, \@a1 ] );
-ok(! $disj, "Got expected disjoint relationship");
-
-{
-    my ($rv, $stdout, $stderr);
-    capture(
-        sub { $rv = print_subset_chart( '-u', [ \@a0, \@a1 ] ); },
-        \$stdout,
-    );
-    ok($rv, "print_subset_chart() returned true value");
-    like($stdout, qr/Subset Relationships/,
-        "Got expected chart header");
-}
-{
-    my ($rv, $stdout, $stderr);
-    capture(
-        sub { $rv = print_equivalence_chart( '-u', [ \@a0, \@a1 ] ); },
-        \$stdout,
-    );
-    ok($rv, "print_equivalence_chart() returned true value");
-    like($stdout, qr/Equivalence Relationships/,
-        "Got expected chart header");
-}
-     
-ok(func_wrap_is_member_which(
-    '-u', [ \@a0, \@a1 ],
-    $test_members_which,
-), "is_member_which() returned all expected values");
-
-eval { @memb_arr = is_member_which('-u', [ \@a0 ]) };
-like($@, qr/Subroutine call requires 2 references as arguments/,
-        "is_member_which() correctly generated error message");
-
-ok(func_wrap_is_member_which_ref(
-    '-u', [ \@a0, \@a1 ],
-    $test_members_which,
-), "is_member_which_ref() returned all expected values");
-
-eval { $memb_arr_ref = is_member_which_ref('-u', [ \@a0 ]) };
-like($@, qr/Subroutine call requires 2 references as arguments/,
-        "is_member_which_ref() correctly generated error message");
-
-$memb_hash_ref =
-    are_members_which(
-        '-u', [ \@a0, \@a1 ] , 
-        [ qw|abel baker camera delta edward fargo golfer hilton icon jerky zebra
-    | ] );
-ok(func_wrap_are_members_which(
-    $memb_hash_ref,
-    $test_members_which,
-), "are_members_which() returned all expected values");
-
-# Problem:  error message about Need to define 'lists' not helpful
-#eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
-#like($@,
-#    qr/Method call requires exactly 1 argument which must be an array reference/,
-#    "are_members_which() correctly generated error message");
-
-ok(func_wrap_is_member_any(
-    '-u', [ \@a0, \@a1 ] , 
-    $test_members_any,
-), "is_member_any() returned all expected values");
-
-#eval { is_member_any('jerky', 'zebra') };
-#like($@,
-#    qr/Method call requires exactly 1 argument \(no references\)/,
-#    "is_member_any() correctly generated error message");
-
-$memb_hash_ref = are_members_any(
-    '-u', [ \@a0, \@a1 ] , 
-    [ qw| abel baker camera delta edward fargo 
-          golfer hilton icon jerky zebra | ] );
-ok(func_wrap_are_members_any(
-    $memb_hash_ref,
-    $test_members_any,
-), "are_members_any() returned all expected values");
-
-#eval { $memb_hash_ref = are_members_any( { key => 'value' } ) };
-#like($@,
-#    qr/Method call requires exactly 1 argument which must be an array reference/,
-#    "are_members_any() correctly generated error message");
-
-$vers = get_version;
-ok($vers, "get_version() returned true value");
-
-
-$LR = is_LsubsetR( '-u', [ \@a2, \@a3 ] );
-ok(! $LR, "non-subset correctly determined");
-
-$RL = is_RsubsetL( '-u', [ \@a2, \@a3 ] );
-ok($RL, "subset correctly determined");
-
-$eqv = is_LequivalentR( '-u', [ \@a2, \@a3 ] );
-ok(! $eqv, "non-equivalence correctly determined");
-
-$eqv = is_LeqvlntR( '-u', [ \@a2, \@a3 ] );
-ok(! $eqv, "non-equivalence correctly determined");
-
-$disj = is_LdisjointR( '-u', [ \@a2, \@a3 ] );
-ok(! $disj, "non-disjoint correctly determined");
-
-
-$eqv = is_LequivalentR( '-u', [ \@a3, \@a4 ] );
-ok($eqv, "equivalence correctly determined");
-
-$eqv = is_LeqvlntR( '-u', [ \@a3, \@a4 ] );
-ok($eqv, "equivalence correctly determined");
-
-$disj = is_LdisjointR( '-u', [ \@a3, \@a4 ] );
-ok(! $disj, "non-disjoint correctly determined");
-
-
-ok(0 == get_intersection( '-u', [ \@a4, \@a8 ] ), "no intersection, as expected");
-ok(0 == scalar(@{get_intersection_ref( '-u', [ \@a4, \@a8 ] )}),
-    "no intersection, as expected");
-$disj = is_LdisjointR( '-u', [ \@a4, \@a8 ] );
-ok($disj, "disjoint correctly determined");
