@@ -1,10 +1,11 @@
 # perl
 #$Id$
 # 33_func_lists_dual_sorted.t
+use strict;
 use Test::More tests =>  46;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
-use Test::ListCompareSpecial qw( :seen :func_wrap :arrays );
+use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
 use IO::CaptureOutput qw( capture );
 
 my @pred = ();
@@ -14,39 +15,12 @@ my @unpred = ();
 my (@unique, @complement, @intersection, @union, @symmetric_difference, @bag);
 my ($unique_ref, $complement_ref, $intersection_ref, $union_ref,
 $symmetric_difference_ref, $bag_ref);
-my ($LR, $RL, $eqv, $disj, $return);
+my ($LR, $RL, $eqv, $disj, $return, $vers);
 my (@nonintersection, @shared);
-my ($nonintersection_ref, @shared_ref);
+my ($nonintersection_ref, $shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref);
-
-my $test_members_which =  {
-    abel      => [ 1, [ qw< 0   > ] ],
-    baker     => [ 2, [ qw< 0 1 > ] ],
-    camera    => [ 2, [ qw< 0 1 > ] ],
-    delta     => [ 2, [ qw< 0 1 > ] ],
-    edward    => [ 2, [ qw< 0 1 > ] ],
-    fargo     => [ 2, [ qw< 0 1 > ] ],
-    golfer    => [ 2, [ qw< 0 1 > ] ],
-    hilton    => [ 1, [ qw<   1 > ] ],
-    icon      => [ 0, [ qw<     > ] ],
-    jerky     => [ 0, [ qw<     > ] ],
-    zebra     => [ 0, [ qw<     > ] ],
-};
-
-my $test_members_any = {
-    abel    => 1,
-    baker   => 1,
-    camera  => 1,
-    delta   => 1,
-    edward  => 1,
-    fargo   => 1,
-    golfer  => 1,
-    hilton  => 1,
-    icon    => 0,
-    jerky   => 0,
-    zebra   => 0,
-};
+my @args;
 
 @pred = qw(abel baker camera delta edward fargo golfer hilton);
 @union = get_union( [ \@a0, \@a1 ] );

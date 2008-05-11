@@ -146,7 +146,7 @@ $unique_all_ref = $lcu->get_unique_all();
 is_deeply(
     make_array_seen_hash($unique_all_ref),
     make_array_seen_hash(\@pred),
-    "Got expected values for get_complement_all()");
+    "Got expected values for get_unique_all()");
 
 %pred = map {$_, 1} qw( hilton );
 @unpred = qw| abel baker camera delta edward fargo golfer icon jerky |;
