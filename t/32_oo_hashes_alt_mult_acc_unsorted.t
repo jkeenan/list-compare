@@ -1,10 +1,11 @@
 # perl
 #$Id$
 # 32_oo_hashes_alt_mult_acc_unsorted.t
+use strict;
 use Test::More tests => 110;
 use List::Compare;
 use lib ("./t");
-use Test::ListCompareSpecial qw( :seen :wrap :hashes );
+use Test::ListCompareSpecial qw( :seen :wrap :hashes :results );
 use IO::CaptureOutput qw( capture );
 
 my @pred = ();
@@ -13,25 +14,12 @@ my %pred = ();
 my @unpred = ();
 my (@unique, @complement, @intersection, @union, @symmetric_difference, @bag);
 my ($unique_ref, $complement_ref, $intersection_ref, $union_ref, $symmetric_difference_ref, $bag_ref);
-my ($LR, $RL, $eqv, $disj, $return);
+my ($LR, $RL, $eqv, $disj, $return, $vers);
 my (@nonintersection, @shared);
-my ($nonintersection_ref, @shared_ref);
+my ($nonintersection_ref, $shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref, @seen);
-
-my $test_members_which = {
-    abel        => [ 1, [ qw< 0         > ] ],
-    baker       => [ 2, [ qw< 0 1       > ] ],
-    camera      => [ 2, [ qw< 0 1       > ] ],
-    delta       => [ 2, [ qw< 0 1       > ] ],
-    edward      => [ 2, [ qw< 0 1       > ] ],
-    fargo       => [ 5, [ qw< 0 1 2 3 4 > ] ],
-    golfer      => [ 5, [ qw< 0 1 2 3 4 > ] ],
-    hilton      => [ 4, [ qw<   1 2 3 4 > ] ],
-    icon        => [ 3, [ qw<     2 3 4 > ] ],
-    jerky       => [ 1, [ qw<     2     > ] ],
-    zebra       => [ 0, [ qw<           > ] ],
-};
+my @args;
 
 ### new ###
 my $lcmu   = List::Compare->new( {
@@ -552,36 +540,27 @@ ok(! $eqv, "Got expected equivalence relationship");
         "Got expected chart header");
 }
 
-ok(wrap_is_member_which(
-    $lcmu,
-    $test_members_which,
-), "is_member_which() returned all expected values");
+@args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
+is_deeply( all_is_member_which( $lcmu, \@args), $test_member_which,
+    "is_member_which() returned all expected values");
 
-ok(wrap_is_member_which_ref(
-    $lcmu,
-    $test_members_which,
-), "is_member_which_ref() returned all expected values");
+is_deeply( all_is_member_which_ref( $lcmu, \@args), $test_member_which,
+    "is_member_which_ref() returned all expected values");
 
 $memb_hash_ref = $lcmu->are_members_which(
     [ qw| abel baker camera delta edward fargo
           golfer hilton icon jerky zebra | ] );
-ok(wrap_are_members_which(
-    $memb_hash_ref,
-    $test_members_which,
-), "are_members_which() returned all expected values");
+is_deeply($memb_hash_ref, $test_members_which_mult,
+   "are_members_which() returned all expected values");
 
-ok(wrap_is_member_any(
-    $lcmu,
-    $test_members_any,
-), "is_member_any() returned all expected values");
+is_deeply( all_is_member_any( $lcmu, \@args), $test_member_any,
+    "is_member_which() returned all expected values");
 
 $memb_hash_ref = $lcmu->are_members_any(
     [ qw| abel baker camera delta edward fargo
           golfer hilton icon jerky zebra | ] );
-ok(wrap_are_members_any(
-    $memb_hash_ref,
-    $test_members_any,
-), "are_members_any() returned all expected values");
+is_deeply($memb_hash_ref, $test_members_any_mult,
+    "are_members_any() returned all expected values");
 
 $vers = $lcmu->get_version;
 ok($vers, "get_version() returned true value");

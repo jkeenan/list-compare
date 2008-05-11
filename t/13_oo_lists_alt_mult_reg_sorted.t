@@ -21,20 +21,6 @@ my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref, @seen);
 my @args;
 
-#my $test_members_which = {
-#    abel        => [ 1, [ qw< 0         > ] ],
-#    baker       => [ 2, [ qw< 0 1       > ] ],
-#    camera      => [ 2, [ qw< 0 1       > ] ],
-#    delta       => [ 2, [ qw< 0 1       > ] ],
-#    edward      => [ 2, [ qw< 0 1       > ] ],
-#    fargo       => [ 5, [ qw< 0 1 2 3 4 > ] ],
-#    golfer      => [ 5, [ qw< 0 1 2 3 4 > ] ],
-#    hilton      => [ 4, [ qw<   1 2 3 4 > ] ],
-#    icon        => [ 3, [ qw<     2 3 4 > ] ],
-#    jerky       => [ 1, [ qw<     2     > ] ],
-#    zebra       => [ 0, [ qw<           > ] ],
-#};
-
 ### new ###
 my $lcm   = List::Compare->new( { lists => [ \@a0, \@a1, \@a2, \@a3, \@a4 ] } );
 ok($lcm, "List::Compare constructor returned true value");
@@ -554,6 +540,7 @@ eval { $memb_hash_ref = $lcm->are_members_any( { key => 'value' } ) };
 like($@,
     qr/Method call requires exactly 1 argument which must be an array reference/,
     "are_members_any() correctly generated error message");
+
 $vers = $lcm->get_version;
 ok($vers, "get_version() returned true value");
 

@@ -1,10 +1,11 @@
 # perl
 #$Id$
 # 28_oo_hashes_alt_dual_acc_unsorted.t
+use strict;
 use Test::More tests => 100;
 use List::Compare;
 use lib ("./t");
-use Test::ListCompareSpecial qw( :seen :wrap :hashes );
+use Test::ListCompareSpecial qw( :seen :wrap :hashes :results );
 use IO::CaptureOutput qw( capture );
 
 my @pred = ();
@@ -13,11 +14,12 @@ my %pred = ();
 my @unpred = ();
 my (@unique, @complement, @intersection, @union, @symmetric_difference, @bag);
 my ($unique_ref, $complement_ref, $intersection_ref, $union_ref, $symmetric_difference_ref, $bag_ref);
-my ($LR, $RL, $eqv, $disj, $return);
+my ($LR, $RL, $eqv, $disj, $return, $vers);
 my (@nonintersection, @shared);
-my ($nonintersection_ref, @shared_ref);
+my ($nonintersection_ref, $shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref, @seen);
+my @args;
 
 my $test_members_which =  {
     abel      => [ 1, [ qw< 0   > ] ],
