@@ -21,7 +21,7 @@ our @EXPORT_OK = qw(
     $test_member_which_dual
     $test_member_which_mult
     $test_members_which
-    $test_member_any
+    $test_member_any_mult
     $test_members_any
     $test_members_any_mult
     $test_members_which_mult
@@ -66,7 +66,7 @@ our %EXPORT_TAGS = (
         $test_member_which_dual
         $test_member_which_mult
         $test_members_which
-        $test_member_any
+        $test_member_any_mult
         $test_members_any
         $test_members_any_mult
         $test_members_which_mult
@@ -368,7 +368,7 @@ $test_members_which =  {
     zebra     => [ 0, [ qw<     > ] ],
 };
 
-$test_member_any = [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 ];
+$test_member_any_mult = [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 ];
 
 $test_members_any = {
     abel    => 1,
@@ -397,20 +397,6 @@ $test_members_any_mult = {
     jerky   => 1,
     zebra   => 0,
 };
-
-#$test_members_which_mult = {
-#    abel        => [ 1, [ qw< 0         > ] ],
-#    baker       => [ 2, [ qw< 0 1       > ] ],
-#    camera      => [ 2, [ qw< 0 1       > ] ],
-#    delta       => [ 2, [ qw< 0 1       > ] ],
-#    edward      => [ 2, [ qw< 0 1       > ] ],
-#    fargo       => [ 5, [ qw< 0 1 2 3 4 > ] ],
-#    golfer      => [ 5, [ qw< 0 1 2 3 4 > ] ],
-#    hilton      => [ 4, [ qw<   1 2 3 4 > ] ],
-#    icon        => [ 3, [ qw<     2 3 4 > ] ],
-#    jerky       => [ 1, [ qw<     2     > ] ],
-#    zebra       => [ 0, [ qw<           > ] ],
-#};
 
 $test_members_which_mult = {
     abel        => [ qw< 0         > ],

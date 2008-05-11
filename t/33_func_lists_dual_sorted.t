@@ -169,11 +169,6 @@ eval { @memb_arr = is_member_which([ \@a0 ]) };
 like($@, qr/Subroutine call requires 2 references as arguments/,
         "is_member_which() correctly generated error message");
 
-#ok(func_wrap_is_member_which_ref(
-#    [ \@a0, \@a1 ],
-#    $test_members_which,
-#), "is_member_which_ref() returned all expected values");
-
 is_deeply(func_all_is_member_which_ref( [ \@a0, \@a1 ], \@args ),
     $test_member_which_dual,
     "is_member_which() returned all expected values");

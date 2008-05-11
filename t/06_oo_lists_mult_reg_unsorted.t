@@ -551,7 +551,7 @@ $memb_hash_ref = $lcmu->are_members_which(
 is_deeply($memb_hash_ref, $test_members_which_mult,
    "are_members_which() returned all expected values");
 
-is_deeply( all_is_member_any( $lcmu, \@args), $test_member_any,
+is_deeply( all_is_member_any( $lcmu, \@args), $test_member_any_mult,
     "is_member_which() returned all expected values");
 
 $memb_hash_ref = $lcmu->are_members_any(

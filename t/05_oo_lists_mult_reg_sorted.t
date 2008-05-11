@@ -523,7 +523,7 @@ like($@,
     qr/Method call requires exactly 1 argument which must be an array reference/,
     "are_members_which() correctly generated error message");
 
-is_deeply( all_is_member_any( $lcm, \@args), $test_member_any,
+is_deeply( all_is_member_any( $lcm, \@args), $test_member_any_mult,
     "is_member_which() returned all expected values");
 
 eval { $lcm->is_member_any('jerky', 'zebra') };
