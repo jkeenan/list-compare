@@ -504,14 +504,14 @@ like($@,
 }
 
 @args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
-is_deeply( all_is_member_which( $lcm, \@args), $test_member_which,
+is_deeply( all_is_member_which( $lcm, \@args), $test_member_which_mult,
     "is_member_which() returned all expected values");
 
 eval { $memb_arr_ref = $lcm->is_member_which('jerky', 'zebra') };
 like($@, qr/Method call requires exactly 1 argument \(no references\)/,
         "is_member_which() correctly generated error message");
 
-is_deeply( all_is_member_which_ref( $lcm, \@args), $test_member_which,
+is_deeply( all_is_member_which_ref( $lcm, \@args), $test_member_which_mult,
     "is_member_which_ref() returned all expected values");
 
 eval { $memb_arr_ref = $lcm->is_member_which_ref('jerky', 'zebra') };

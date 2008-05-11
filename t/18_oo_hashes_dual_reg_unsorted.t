@@ -359,36 +359,6 @@ ok(! $disj, "Got expected disjoint relationship");
     like($stdout, qr/Equivalence Relationships/,
         "Got expected chart header");
 }
-#ok(wrap_is_member_which(
-#    $lcu,
-#    $test_member_which,
-#), "is_member_which() returned all expected values");
-#
-#ok(wrap_is_member_which_ref(
-#    $lcu,
-#    $test_member_which,
-#), "is_member_which_ref() returned all expected values");
-#
-#$memb_hash_ref = $lcu->are_members_which(
-#    [ qw| abel baker camera delta edward fargo 
-#          golfer hilton icon jerky zebra | ] );
-#ok(wrap_are_members_which(
-#    $memb_hash_ref,
-#    $test_member_which,
-#), "are_members_which() returned all expected value");
-#
-#ok(wrap_is_member_any(
-#    $lcu,
-#    $test_members_any,
-#), "is_member_any() returned all expected values");
-#
-#$memb_hash_ref = $lcu->are_members_any(
-#    [ qw| abel baker camera delta edward fargo 
-#          golfer hilton icon jerky zebra | ] );
-#ok(wrap_are_members_any(
-#    $memb_hash_ref,
-#    $test_members_any,
-#), "are_members_any() returned all expected values");
 
 ok(wrap_is_member_which(
     $lcu,

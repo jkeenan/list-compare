@@ -2,7 +2,7 @@
 #$Id$
 # 33_func_lists_dual_sorted.t
 use strict;
-use Test::More tests =>  46;
+use Test::More qw(no_plan); # tests =>  46;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -155,19 +155,28 @@ ok(! $disj, "Got expected disjoint relationship");
         "Got expected chart header");
 }
      
-ok(func_wrap_is_member_which(
-    [ \@a0, \@a1 ],
-    $test_members_which,
-), "is_member_which() returned all expected values");
+#ok(func_wrap_is_member_which(
+#    [ \@a0, \@a1 ],
+#    $test_members_which,
+#), "is_member_which() returned all expected values");
+
+@args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
+is_deeply(func_all_is_member_which( [ \@a0, \@a1 ], \@args ),
+    $test_member_which_dual,
+    "is_member_which() returned all expected values");
 
 eval { @memb_arr = is_member_which([ \@a0 ]) };
 like($@, qr/Subroutine call requires 2 references as arguments/,
         "is_member_which() correctly generated error message");
 
-ok(func_wrap_is_member_which_ref(
-    [ \@a0, \@a1 ],
-    $test_members_which,
-), "is_member_which_ref() returned all expected values");
+#ok(func_wrap_is_member_which_ref(
+#    [ \@a0, \@a1 ],
+#    $test_members_which,
+#), "is_member_which_ref() returned all expected values");
+
+is_deeply(func_all_is_member_which_ref( [ \@a0, \@a1 ], \@args ),
+    $test_member_which_dual,
+    "is_member_which() returned all expected values");
 
 eval { $memb_arr_ref = is_member_which_ref([ \@a0 ]) };
 like($@, qr/Subroutine call requires 2 references as arguments/,
@@ -183,6 +192,11 @@ ok(func_wrap_are_members_which(
     $test_members_which,
 ), "are_members_which() returned all expected values");
 
+
+
+
+
+__END__
 # Problem:  error message about Need to define 'lists' not helpful
 #eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
 #like($@,

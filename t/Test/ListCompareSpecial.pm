@@ -7,6 +7,8 @@ our @EXPORT_OK = qw(
     getseen unseen
     wrap_is_member_which
     all_is_member_which
+    func_all_is_member_which
+    func_all_is_member_which_ref
     wrap_is_member_which_ref
     all_is_member_which_ref
     wrap_are_members_which
@@ -16,7 +18,8 @@ our @EXPORT_OK = qw(
     make_array_seen_hash
     @a0 @a1 @a2 @a3 @a4             @a8
     %h0 %h1 %h2 %h3 %h4 %h5 %h6 %h7 %h8
-    $test_member_which
+    $test_member_which_dual
+    $test_member_which_mult
     $test_members_which
     $test_member_any
     $test_members_any
@@ -56,9 +59,12 @@ our %EXPORT_TAGS = (
         func_wrap_are_members_which
         func_wrap_is_member_any
         func_wrap_are_members_any
+        func_all_is_member_which
+        func_all_is_member_which_ref
     ) ],
     results => [ qw(
-        $test_member_which
+        $test_member_which_dual
+        $test_member_which_mult
         $test_members_which
         $test_member_any
         $test_members_any
@@ -158,6 +164,16 @@ sub all_is_member_which {
     return \@overall;
 }
 
+sub func_all_is_member_which {
+    my $data = shift;
+    my $args = shift;
+    my @overall;
+    for my $v ( @{ $args } ) {
+        push @overall, [ is_member_which( $data, [ $v ] ) ];
+    }
+    return \@overall;
+}
+
 sub wrap_is_member_which_ref {
     my $obj = shift;
     my $args = shift;
@@ -178,6 +194,17 @@ sub all_is_member_which_ref {
     }
     return \@overall;
 }
+
+sub func_all_is_member_which_ref {
+    my $data = shift;
+    my $args = shift;
+    my @overall;
+    for my $v ( @{ $args } ) {
+        push @overall, is_member_which_ref( $data, [ $v ] );
+    }
+    return \@overall;
+}
+
 sub wrap_are_members_which {
     my $memb_hash_ref = shift;
     my $args = shift;
@@ -299,7 +326,21 @@ sub make_array_seen_hash {
 
 %h8 = map {$_, 1} qw(kappa lambda mu);
 
-$test_member_which = [
+$test_member_which_dual = [
+  [ qw( 0   ) ],
+  [ qw( 0 1 ) ],
+  [ qw( 0 1 ) ],
+  [ qw( 0 1 ) ],
+  [ qw( 0 1 ) ],
+  [ qw( 0 1 ) ],
+  [ qw( 0 1 ) ],
+  [ qw(   1 ) ],
+  [ qw(     ) ],
+  [ qw(     ) ],
+  [ qw(     ) ],
+];
+
+$test_member_which_mult = [
   [ qw( 0         ) ],
   [ qw( 0 1       ) ],
   [ qw( 0 1       ) ],

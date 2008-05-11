@@ -537,10 +537,10 @@ ok(! $eqv, "Got expected equivalence relationship");
 }
 
 @args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
-is_deeply( all_is_member_which( $lcmu, \@args), $test_member_which,
+is_deeply( all_is_member_which( $lcmu, \@args), $test_member_which_mult,
     "is_member_which() returned all expected values");
 
-is_deeply( all_is_member_which_ref( $lcmu, \@args), $test_member_which,
+is_deeply( all_is_member_which_ref( $lcmu, \@args), $test_member_which_mult,
     "is_member_which_ref() returned all expected values");
 
 $memb_hash_ref = $lcmu->are_members_which(
