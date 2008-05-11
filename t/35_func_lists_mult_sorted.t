@@ -226,73 +226,50 @@ is_deeply(func_all_is_member_which_ref( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args
 #like($@, qr/Method call requires exactly 1 argument \(no references\)/,
 #        "is_member_which_ref() correctly generated error message");
 
-__END__
-
-$memb_hash_ref = are_members_which( \@args );
+$memb_hash_ref = are_members_which( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args );
 is_deeply($memb_hash_ref, $test_members_which_mult,
    "are_members_which() returned all expected values");
 
-eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
-like($@,
-    qr/Method call requires exactly 1 argument which must be an array reference/,
-    "are_members_which() correctly generated error message");
+#eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
+#like($@,
+#    qr/Method call requires exactly 1 argument which must be an array reference/,
+#    "are_members_which() correctly generated error message");
 
-is_deeply( all_is_member_any( $lcm, \@args), $test_member_any_mult,
-    "is_member_which() returned all expected values");
+is_deeply(func_all_is_member_any( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args ),
+    $test_member_any_mult,
+    "is_member_any() returned all expected values");
 
-eval { is_member_any('jerky', 'zebra') };
-like($@,
-    qr/Method call requires exactly 1 argument \(no references\)/,
-    "is_member_any() correctly generated error message");
+#eval { is_member_any('jerky', 'zebra') };
+#like($@,
+#    qr/Method call requires exactly 1 argument \(no references\)/,
+#    "is_member_any() correctly generated error message");
 
-$memb_hash_ref = are_members_any( \@args );
-ok(wrap_are_members_any(
+$memb_hash_ref = are_members_any( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args );
+ok(func_wrap_are_members_any(
     $memb_hash_ref,
     $test_members_any_mult,
 ), "are_members_any() returned all expected values");
 
-eval { $memb_hash_ref = are_members_any( { key => 'value' } ) };
-like($@,
-    qr/Method call requires exactly 1 argument which must be an array reference/,
-    "are_members_any() correctly generated error message");
+#eval { $memb_hash_ref = are_members_any( { key => 'value' } ) };
+#like($@,
+#    qr/Method call requires exactly 1 argument which must be an array reference/,
+#    "are_members_any() correctly generated error message");
 
 $vers = get_version;
 ok($vers, "get_version() returned true value");
 
-### new ###
-my $lcm_dj   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4, \@a8);
-ok($lcm_dj, "Constructor returned true value");
+#my $lcm_dj   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4, \@a8);
+#ok($lcm_dj, "Constructor returned true value");
 
-$disj = $lcm_dj->is_LdisjointR;
+$disj = is_LdisjointR( [ \@a0, \@a1, \@a2, \@a3, \@a4, \@a8 ] );
 ok(! $disj, "Got expected disjoint relationship");
 
-$disj = $lcm_dj->is_LdisjointR(2,3);
+$disj = is_LdisjointR( [ \@a0, \@a1, \@a2, \@a3, \@a4, \@a8 ], [ 2,3 ] );
 ok(! $disj, "Got expected disjoint relationship");
 
-$disj = $lcm_dj->is_LdisjointR(4,5);
+$disj = is_LdisjointR( [ \@a0, \@a1, \@a2, \@a3, \@a4, \@a8 ], [ 4,5 ] );
 ok($disj, "Got expected disjoint relationship");
 
-eval { $disj = $lcm_dj->is_LdisjointR(2) };
-like($@, qr/Method List::Compare::Multiple::is_LdisjointR requires 2 arguments/,
-    "Got expected error message");
-
-########## BELOW:  Testfor bad arguments to constructor ##########
-
-my ($lcm_bad);
-my %h5 = (
-    golfer   => 1,
-    lambda   => 0,
-);
-
-eval { $lcm_bad = List::Compare->new('-u', \@a0, \@a1, \@a2, \@a3, \%h5) };
-like($@, qr/Must pass all array references or all hash references/,
-    "Got expected error message from bad constructor");
-
-eval { $lcm_bad = List::Compare->new('-u', \%h5, \@a0, \@a1, \@a2, \@a3) };
-like($@, qr/Must pass all array references or all hash references/,
-    "Got expected error message from bad constructor");
-
-my $scalar = 'test';
-eval { $lcm_bad = List::Compare->new(\$scalar, \@a0, \@a1) };
-like($@, qr/Must pass all array references or all hash references/,
-    "Got expected error message from bad constructor");
+#eval { $disj = is_LdisjointR(2) };
+#like($@, qr/Method List::Compare::Multiple::is_LdisjointR requires 2 arguments/,
+#    "Got expected error message");

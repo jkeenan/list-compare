@@ -14,6 +14,7 @@ our @EXPORT_OK = qw(
     wrap_are_members_which
     wrap_is_member_any
     all_is_member_any
+    func_all_is_member_any
     wrap_are_members_any
     make_array_seen_hash
     @a0 @a1 @a2 @a3 @a4             @a8
@@ -21,6 +22,7 @@ our @EXPORT_OK = qw(
     $test_member_which_dual
     $test_member_which_mult
     $test_members_which
+    $test_member_any_dual
     $test_member_any_mult
     $test_members_any
     $test_members_any_mult
@@ -61,11 +63,13 @@ our %EXPORT_TAGS = (
         func_wrap_are_members_any
         func_all_is_member_which
         func_all_is_member_which_ref
+        func_all_is_member_any
     ) ],
     results => [ qw(
         $test_member_which_dual
         $test_member_which_mult
         $test_members_which
+        $test_member_any_dual
         $test_member_any_mult
         $test_members_any
         $test_members_any_mult
@@ -237,6 +241,16 @@ sub all_is_member_any {
     return \@overall;
 }
 
+sub func_all_is_member_any {
+    my $data = shift;
+    my $args = shift;
+    my @overall;
+    for my $v ( @{ $args } ) {
+        push @overall, is_member_any( $data, [ $v ] );
+    }
+    return \@overall;
+}
+
 sub wrap_are_members_any {
     my $memb_hash_ref = shift;
     my $args = shift;
@@ -368,6 +382,7 @@ $test_members_which =  {
     zebra     => [ 0, [ qw<     > ] ],
 };
 
+$test_member_any_dual = [ 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 ];
 $test_member_any_mult = [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 ];
 
 $test_members_any = {

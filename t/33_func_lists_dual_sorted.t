@@ -155,11 +155,6 @@ ok(! $disj, "Got expected disjoint relationship");
         "Got expected chart header");
 }
      
-#ok(func_wrap_is_member_which(
-#    [ \@a0, \@a1 ],
-#    $test_members_which,
-#), "is_member_which() returned all expected values");
-
 @args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
 is_deeply(func_all_is_member_which( [ \@a0, \@a1 ], \@args ),
     $test_member_which_dual,
@@ -177,41 +172,28 @@ eval { $memb_arr_ref = is_member_which_ref([ \@a0 ]) };
 like($@, qr/Subroutine call requires 2 references as arguments/,
         "is_member_which_ref() correctly generated error message");
 
-$memb_hash_ref =
-    are_members_which(
-        [ \@a0, \@a1 ] , 
-        [ qw|abel baker camera delta edward fargo golfer hilton icon jerky zebra
-    | ] );
+$memb_hash_ref = are_members_which( [ \@a0, \@a1 ] , \@args );
 ok(func_wrap_are_members_which(
     $memb_hash_ref,
     $test_members_which,
 ), "are_members_which() returned all expected values");
 
-
-
-
-
-__END__
 # Problem:  error message about Need to define 'lists' not helpful
 #eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
 #like($@,
 #    qr/Method call requires exactly 1 argument which must be an array reference/,
 #    "are_members_which() correctly generated error message");
 
-ok(func_wrap_is_member_any(
-    [ \@a0, \@a1 ] , 
-    $test_members_any,
-), "is_member_any() returned all expected values");
+is_deeply(func_all_is_member_any( [ \@a0, \@a1 ], \@args ),
+    $test_member_any_dual,
+    "is_member_any() returned all expected values");
 
 #eval { is_member_any('jerky', 'zebra') };
 #like($@,
 #    qr/Method call requires exactly 1 argument \(no references\)/,
 #    "is_member_any() correctly generated error message");
 
-$memb_hash_ref = are_members_any(
-    [ \@a0, \@a1 ] , 
-    [ qw| abel baker camera delta edward fargo 
-          golfer hilton icon jerky zebra | ] );
+$memb_hash_ref = are_members_any( [ \@a0, \@a1 ], \@args );
 ok(func_wrap_are_members_any(
     $memb_hash_ref,
     $test_members_any,
