@@ -505,7 +505,7 @@ sub _equiv_engine {
 sub _argument_checker_0 {
     my @args = @_;
     my $first_ref = ref($args[0]);
-    die "Improper argument: $!" 
+    die "'$first_ref' must be array ref or hash ref: $!" 
         unless ($first_ref eq 'ARRAY' or $first_ref eq 'HASH');
     my @temp = @args[1..$#args];
     my ($testing);
@@ -524,6 +524,7 @@ sub _argument_checker_0 {
 
 sub _argument_checker {
     my $argref = shift;
+    croak "'$argref' must be an array ref" unless ref($argref) eq 'ARRAY';
     my @args = _argument_checker_0(@{$argref});
     return (@args);
 }
@@ -626,7 +627,7 @@ sub _alt_construct_tester {
     my ($argref, $unsorted);
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
        my $hashref = shift;
-       die "Need to define 'lists' key properly: $!"
+       die "If argument is single hash ref, you must have a 'lists' key whose value is an array ref: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
        $argref = ${$hashref}{'lists'};
