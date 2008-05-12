@@ -203,11 +203,6 @@ ok(! $eqv, "Got expected equivalence relationship");
         "Got expected chart header");
 }
 
-#ok(func_wrap_is_member_which(
-#    [ \@a0, \@a1, \@a2, \@a3, \@a4 ],
-#    $test_members_which_mult,
-#), "is_member_which() returned all expected values");
-
 @args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
 
 is_deeply(func_all_is_member_which( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args ),
@@ -257,9 +252,6 @@ ok(func_wrap_are_members_any(
 
 $vers = get_version;
 ok($vers, "get_version() returned true value");
-
-#my $lcm_dj   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4, \@a8);
-#ok($lcm_dj, "Constructor returned true value");
 
 $disj = is_LdisjointR( [ \@a0, \@a1, \@a2, \@a3, \@a4, \@a8 ] );
 ok(! $disj, "Got expected disjoint relationship");
