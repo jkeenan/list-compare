@@ -91,6 +91,13 @@ sub II_class_func_tests {
     I_class_func_tests($sub, $name);
     my @results;
     # more class II tests to come
+    eval { @results = $sub->( $error, [ \@a0, \@a1 ], [2], [3] ); };
+    like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
+        "$name:  Got expected error message for wrong number of arguments");
+
+    eval { @results = $sub->( $error, [ \%h0, \%h1 ], [2], [3] ); };
+    like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
+        "$name:  Got expected error message for wrong number of arguments");
 }
 
 

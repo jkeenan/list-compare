@@ -557,6 +557,8 @@ sub _argument_checker_2 {
 # stripped off).
 # The second argument is an arrayref holding a single item (index number of 
 # item being tested)
+# Note:  Currently we're only checking for the quantity of arguments -- not
+# their types.  This should be fixed.
 sub _argument_checker_3 {
     my $argref = shift;
     my @args = @{$argref};
