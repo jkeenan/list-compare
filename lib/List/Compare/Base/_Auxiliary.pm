@@ -93,20 +93,22 @@ sub _validate_2_seenhashes {
             $badentriesR{$_} = ${$refR}{$_};
         }
     }
+    my $msg = q{};
     if ( (keys %badentriesL) or (keys %badentriesR) ) {
-        print "\nValues in a 'seen-hash' may only be positive integers.\n";
-        print "  These elements have invalid values:\n\n";
+        $msg .= "\nValues in a 'seen-hash' may only be positive integers.\n";
+        $msg .= "  These elements have invalid values:\n";
         if (keys %badentriesL) {
-            print "  First hash in arguments:\n\n";
-            print "     Key:  $_\tValue:  $badentriesL{$_}\n" 
+            $msg .= "  First hash in arguments:\n";
+            $msg .= "     Key:  $_\tValue:  $badentriesL{$_}\n" 
                 foreach (sort keys %badentriesL);
         } 
         if (keys %badentriesR) {
-            print "  Second hash in arguments:\n\n";
-            print "     Key:  $_\tValue:  $badentriesR{$_}\n" 
+            $msg .= "  Second hash in arguments:\n";
+            $msg .= "     Key:  $_\tValue:  $badentriesR{$_}\n" 
                 foreach (sort keys %badentriesR);
         }
-        croak "Correct invalid values before proceeding:  $!";
+        $msg .= "Correct invalid values before proceeding";
+        croak "$msg:  $!";
     }
     return (\%seenL, \%seenR);
 }
@@ -125,20 +127,22 @@ sub _validate_seen_hash {
             $badentriesR{$_} = ${$r}{$_} 
                 unless (${$r}{$_} =~ /^\d+$/ and ${$r}{$_} > 0);
         }
+        my $msg = q{};
         if ( (keys %badentriesL) or (keys %badentriesR) ) {
-            print "\nValues in a 'seen-hash' may only be numeric.\n";
-            print "  These elements have invalid values:\n\n";
+            $msg .= "\nValues in a 'seen-hash' must be numeric.\n";
+            $msg .= "  These elements have invalid values:\n";
             if (keys %badentriesL) {
-                print "  First hash in arguments:\n\n";
-                print "     Key:  $_\tValue:  $badentriesL{$_}\n" 
+                $msg .= "  First hash in arguments:\n";
+                $msg .= "     Key:  $_\tValue:  $badentriesL{$_}\n" 
                     foreach (sort keys %badentriesL);
             } 
             if (keys %badentriesR) {
-                print "  Second hash in arguments:\n\n";
-                print "     Key:  $_\tValue:  $badentriesR{$_}\n" 
+                $msg .= "  Second hash in arguments:\n";
+                $msg .= "     Key:  $_\tValue:  $badentriesR{$_}\n" 
                     foreach (sort keys %badentriesR);
             }
-            croak "Correct invalid values before proceeding:  $!";
+            $msg .= "Correct invalid values before proceeding";
+            croak "$msg:  $!";
         }
     }
 }
@@ -156,17 +160,19 @@ sub _validate_multiple_seenhashes {
             }
         }
     }
+    my $msg = q{};
     if ($badentriesflag) {
-        print "\nValues in a 'seen-hash' may only be positive integers.\n";
-        print "  These elements have invalid values:\n\n";
+        $msg .= "\nValues in a 'seen-hash' must be positive integers.\n";
+        $msg .= "  These elements have invalid values:\n\n";
         foreach (sort keys %badentries) {
-            print "    Hash $_:\n";
+            $msg .= "    Hash $_:\n";
             my %pairs = %{$badentries{$_}};
             foreach my $val (sort keys %pairs) {
-                print "        Bad key-value pair:  $val\t$pairs{$val}\n";
+                $msg .= "        Bad key-value pair:  $val\t$pairs{$val}\n";
             }
         }
-        croak "Correct invalid values before proceeding:  $!";
+        $msg .= "Correct invalid values before proceeding";
+        croak "$msg:  $!";
     }
 }
 
@@ -505,7 +511,7 @@ sub _equiv_engine {
 sub _argument_checker_0 {
     my @args = @_;
     my $first_ref = ref($args[0]);
-    die "'$first_ref' must be array ref or hash ref: $!" 
+    croak "'$first_ref' must be array ref or hash ref: $!" 
         unless ($first_ref eq 'ARRAY' or $first_ref eq 'HASH');
     my @temp = @args[1..$#args];
     my ($testing);
@@ -627,7 +633,7 @@ sub _alt_construct_tester {
     my ($argref, $unsorted);
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
        my $hashref = shift;
-       die "If argument is single hash ref, you must have a 'lists' key whose value is an array ref: $!"
+       croak "If argument is single hash ref, you must have a 'lists' key whose value is an array ref: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
        $argref = ${$hashref}{'lists'};
@@ -648,10 +654,10 @@ sub _alt_construct_tester_1 {
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
         my (@returns);
         my $hashref = $args[0];
-        die "Need to define 'lists' key properly: $!"
+        croak "Need to define 'lists' key properly: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
-        die "Need to define 'item' key properly: $!"
+        croak "Need to define 'item' key properly: $!"
            unless ${$hashref}{'item'};
         @returns = ( ${$hashref}{'lists'}, [${$hashref}{'item'}] );
         $argref = \@returns;
@@ -669,10 +675,10 @@ sub _alt_construct_tester_2 {
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
         my (@returns);
         my $hashref = $args[0];
-        die "Need to define 'lists' key properly: $!"
+        croak "Need to define 'lists' key properly: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
-        die "Need to define 'items' key properly: $!"
+        croak "Need to define 'items' key properly: $!"
            unless ( ${$hashref}{'items'}
                 and (ref(${$hashref}{'items'}) eq 'ARRAY') );
         @returns = defined ${$hashref}{'items'}
@@ -693,7 +699,7 @@ sub _alt_construct_tester_3 {
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
         my (@returns);
         my $hashref = $args[0];
-        die "Need to define 'lists' key properly: $!"
+        croak "If argument is single hash ref, you must have a 'lists' key whose value is an array ref: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
         @returns = defined ${$hashref}{'item'}
@@ -716,7 +722,7 @@ sub _alt_construct_tester_4 {
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
         my (@returns);
         my $hashref = $args[0];
-        die "Need to define 'lists' key properly: $!"
+        croak "Need to define 'lists' key properly: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
         @returns = defined ${$hashref}{'pair'}
@@ -737,7 +743,7 @@ sub _alt_construct_tester_5 {
     if (@args == 1) {
         if (ref($args[0]) eq 'HASH') {
            my $hashref = shift;
-           die "Need to define 'lists' key properly: $!"
+           croak "Need to define 'lists' key properly: $!"
                unless ( ${$hashref}{'lists'}
                     and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
            $argref = ${$hashref}{'lists'};

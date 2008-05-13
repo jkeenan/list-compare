@@ -1,6 +1,6 @@
 # perl
 #$Id$
-# 33_func_errors.t
+# 91_func_errors.t
 use strict;
 use Test::More qw(no_plan); # tests =>  46;
 use List::Compare::Functional qw(:originals :aliases);
@@ -32,25 +32,68 @@ my %badhash2 = (
     delta   => q{psi},
 );
 
-eval { @union = get_union( { key => 'value' } ); };
-like($@, qr/^If argument is single hash ref, you must have a 'lists' key/,
-    "Got expected error message for bad single hash ref");
+I_class_func_tests(\&get_union, q{get_union});
+I_class_func_tests(\&get_union_ref, q{get_union_ref});
+I_class_func_tests(\&get_intersection, q{get_intersection});
+I_class_func_tests(\&get_intersection_ref, q{get_intersection_ref});
+I_class_func_tests(\&get_shared, q{get_shared});
+I_class_func_tests(\&get_shared_ref, q{get_shared_ref});
+I_class_func_tests(\&get_nonintersection, q{get_nonintersection});
+I_class_func_tests(\&get_nonintersection_ref, q{get_nonintersection_ref});
+I_class_func_tests(\&get_symmetric_difference, q{get_symmetric_difference});
+I_class_func_tests(\&get_symmetric_difference_ref,
+    q{get_symmetric_difference_ref});
+I_class_func_tests(\&get_symdiff, q{get_symdiff});
+I_class_func_tests(\&get_symdiff_ref, q{get_symdiff_ref});
+I_class_func_tests(\&get_bag, q{get_bag});
+I_class_func_tests(\&get_bag_ref, q{get_union_ref});
 
-eval { @union = get_union( $error, [ \@a0, \@a1 ] ); };
-like($@, qr/^'$error' must be an array ref/,
-    "Got expected error message for bad non-ref argument");
+II_class_func_tests(\&get_unique, q{get_unique});
+II_class_func_tests(\&get_unique_ref, q{get_unique_ref});
+II_class_func_tests(\&get_complement, q{get_complement});
+II_class_func_tests(\&get_complement_ref, q{get_complement_ref});
 
-eval { @union = get_union( '-u', $error, [ \@a0, \@a1 ] ); };
-like($@, qr/^'$error' must be an array ref/,
-    "Got expected error message for bad non-ref argument");
+sub I_class_func_tests {
+    my $sub = shift;
+    my $name = shift;
+    my @results;
+    # Assume we have access to imported globals such as @a0, %h1, etc.
 
-eval { @union = get_union( [ \%h0, \@a1 ] ); };
-like($@,
-    qr/Arguments must be either all array references or all hash references/,
-    "Got expected error message for mixing array refs and hash refs");
+    eval { @results = $sub->( { key => 'value' } ); };
+    like($@, qr/^If argument is single hash ref, you must have a 'lists' key/,
+        "$name:  Got expected error message for bad single hash ref");
+    
+    eval { @results = $sub->( $error, [ \@a0, \@a1 ] ); };
+    like($@, qr/^'$error' must be an array ref/,
+        "$name:  Got expected error message for bad non-ref argument");
+    
+    eval { @results = $sub->( '-u', $error, [ \@a0, \@a1 ] ); };
+    like($@, qr/^'$error' must be an array ref/,
+        "$name:  Got expected error message for bad non-ref argument");
+    
+    eval { @results = $sub->( [ \%h0, \@a1 ] ); };
+    like($@,
+        qr/Arguments must be either all array references or all hash references/,
+        "$name:  Got expected error message for mixing array refs and hash refs");
+    
+    eval { @results = $sub->( [ \%badhash1, \%badhash2 ] ); };
+    like($@,
+        qr/Values in a 'seen-hash' must be numeric/s,
+        "$name:  Got expected error message for bad seen-hash");
+    like($@,
+        qr/Key:\s+beta\s+Value:\s+omega/s,
+        "$name:  Got expected error message for bad seen-hash");
+}
 
-@union = get_union( [ \%badhash1, \%badhash2 ] );
-#eval { @union = get_union( [ \%badhash1, \%badhash2 ] ); };
+sub II_class_func_tests {
+    my $sub = shift;
+    my $name = shift;
+    I_class_func_tests($sub, $name);
+    my @results;
+    # more class II tests to come
+}
+
+
 
 __END__
 @union = get_union( [ \@a0, \@a1 ] );
