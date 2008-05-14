@@ -153,30 +153,6 @@ ok(unseen(\%seen, \@unpred),
     "symmetric difference:  All non-expected elements correctly excluded");
 %seen = ();
 
-#@pred = qw( abel hilton );
-#{
-#    my ($rv, $stdout, $stderr);
-#    capture(
-#        sub { @nonintersection = get_nonintersection; },
-#        \$stdout,
-#        \$stderr,
-#    );
-#    is_deeply( \@nonintersection, \@pred, "Got expected nonintersection");
-#    like($stderr, qr/please consider re-coding/,
-#        "Got expected warning");
-#}
-#{
-#    my ($rv, $stdout, $stderr);
-#    capture(
-#        sub { $nonintersection_ref = get_nonintersection_ref; },
-#        \$stdout,
-#        \$stderr,
-#    );
-#    is_deeply($nonintersection_ref, \@pred, "Got expected nonintersection");
-#    like($stderr, qr/please consider re-coding/,
-#        "Got expected warning");
-#}
-
 %pred = map {$_, 1} qw( abel hilton );
 @unpred = qw| baker camera delta edward fargo golfer icon jerky |;
 @nonintersection = get_nonintersection( '-u', [ \@a0, \@a1 ] );
@@ -217,4 +193,3 @@ is_deeply(\%seen, \%pred, "Got predicted quantities in bag");
 ok(unseen(\%seen, \@unpred),
     "bag:  All non-expected elements correctly excluded");
 %seen = ();
-

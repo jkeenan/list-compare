@@ -2,7 +2,7 @@
 #$Id$
 # 35_func_lists_mult_sorted.t
 use strict;
-use Test::More qw(no_plan); # tests =>  46;
+use Test::More tests =>  43;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -21,10 +21,6 @@ my ($nonintersection_ref, $shared_ref);
 my ($memb_hash_ref, $memb_arr_ref, @memb_arr);
 my ($unique_all_ref, $complement_all_ref);
 my @args;
-
-### new ###
-#my $lcm   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4);
-#ok($lcm, "List::Compare constructor returned true value");
 
 @pred = qw(abel baker camera delta edward fargo golfer hilton icon jerky);
 @union = get_union( [ \@a0, \@a1, \@a2, \@a3, \@a4 ] );
@@ -137,18 +133,6 @@ ok(! $LR, "Got expected subset relationship");
 $LR = is_LsubsetR( [ \@a0, \@a1, \@a2, \@a3, \@a4 ] );
 ok(! $LR, "Got expected subset relationship");
 
-#eval { $LR = is_LsubsetR(2) };
-#like($@,
-#    qr/Method List::Compare::Multiple::is_LsubsetR requires 2 arguments/,
-#    "Got expected error message"
-#);
-#
-#eval { $LR = is_LsubsetR(8,9) };
-#like($@,
-#    qr/Each argument to method List::Compare::Multiple::is_LsubsetR must be a valid array index /,
-#    "Got expected error message"
-#);
-#
 $eqv = is_LequivalentR( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 3,4 ] );
 ok($eqv, "Got expected equivalence relationship");
 
@@ -157,18 +141,6 @@ ok($eqv, "Got expected equivalence relationship");
 
 $eqv = is_LequivalentR( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 2,4 ] );
 ok(! $eqv, "Got expected equivalence relationship");
-
-#eval { $eqv = is_LequivalentR(2) };
-#like($@,
-#    qr/Method List::Compare::Multiple::is_LequivalentR requires 2 arguments/,
-#    "Got expected error message",
-#);
-#
-#eval { $eqv = is_LequivalentR(8,9) };
-#like($@,
-#    qr/Each argument to method List::Compare::Multiple::is_LequivalentR must be a valid array index/,
-#    "Got expected error message",
-#);
 
 {
     my ($rv, $stdout, $stderr);
@@ -197,46 +169,23 @@ is_deeply(func_all_is_member_which( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args ),
     $test_member_which_mult,
     "is_member_which() returned all expected values");
 
-#eval { $memb_arr_ref = is_member_which('jerky', 'zebra') };
-#like($@, qr/Method call requires exactly 1 argument \(no references\)/,
-#        "is_member_which() correctly generated error message");
-
 is_deeply(func_all_is_member_which_ref( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args ),
     $test_member_which_mult,
     "is_member_which_ref() returned all expected values");
-
-#eval { $memb_arr_ref = is_member_which_ref('jerky', 'zebra') };
-#like($@, qr/Method call requires exactly 1 argument \(no references\)/,
-#        "is_member_which_ref() correctly generated error message");
 
 $memb_hash_ref = are_members_which( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args );
 is_deeply($memb_hash_ref, $test_members_which_mult,
    "are_members_which() returned all expected values");
 
-#eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
-#like($@,
-#    qr/Method call requires exactly 1 argument which must be an array reference/,
-#    "are_members_which() correctly generated error message");
-
 is_deeply(func_all_is_member_any( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args ),
     $test_member_any_mult,
     "is_member_any() returned all expected values");
-
-#eval { is_member_any('jerky', 'zebra') };
-#like($@,
-#    qr/Method call requires exactly 1 argument \(no references\)/,
-#    "is_member_any() correctly generated error message");
 
 $memb_hash_ref = are_members_any( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], \@args );
 ok(func_wrap_are_members_any(
     $memb_hash_ref,
     $test_members_any_mult,
 ), "are_members_any() returned all expected values");
-
-#eval { $memb_hash_ref = are_members_any( { key => 'value' } ) };
-#like($@,
-#    qr/Method call requires exactly 1 argument which must be an array reference/,
-#    "are_members_any() correctly generated error message");
 
 $vers = get_version;
 ok($vers, "get_version() returned true value");
@@ -249,7 +198,3 @@ ok(! $disj, "Got expected disjoint relationship");
 
 $disj = is_LdisjointR( [ \@a0, \@a1, \@a2, \@a3, \@a4, \@a8 ], [ 4,5 ] );
 ok($disj, "Got expected disjoint relationship");
-
-#eval { $disj = is_LdisjointR(2) };
-#like($@, qr/Method List::Compare::Multiple::is_LdisjointR requires 2 arguments/,
-#    "Got expected error message");

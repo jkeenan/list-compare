@@ -2,7 +2,7 @@
 #$Id$
 # 33_func_lists_dual_sorted.t
 use strict;
-use Test::More qw(no_plan); # tests =>  46;
+use Test::More tests =>  46;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -35,7 +35,6 @@ is_deeply( \@shared, \@pred, "Got expected shared");
 
 $shared_ref = get_shared_ref( [ \@a0, \@a1 ] );
 is_deeply( $shared_ref, \@pred, "Got expected shared");
-
 
 @pred = qw( baker camera delta edward fargo golfer );
 @intersection = get_intersection( [ \@a0, \@a1 ] );
@@ -88,28 +87,11 @@ $symmetric_difference_ref = get_symdiff_ref( [ \@a0, \@a1 ] );
 is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
 
 @pred = qw( abel hilton );
-#{
-#    my ($rv, $stdout, $stderr);
-#    capture(
-#        sub { @nonintersection = get_nonintersection; },
-#        \$stdout,
-#        \$stderr,
-#    );
-#    is_deeply( \@nonintersection, \@pred, "Got expected nonintersection");
-#    like($stderr, qr/please consider re-coding/,
-#        "Got expected warning");
-#}
-#{
-#    my ($rv, $stdout, $stderr);
-#    capture(
-#        sub { $nonintersection_ref = get_nonintersection_ref; },
-#        \$stdout,
-#        \$stderr,
-#    );
-#    is_deeply($nonintersection_ref, \@pred, "Got expected nonintersection");
-#    like($stderr, qr/please consider re-coding/,
-#        "Got expected warning");
-#}
+@nonintersection = get_nonintersection( [ \@a0, \@a1 ] );
+is_deeply(\@nonintersection, \@pred, "Got expected nonintersection");
+
+$nonintersection_ref = get_nonintersection_ref( [ \@a0, \@a1 ] );
+is_deeply($nonintersection_ref, \@pred, "Got expected nonintersection");
 
 @pred = qw( abel abel baker baker camera camera delta delta delta edward
 edward fargo fargo golfer golfer hilton );
@@ -160,17 +142,9 @@ is_deeply(func_all_is_member_which( [ \@a0, \@a1 ], \@args ),
     $test_member_which_dual,
     "is_member_which() returned all expected values");
 
-eval { @memb_arr = is_member_which([ \@a0 ]) };
-like($@, qr/Subroutine call requires 2 references as arguments/,
-        "is_member_which() correctly generated error message");
-
 is_deeply(func_all_is_member_which_ref( [ \@a0, \@a1 ], \@args ),
     $test_member_which_dual,
     "is_member_which() returned all expected values");
-
-eval { $memb_arr_ref = is_member_which_ref([ \@a0 ]) };
-like($@, qr/Subroutine call requires 2 references as arguments/,
-        "is_member_which_ref() correctly generated error message");
 
 $memb_hash_ref = are_members_which( [ \@a0, \@a1 ] , \@args );
 ok(func_wrap_are_members_which(
@@ -178,20 +152,9 @@ ok(func_wrap_are_members_which(
     $test_members_which,
 ), "are_members_which() returned all expected values");
 
-# Problem:  error message about Need to define 'lists' not helpful
-#eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
-#like($@,
-#    qr/Method call requires exactly 1 argument which must be an array reference/,
-#    "are_members_which() correctly generated error message");
-
 is_deeply(func_all_is_member_any( [ \@a0, \@a1 ], \@args ),
     $test_member_any_dual,
     "is_member_any() returned all expected values");
-
-#eval { is_member_any('jerky', 'zebra') };
-#like($@,
-#    qr/Method call requires exactly 1 argument \(no references\)/,
-#    "is_member_any() correctly generated error message");
 
 $memb_hash_ref = are_members_any( [ \@a0, \@a1 ], \@args );
 ok(func_wrap_are_members_any(
@@ -199,14 +162,8 @@ ok(func_wrap_are_members_any(
     $test_members_any,
 ), "are_members_any() returned all expected values");
 
-#eval { $memb_hash_ref = are_members_any( { key => 'value' } ) };
-#like($@,
-#    qr/Method call requires exactly 1 argument which must be an array reference/,
-#    "are_members_any() correctly generated error message");
-
 $vers = get_version;
 ok($vers, "get_version() returned true value");
-
 
 $LR = is_LsubsetR( [ \@a2, \@a3 ] );
 ok(! $LR, "non-subset correctly determined");
@@ -223,7 +180,6 @@ ok(! $eqv, "non-equivalence correctly determined");
 $disj = is_LdisjointR( [ \@a2, \@a3 ] );
 ok(! $disj, "non-disjoint correctly determined");
 
-
 $eqv = is_LequivalentR( [ \@a3, \@a4 ] );
 ok($eqv, "equivalence correctly determined");
 
@@ -232,7 +188,6 @@ ok($eqv, "equivalence correctly determined");
 
 $disj = is_LdisjointR( [ \@a3, \@a4 ] );
 ok(! $disj, "non-disjoint correctly determined");
-
 
 ok(0 == get_intersection( [ \@a4, \@a8 ] ), "no intersection, as expected");
 ok(0 == scalar(@{get_intersection_ref( [ \@a4, \@a8 ] )}),
