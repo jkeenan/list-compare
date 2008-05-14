@@ -54,12 +54,6 @@ is_deeply(\@unique, \@pred, "Got expected unique");
 $unique_ref = get_unique_ref( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 2 ] );
 is_deeply($unique_ref, \@pred, "Got expected unique");
 
-#eval { $unique_ref = get_unique_ref('jerky') };
-#like($@,
-#    qr/Argument to method List::Compare::Multiple::get_unique_ref must be the array index/,
-#    "Got expected error message"
-#);
-
 @pred = qw( abel );
 @unique = get_unique( [ \@a0, \@a1, \@a2, \@a3, \@a4 ] );
 is_deeply(\@unique, \@pred, "Got expected unique");
@@ -84,12 +78,6 @@ is_deeply(\@complement, \@pred, "Got expected complement");
 
 $complement_ref = get_complement_ref([ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 1 ] );
 is_deeply($complement_ref, \@pred, "Got expected complement");
-
-#eval { $complement_ref = get_complement_ref('jerky') };
-#like($@,
-#    qr/Argument to method List::Compare::Multiple::get_complement_ref must be the array index/,
-#    "Got expected error message"
-#);
 
 @pred = qw ( hilton icon jerky );
 @complement = get_complement( [ \@a0, \@a1, \@a2, \@a3, \@a4 ] );

@@ -31,6 +31,7 @@ my %badhash2 = (
     gamma   => 1,
     delta   => q{psi},
 );
+my $bad_lists_msg = q{If argument is single hash ref, you must have a 'lists' key whose value is an array ref};
 
 I_class_func_tests(\&get_union, q{get_union});
 I_class_func_tests(\&get_union_ref, q{get_union_ref});
@@ -53,6 +54,19 @@ II_class_func_tests(\&get_unique_ref, q{get_unique_ref});
 II_class_func_tests(\&get_complement, q{get_complement});
 II_class_func_tests(\&get_complement_ref, q{get_complement_ref});
 
+III_class_func_tests(\&is_LsubsetR, q{is_LsubsetR});
+III_class_func_tests(\&is_RsubsetL, q{is_RsubsetL});
+III_class_func_tests(\&is_LequivalentR, q{is_LequivalentR});
+III_class_func_tests(\&is_LeqvlntR, q{is_LeqvlntR});
+III_class_func_tests(\&is_LdisjointR, q{is_LdisjointR});
+
+IV_class_func_tests(\&is_member_which, q{is_member_which});
+IV_class_func_tests(\&is_member_which_ref, q{is_member_which_ref});
+IV_class_func_tests(\&is_member_any, q{is_member_any});
+
+V_class_func_tests(\&are_members_which, q{are_members_which});
+V_class_func_tests(\&are_members_any, q{are_members_any});
+
 sub I_class_func_tests {
     my $sub = shift;
     my $name = shift;
@@ -60,7 +74,11 @@ sub I_class_func_tests {
     # Assume we have access to imported globals such as @a0, %h1, etc.
 
     eval { @results = $sub->( { key => 'value' } ); };
-    like($@, qr/^If argument is single hash ref, you must have a 'lists' key/,
+    like($@, qr/^$bad_lists_msg/,
+        "$name:  Got expected error message for bad single hash ref");
+    
+    eval { @results = $sub->( { lists => 'not a reference' } ); };
+    like($@, qr/^$bad_lists_msg/,
         "$name:  Got expected error message for bad single hash ref");
     
     eval { @results = $sub->( $error, [ \@a0, \@a1 ] ); };
@@ -90,7 +108,6 @@ sub II_class_func_tests {
     my $name = shift;
     I_class_func_tests($sub, $name);
     my @results;
-    # more class II tests to come
     eval { @results = $sub->( $error, [ \@a0, \@a1 ], [2], [3] ); };
     like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
         "$name:  Got expected error message for wrong number of arguments");
@@ -100,222 +117,79 @@ sub II_class_func_tests {
         "$name:  Got expected error message for wrong number of arguments");
 }
 
+sub III_class_func_tests {
+    my $sub = shift;
+    my $name = shift;
+    my $result;
+    # Assume we have access to imported globals such as @a0, %h1, etc.
 
+    eval { $result = $sub->( { key => 'value' } ); };
+    like($@, qr/^$bad_lists_msg/,
+        "$name:  Got expected error message for bad single hash ref");
 
-__END__
-@union = get_union( [ \@a0, \@a1 ] );
-is_deeply( \@union, \@pred, "Got expected union");
+    eval { $result = $sub->( { lists => 'not a reference' } ); };
+    like($@, qr/^$bad_lists_msg/,
+        "$name:  Got expected error message for bad single hash ref");
+    
+    my $i = 2;
+    eval { $result = $sub->( [ \@a0, \@a1 ], [ $i, 0 ] ); };
+    like($@, qr/No element in index position $i in list of list references passed as first argument to function/,
+        "$name:  Got expected error message for non-existent index position");
 
-$union_ref = get_union_ref( [ \@a0, \@a1 ] );
-is_deeply( $union_ref, \@pred, "Got expected union");
-
-@pred = qw( baker camera delta edward fargo golfer );
-@shared = get_shared( [ \@a0, \@a1 ] );
-is_deeply( \@shared, \@pred, "Got expected shared");
-
-$shared_ref = get_shared_ref( [ \@a0, \@a1 ] );
-is_deeply( $shared_ref, \@pred, "Got expected shared");
-
-
-@pred = qw( baker camera delta edward fargo golfer );
-@intersection = get_intersection( [ \@a0, \@a1 ] );
-is_deeply(\@intersection, \@pred, "Got expected intersection");
-
-$intersection_ref = get_intersection_ref( [ \@a0, \@a1 ] );
-is_deeply($intersection_ref, \@pred, "Got expected intersection");
-
-@pred = qw( abel );
-@unique = get_unique( [ \@a0, \@a1 ] );
-is_deeply(\@unique, \@pred, "Got expected unique");
-
-$unique_ref = get_unique_ref( [ \@a0, \@a1 ] );
-is_deeply($unique_ref, \@pred, "Got expected unique");
-
-@pred = (
-    [ 'abel' ],
-    [ 'hilton' ],
-);
-$unique_all_ref = get_unique_all( [ \@a0, \@a1 ] );
-is_deeply($unique_all_ref, [ @pred ],
-    "Got expected values for get_unique_all()");
-
-@pred = qw ( hilton );
-@complement = get_complement( [ \@a0, \@a1 ] );
-is_deeply(\@complement, \@pred, "Got expected complement");
-
-$complement_ref = get_complement_ref( [ \@a0, \@a1 ] );
-is_deeply($complement_ref, \@pred, "Got expected complement");
-
-@pred = (
-    [ qw( hilton ) ],
-    [ qw( abel ) ],
-);
-$complement_all_ref = get_complement_all( [ \@a0, \@a1 ] );
-is_deeply($complement_all_ref, [ @pred ],
-    "Got expected values for get_complement_all()");
-
-@pred = qw( abel hilton );
-@symmetric_difference = get_symmetric_difference( [ \@a0, \@a1 ] );
-is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
-
-$symmetric_difference_ref = get_symmetric_difference_ref( [ \@a0, \@a1 ] );
-is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
-
-@symmetric_difference = get_symdiff( [ \@a0, \@a1 ] );
-is_deeply(\@symmetric_difference, \@pred, "Got expected symmetric_difference");
-
-$symmetric_difference_ref = get_symdiff_ref( [ \@a0, \@a1 ] );
-is_deeply($symmetric_difference_ref, \@pred, "Got expected symmetric_difference");
-
-@pred = qw( abel hilton );
-#{
-#    my ($rv, $stdout, $stderr);
-#    capture(
-#        sub { @nonintersection = get_nonintersection; },
-#        \$stdout,
-#        \$stderr,
-#    );
-#    is_deeply( \@nonintersection, \@pred, "Got expected nonintersection");
-#    like($stderr, qr/please consider re-coding/,
-#        "Got expected warning");
-#}
-#{
-#    my ($rv, $stdout, $stderr);
-#    capture(
-#        sub { $nonintersection_ref = get_nonintersection_ref; },
-#        \$stdout,
-#        \$stderr,
-#    );
-#    is_deeply($nonintersection_ref, \@pred, "Got expected nonintersection");
-#    like($stderr, qr/please consider re-coding/,
-#        "Got expected warning");
-#}
-
-@pred = qw( abel abel baker baker camera camera delta delta delta edward
-edward fargo fargo golfer golfer hilton );
-@bag = get_bag( [ \@a0, \@a1 ] );
-is_deeply(\@bag, \@pred, "Got expected bag");
-
-$bag_ref = get_bag_ref( [ \@a0, \@a1 ] );
-is_deeply($bag_ref, \@pred, "Got expected bag");
-
-$LR = is_LsubsetR( [ \@a0, \@a1 ] );
-ok(! $LR, "Got expected subset relationship");
-
-$RL = is_RsubsetL( [ \@a0, \@a1 ] );
-ok(! $RL, "Got expected subset relationship");
-
-$eqv = is_LequivalentR( [ \@a0, \@a1 ] );
-ok(! $eqv, "Got expected equivalent relationship");
-
-$eqv = is_LeqvlntR( [ \@a0, \@a1 ] );
-ok(! $eqv, "Got expected equivalent relationship");
-
-$disj = is_LdisjointR( [ \@a0, \@a1 ] );
-ok(! $disj, "Got expected disjoint relationship");
-
-{
-    my ($rv, $stdout, $stderr);
-    capture(
-        sub { $rv = print_subset_chart( [ \@a0, \@a1 ] ); },
-        \$stdout,
-    );
-    ok($rv, "print_subset_chart() returned true value");
-    like($stdout, qr/Subset Relationships/,
-        "Got expected chart header");
+    eval { $result = $sub->( [ \@a0, \@a1 ], [ $i ] ); };
+    like($@, qr/Must provide index positions corresponding to two lists/,
+        "$name:  Got expected error message for non-existent index position");
 }
-{
-    my ($rv, $stdout, $stderr);
-    capture(
-        sub { $rv = print_equivalence_chart( [ \@a0, \@a1 ] ); },
-        \$stdout,
-    );
-    ok($rv, "print_equivalence_chart() returned true value");
-    like($stdout, qr/Equivalence Relationships/,
-        "Got expected chart header");
+    
+sub IV_class_func_tests {
+    my $sub = shift;
+    my $name = shift;
+    my @results;
+    # Assume we have access to imported globals such as @a0, %h1, etc.
+
+    eval { @results = $sub->( { item  => 'value' } ); };
+    like($@, qr/^$bad_lists_msg/,
+        "$name:  Got expected error message for single hash ref lacking 'lists' key");
+
+    eval { @results = $sub->( { lists => 'not a reference' } ); };
+    like($@, qr/^$bad_lists_msg/,
+        "$name:  Got expected error message for bad single hash ref");
+    
+    eval { @results = $sub->( { lists  => [ \@a0, \@a1 ] } ); };
+    like($@, qr/^If argument is single hash ref, you must have an 'item' key/,
+        "$name:  Got expected error message for single hash ref lacking 'item' key");
+
+    eval { @results = $sub->( [ \@a0, \@a1 ] ); };
+    like($@, qr/^Subroutine call requires 2 references as arguments/,
+        "$name:  Got expected error message for lack of second argument");
 }
-     
-@args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
-is_deeply(func_all_is_member_which( [ \@a0, \@a1 ], \@args ),
-    $test_member_which_dual,
-    "is_member_which() returned all expected values");
 
-eval { @memb_arr = is_member_which([ \@a0 ]) };
-like($@, qr/Subroutine call requires 2 references as arguments/,
-        "is_member_which() correctly generated error message");
+sub V_class_func_tests {
+    my $sub = shift;
+    my $name = shift;
+    my $result;
+    # Assume we have access to imported globals such as @a0, %h1, etc.
 
-is_deeply(func_all_is_member_which_ref( [ \@a0, \@a1 ], \@args ),
-    $test_member_which_dual,
-    "is_member_which() returned all expected values");
+    eval { $result = $sub->( { items  => 'value' } ); };
+    like($@, qr/^$bad_lists_msg/,
+        "$name:  Got expected error message for single hash ref lacking 'lists' key");
 
-eval { $memb_arr_ref = is_member_which_ref([ \@a0 ]) };
-like($@, qr/Subroutine call requires 2 references as arguments/,
-        "is_member_which_ref() correctly generated error message");
+    eval { $result = $sub->( { lists => 'not a reference' } ); };
+    like($@, qr/^$bad_lists_msg/,
+        "$name:  Got expected error message for bad single hash ref");
+    
+    eval { $result = $sub->( { lists  => [ \@a0, \@a1 ] } ); };
+    like($@, qr/^If argument is single hash ref, you must have an 'items' key/,
+        "$name:  Got expected error message for single hash ref lacking 'items' key");
+    
+    eval { $result = $sub->( {
+        lists  => [ \@a0, \@a1 ],
+        items  => 'not a reference',
+    } ); };
+    like($@, qr/^If argument is single hash ref, you must have an 'items' key/,
+        "$name:  Got expected error message for single hash ref with improper 'items' key");
 
-$memb_hash_ref = are_members_which( [ \@a0, \@a1 ] , \@args );
-ok(func_wrap_are_members_which(
-    $memb_hash_ref,
-    $test_members_which,
-), "are_members_which() returned all expected values");
-
-# Problem:  error message about Need to define 'lists' not helpful
-#eval { $memb_hash_ref = are_members_which( { key => 'value' } ) };
-#like($@,
-#    qr/Method call requires exactly 1 argument which must be an array reference/,
-#    "are_members_which() correctly generated error message");
-
-is_deeply(func_all_is_member_any( [ \@a0, \@a1 ], \@args ),
-    $test_member_any_dual,
-    "is_member_any() returned all expected values");
-
-#eval { is_member_any('jerky', 'zebra') };
-#like($@,
-#    qr/Method call requires exactly 1 argument \(no references\)/,
-#    "is_member_any() correctly generated error message");
-
-$memb_hash_ref = are_members_any( [ \@a0, \@a1 ], \@args );
-ok(func_wrap_are_members_any(
-    $memb_hash_ref,
-    $test_members_any,
-), "are_members_any() returned all expected values");
-
-#eval { $memb_hash_ref = are_members_any( { key => 'value' } ) };
-#like($@,
-#    qr/Method call requires exactly 1 argument which must be an array reference/,
-#    "are_members_any() correctly generated error message");
-
-$vers = get_version;
-ok($vers, "get_version() returned true value");
-
-
-$LR = is_LsubsetR( [ \@a2, \@a3 ] );
-ok(! $LR, "non-subset correctly determined");
-
-$RL = is_RsubsetL( [ \@a2, \@a3 ] );
-ok($RL, "subset correctly determined");
-
-$eqv = is_LequivalentR( [ \@a2, \@a3 ] );
-ok(! $eqv, "non-equivalence correctly determined");
-
-$eqv = is_LeqvlntR( [ \@a2, \@a3 ] );
-ok(! $eqv, "non-equivalence correctly determined");
-
-$disj = is_LdisjointR( [ \@a2, \@a3 ] );
-ok(! $disj, "non-disjoint correctly determined");
-
-
-$eqv = is_LequivalentR( [ \@a3, \@a4 ] );
-ok($eqv, "equivalence correctly determined");
-
-$eqv = is_LeqvlntR( [ \@a3, \@a4 ] );
-ok($eqv, "equivalence correctly determined");
-
-$disj = is_LdisjointR( [ \@a3, \@a4 ] );
-ok(! $disj, "non-disjoint correctly determined");
-
-
-ok(0 == get_intersection( [ \@a4, \@a8 ] ), "no intersection, as expected");
-ok(0 == scalar(@{get_intersection_ref( [ \@a4, \@a8 ] )}),
-    "no intersection, as expected");
-$disj = is_LdisjointR( [ \@a4, \@a8 ] );
-ok($disj, "disjoint correctly determined");
+    eval { $result = $sub->( [ \@a0, \@a1 ] ); };
+    like($@, qr/^Subroutine call requires 2 references as arguments/,
+        "$name:  Got expected error message for lack of second argument");
+}

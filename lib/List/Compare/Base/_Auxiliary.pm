@@ -1,7 +1,6 @@
 package List::Compare::Base::_Auxiliary;
 #$Id$
 $VERSION = 0.35;
-# As of:  09/18/2005
 use Carp;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw|
@@ -74,6 +73,8 @@ use Carp;
 );
 use strict;
 local $^W =1;
+
+my $bad_lists_msg = q{If argument is single hash ref, you must have a 'lists' key whose value is an array ref};
 
 sub _validate_2_seenhashes {
     my ($refL, $refR) = @_;
@@ -591,7 +592,7 @@ sub _argument_checker_4 {
         if (@{$args[1]} == 2) {
             my $last_index = $#{$args[0]};
             foreach my $i (@{$args[1]}) {
-		croak "No element in index position $i in list of list references passed as first argument to function: $!"
+		        croak "No element in index position $i in list of list references passed as first argument to function: $!"
                     unless ($i =~ /^\d+$/ and $i <= $last_index);
             }
             return (_argument_checker($args[0]), $args[1]);
@@ -635,7 +636,7 @@ sub _alt_construct_tester {
     my ($argref, $unsorted);
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
        my $hashref = shift;
-       croak "If argument is single hash ref, you must have a 'lists' key whose value is an array ref: $!"
+       croak "$bad_lists_msg: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
        $argref = ${$hashref}{'lists'};
@@ -656,10 +657,10 @@ sub _alt_construct_tester_1 {
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
         my (@returns);
         my $hashref = $args[0];
-        croak "Need to define 'lists' key properly: $!"
+       croak "$bad_lists_msg: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
-        croak "Need to define 'item' key properly: $!"
+        croak "If argument is single hash ref, you must have an 'item' key: $!"
            unless ${$hashref}{'item'};
         @returns = ( ${$hashref}{'lists'}, [${$hashref}{'item'}] );
         $argref = \@returns;
@@ -677,10 +678,10 @@ sub _alt_construct_tester_2 {
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
         my (@returns);
         my $hashref = $args[0];
-        croak "Need to define 'lists' key properly: $!"
+       croak "$bad_lists_msg: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
-        croak "Need to define 'items' key properly: $!"
+        croak "If argument is single hash ref, you must have an 'items' key whose value is an array ref: $!"
            unless ( ${$hashref}{'items'}
                 and (ref(${$hashref}{'items'}) eq 'ARRAY') );
         @returns = defined ${$hashref}{'items'}
@@ -701,7 +702,7 @@ sub _alt_construct_tester_3 {
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
         my (@returns);
         my $hashref = $args[0];
-        croak "If argument is single hash ref, you must have a 'lists' key whose value is an array ref: $!"
+       croak "$bad_lists_msg: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
         @returns = defined ${$hashref}{'item'}
@@ -724,7 +725,7 @@ sub _alt_construct_tester_4 {
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
         my (@returns);
         my $hashref = $args[0];
-        croak "Need to define 'lists' key properly: $!"
+       croak "$bad_lists_msg: $!"
            unless ( ${$hashref}{'lists'}
                 and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
         @returns = defined ${$hashref}{'pair'}

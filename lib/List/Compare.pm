@@ -1,6 +1,6 @@
 package List::Compare;
 #$Id$
-$VERSION = '0.35';   # May 1, 2008 
+$VERSION = '0.35';
 use strict;
 local $^W = 1;
 use Carp;

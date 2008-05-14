@@ -1,6 +1,6 @@
 package List::Compare::Functional;
 #$Id$
-$VERSION = 0.35;   # May 1, 2008 
+$VERSION = 0.35;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw|
     get_intersection
