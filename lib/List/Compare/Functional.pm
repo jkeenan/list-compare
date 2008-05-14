@@ -495,7 +495,9 @@ sub _bag_engine {
                 push(@bag, $el);
             }
         }
-    } elsif (ref($listrefs[0]) eq 'HASH') {
+    } else {
+        # Via _argument_checker_0(), we've already guaranteed that we
+        # have either array refs or hash refs.
         foreach my $lref (@listrefs) {
             foreach my $key (keys %{$lref}) {
                 for (my $j=1; $j <= ${$lref}{$key}; $j++) {
@@ -503,8 +505,6 @@ sub _bag_engine {
                 }
             }
         }
-    } else {
-        croak "Indeterminate case in _bag_engine: $!";
     }
     return \@bag;
 }
