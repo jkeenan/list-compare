@@ -1,8 +1,8 @@
 # perl
 #$Id$
-# 35_func_lists_mult_sorted.t
+# 39_func_lists_alt_mult_sorted.t
 use strict;
-use Test::More tests =>  43;
+use Test::More qw(no_plan); # tests =>  43;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );

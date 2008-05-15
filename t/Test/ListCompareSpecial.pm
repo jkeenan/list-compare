@@ -9,12 +9,15 @@ our @EXPORT_OK = qw(
     all_is_member_which
     func_all_is_member_which
     func_all_is_member_which_ref
+    func_all_is_member_which_alt
+    func_all_is_member_which_ref_alt
     wrap_is_member_which_ref
     all_is_member_which_ref
     wrap_are_members_which
     wrap_is_member_any
     all_is_member_any
     func_all_is_member_any
+    func_all_is_member_any_alt
     wrap_are_members_any
     make_array_seen_hash
     @a0 @a1 @a2 @a3 @a4             @a8
@@ -58,12 +61,15 @@ our %EXPORT_TAGS = (
     func_wrap => [ qw(
         func_wrap_is_member_which
         func_wrap_is_member_which_ref
+        func_all_is_member_which_ref_alt
+        func_all_is_member_which_alt
         func_wrap_are_members_which
         func_wrap_is_member_any
         func_wrap_are_members_any
         func_all_is_member_which
         func_all_is_member_which_ref
         func_all_is_member_any
+        func_all_is_member_any_alt
     ) ],
     results => [ qw(
         $test_member_which_dual
@@ -178,6 +184,32 @@ sub func_all_is_member_which {
     return \@overall;
 }
 
+sub func_all_is_member_which_alt {
+    my $data = shift;
+    my $args = shift;
+    my @overall;
+    for my $v ( @{ $args } ) {
+        push @overall, [ is_member_which( {
+            lists   => $data, 
+            item    => $v,
+        } ) ];
+    }
+    return \@overall;
+}
+
+sub func_all_is_member_which_ref_alt {
+    my $data = shift;
+    my $args = shift;
+    my @overall;
+    for my $v ( @{ $args } ) {
+        push @overall, is_member_which_ref( {
+            lists   => $data, 
+            item    => $v,
+        } );
+    }
+    return \@overall;
+}
+
 sub wrap_is_member_which_ref {
     my $obj = shift;
     my $args = shift;
@@ -247,6 +279,19 @@ sub func_all_is_member_any {
     my @overall;
     for my $v ( @{ $args } ) {
         push @overall, is_member_any( $data, [ $v ] );
+    }
+    return \@overall;
+}
+
+sub func_all_is_member_any_alt {
+    my $data = shift;
+    my $args = shift;
+    my @overall;
+    for my $v ( @{ $args } ) {
+        push @overall, is_member_any( {
+            lists => $data,
+            item => $v,
+        } );
     }
     return \@overall;
 }

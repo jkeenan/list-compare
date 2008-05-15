@@ -1,8 +1,8 @@
 # perl
 #$Id$
-# 34_func_lists_dual_unsorted.t
+# 38_func_lists_alt_dual_unsorted.t
 use strict;
-use Test::More tests =>  38;
+use Test::More qw(no_plan); # tests =>  38;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
