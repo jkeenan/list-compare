@@ -1751,7 +1751,7 @@ List::Compare - Compare elements of two or more lists
 =head1 VERSION
 
 This document refers to version 0.35 of List::Compare.  This version was
-released May 1, 2008.
+released May 18, 2008.
 
 =head1 SYNOPSIS
 
@@ -3182,7 +3182,7 @@ or through the web interface at L<http://rt.cpan.org>.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  May 1, 2008.
+Creation date:  May 20, 2002.  Last modification date:  May 18, 2008.
 
 =head1 COPYRIGHT
 

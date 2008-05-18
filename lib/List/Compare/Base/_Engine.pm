@@ -84,7 +84,7 @@ List::Compare::Base::_Engine - Internal use only
 =head1 VERSION
 
 This document refers to version 0.35 of List::Compare::Base::_Engine.
-This version was released May 1, 2008.
+This version was released May 18, 2008.
 
 =head1 SYNOPSIS
 
@@ -96,7 +96,7 @@ List::Compare::Functional.  They are not intended to be publicly callable.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  May 1, 2008. 
+Creation date:  May 20, 2002.  Last modification date:  May 18, 2008. 
 Copyright (c) 2002-04 James E. Keenan.  United States.  All rights reserved. 
 This is free software and may be distributed under the same terms as Perl
 itself.

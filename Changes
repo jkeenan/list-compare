@@ -132,3 +132,10 @@ List::Compare::Functional; other internal code clean-up
 
 0.34 Mon Nov  5 18:35:15 EST 2007
     - Add require 5.6 to Makefile.PL.
+
+0.35 Sun May 18 19:54:32 EDT 2008
+    - Fix bug reported by Charles Bailey.  In object-oriented interface, two
+      lists case, get_shared and get_shared_ref should default to
+      get_intersection and get_intersection_ref.
+    - Complete overhaul of test suite.  Tests are now grouped by interface in
+      a more logical order.
