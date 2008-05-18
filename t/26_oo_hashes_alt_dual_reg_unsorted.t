@@ -75,7 +75,22 @@ ok(unseen(\%seen, \@unpred),
     "union:  All non-expected elements correctly excluded");
 %seen = ();
 
-%pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton );
+%pred = map {$_, 1} qw( baker camera delta edward fargo golfer );
+@unpred = qw| abel hilton icon jerky |;
+@intersection = $lcu->get_intersection;
+$seen{$_}++ foreach (@intersection);
+is_deeply(\%seen, \%pred, "unsorted:  got expected intersection");
+ok(unseen(\%seen, \@unpred),
+    "intersection:  All non-expected elements correctly excluded");
+%seen = ();
+
+$intersection_ref = $lcu->get_intersection_ref;
+$seen{$_}++ foreach (@{$intersection_ref});
+is_deeply(\%seen, \%pred, "unsorted:  got expected intersection");
+ok(unseen(\%seen, \@unpred),
+    "intersection:  All non-expected elements correctly excluded");
+%seen = ();
+
 {
     my ($rv, $stdout, $stderr);
     capture(
@@ -106,22 +121,6 @@ ok(unseen(\%seen, \@unpred),
     like($stderr, qr/please consider re-coding/,
         "Got expected warning");
 }
-%seen = ();
-
-%pred = map {$_, 1} qw( baker camera delta edward fargo golfer );
-@unpred = qw| abel hilton icon jerky |;
-@intersection = $lcu->get_intersection;
-$seen{$_}++ foreach (@intersection);
-is_deeply(\%seen, \%pred, "unsorted:  got expected intersection");
-ok(unseen(\%seen, \@unpred),
-    "intersection:  All non-expected elements correctly excluded");
-%seen = ();
-
-$intersection_ref = $lcu->get_intersection_ref;
-$seen{$_}++ foreach (@{$intersection_ref});
-is_deeply(\%seen, \%pred, "unsorted:  got expected intersection");
-ok(unseen(\%seen, \@unpred),
-    "intersection:  All non-expected elements correctly excluded");
 %seen = ();
 
 %pred = map {$_, 1} qw( abel );

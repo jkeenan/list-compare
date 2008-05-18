@@ -37,6 +37,13 @@ is_deeply( \@union, \@pred, "Got expected union");
 $union_ref = $lc->get_union_ref;
 is_deeply( $union_ref, \@pred, "Got expected union");
 
+@pred = qw( baker camera delta edward fargo golfer );
+@intersection = $lc->get_intersection;
+is_deeply(\@intersection, \@pred, "Got expected intersection");
+
+$intersection_ref = $lc->get_intersection_ref;
+is_deeply($intersection_ref, \@pred, "Got expected intersection");
+
 {
     my ($rv, $stdout, $stderr);
     capture(
@@ -59,13 +66,6 @@ is_deeply( $union_ref, \@pred, "Got expected union");
     like($stderr, qr/please consider re-coding/,
         "Got expected warning");
 }
-
-@pred = qw( baker camera delta edward fargo golfer );
-@intersection = $lc->get_intersection;
-is_deeply(\@intersection, \@pred, "Got expected intersection");
-
-$intersection_ref = $lc->get_intersection_ref;
-is_deeply($intersection_ref, \@pred, "Got expected intersection");
 
 @pred = qw( abel );
 @unique = $lc->get_unique;

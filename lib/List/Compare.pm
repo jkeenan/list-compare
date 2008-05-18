@@ -174,15 +174,15 @@ sub get_union_ref {
 sub get_shared {
     my $class = shift;
     my $method = (caller(0))[3];
-    carp "When comparing only 2 lists, $method defaults to \n  ", 'get_union()', ".  Though the results returned are valid, \n    please consider re-coding with that method: $!";
-    get_union($class);
+    carp "When comparing only 2 lists, $method defaults to \n  ", 'get_intersection()', ".  Though the results returned are valid, \n    please consider re-coding with that method: $!";
+    get_intersection($class);
 }
 
 sub get_shared_ref {
     my $class = shift;
     my $method = (caller(0))[3];
-    carp "When comparing only 2 lists, $method defaults to \n  ", 'get_union_ref()', ".  Though the results returned are valid, \n    please consider re-coding with that method: $!";
-    get_union_ref($class);
+    carp "When comparing only 2 lists, $method defaults to \n  ", 'get_intersection_ref()', ".  Though the results returned are valid, \n    please consider re-coding with that method: $!";
+    get_intersection_ref($class);
 }
 
 sub get_unique {
