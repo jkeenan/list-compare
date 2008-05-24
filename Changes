@@ -139,3 +139,7 @@ List::Compare::Functional; other internal code clean-up
       get_intersection and get_intersection_ref.
     - Complete overhaul of test suite.  Tests are now grouped by interface in
       a more logical order.
+
+0.36 Fri May 23 21:41:55 EDT 2008
+    - IO::CaptureOutput was mispositioned:  should have been directly under t/
+      rather than under t/Test/.
