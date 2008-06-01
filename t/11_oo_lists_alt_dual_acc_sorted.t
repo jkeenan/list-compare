@@ -2,7 +2,7 @@
 #$Id$
 # 11_oo_lists_alt_dual_acc_sorted.t
 use strict;
-use Test::More qw(no_plan); # tests =>  79;
+use Test::More tests =>  79;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
