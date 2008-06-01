@@ -386,7 +386,6 @@ sub get_version {
 package List::Compare::Accelerated;
 use Carp;
 use List::Compare::Base::_Auxiliary qw(
-    _validate_2_seenhashes
     _argument_checker_0
     _chart_engine_regular
     _calc_seen
