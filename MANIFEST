@@ -57,6 +57,7 @@ t/45_func_hashes_alt_dual_sorted.t
 t/46_func_hashes_alt_dual_unsorted.t
 t/47_func_hashes_alt_mult_sorted.t
 t/48_func_hashes_alt_mult_unsorted.t
+t/90_oo_errors.t
 t/91_func_errors.t
 t/IO/CaptureOutput.pm
 t/Test/ListCompareSpecial.pm
