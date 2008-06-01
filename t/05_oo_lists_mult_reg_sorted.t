@@ -2,7 +2,7 @@
 #$Id$
 # 05_oo_lists_mult_reg_sorted.t
 use strict;
-use Test::More tests => 106;
+use Test::More tests => 110;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
@@ -514,11 +514,20 @@ eval { $memb_arr_ref = $lcm->is_member_which_ref('jerky', 'zebra') };
 like($@, qr/Method call requires exactly 1 argument \(no references\)/,
         "is_member_which_ref() correctly generated error message");
 
+eval { $memb_arr_ref = $lcm->is_member_which_ref( [ 'jerky' ] ) };
+like($@, qr/Method call requires exactly 1 argument \(no references\)/,
+        "is_member_which_ref() correctly generated error message");
+
 $memb_hash_ref = $lcm->are_members_which( \@args );
 is_deeply($memb_hash_ref, $test_members_which_mult,
    "are_members_which() returned all expected values");
 
 eval { $memb_hash_ref = $lcm->are_members_which( { key => 'value' } ) };
+like($@,
+    qr/Method call requires exactly 1 argument which must be an array reference/,
+    "are_members_which() correctly generated error message");
+
+eval { $memb_hash_ref = $lcm->are_members_which( \@args, [ 1 .. 3 ] ) };
 like($@,
     qr/Method call requires exactly 1 argument which must be an array reference/,
     "are_members_which() correctly generated error message");
@@ -531,6 +540,11 @@ like($@,
     qr/Method call requires exactly 1 argument \(no references\)/,
     "is_member_any() correctly generated error message");
 
+eval { $lcm->is_member_any( [ 'jerky' ] ) };
+like($@,
+    qr/Method call requires exactly 1 argument \(no references\)/,
+    "is_member_any() correctly generated error message");
+
 $memb_hash_ref = $lcm->are_members_any( \@args );
 ok(wrap_are_members_any(
     $memb_hash_ref,
@@ -538,6 +552,11 @@ ok(wrap_are_members_any(
 ), "are_members_any() returned all expected values");
 
 eval { $memb_hash_ref = $lcm->are_members_any( { key => 'value' } ) };
+like($@,
+    qr/Method call requires exactly 1 argument which must be an array reference/,
+    "are_members_any() correctly generated error message");
+
+eval { $memb_hash_ref = $lcm->are_members_any( \@args, [ 1..3 ] ) };
 like($@,
     qr/Method call requires exactly 1 argument which must be an array reference/,
     "are_members_any() correctly generated error message");
