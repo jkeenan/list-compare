@@ -2,7 +2,7 @@
 #$Id$
 # 35_func_lists_mult_sorted.t
 use strict;
-use Test::More tests =>  43;
+use Test::More tests =>  48;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -50,6 +50,14 @@ is_deeply(\@unique, \@pred, "Got expected unique");
 $unique_ref = get_unique_ref( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 2 ] );
 is_deeply($unique_ref, \@pred, "Got expected unique");
 
+eval { $unique_ref = get_unique_ref(
+    [ \@a0, \@a1, \@a2, \@a3, \@a4 ],
+    [ 2 ],
+    [ 'foobar' ]
+); };
+like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
+    "Got expected message for too many arguments");
+
 @pred = qw( abel );
 @unique = get_unique( [ \@a0, \@a1, \@a2, \@a3, \@a4 ] );
 is_deeply(\@unique, \@pred, "Got expected unique");
@@ -81,6 +89,14 @@ is_deeply(\@complement, \@pred, "Got expected complement");
 
 $complement_ref = get_complement_ref( [ \@a0, \@a1, \@a2, \@a3, \@a4 ] );
 is_deeply($complement_ref, \@pred, "Got expected complement");
+
+eval { $complement_ref = get_complement_ref(
+    [ \@a0, \@a1, \@a2, \@a3, \@a4 ],
+    [ 2 ],
+    [ 'foobar' ]
+); };
+like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
+    "Got expected message for too many arguments");
 
 @pred = (
     [ qw( hilton icon jerky ) ],
@@ -133,6 +149,12 @@ ok(! $LR, "Got expected subset relationship");
 $LR = is_LsubsetR( [ \@a0, \@a1, \@a2, \@a3, \@a4 ] );
 ok(! $LR, "Got expected subset relationship");
 
+eval { $LR = is_LsubsetR(
+    [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 3,2 ], [ 'bogus' ]
+); };
+like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
+    "Got expected error message concerning too many arguments");
+
 $eqv = is_LequivalentR( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 3,4 ] );
 ok($eqv, "Got expected equivalence relationship");
 
@@ -141,6 +163,12 @@ ok($eqv, "Got expected equivalence relationship");
 
 $eqv = is_LequivalentR( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 2,4 ] );
 ok(! $eqv, "Got expected equivalence relationship");
+
+eval { $LR = is_LequivalentR(
+    [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 3,2 ], [ 'bogus' ]
+); };
+like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
+    "Got expected error message concerning too many arguments");
 
 {
     my ($rv, $stdout, $stderr);
@@ -198,3 +226,10 @@ ok(! $disj, "Got expected disjoint relationship");
 
 $disj = is_LdisjointR( [ \@a0, \@a1, \@a2, \@a3, \@a4, \@a8 ], [ 4,5 ] );
 ok($disj, "Got expected disjoint relationship");
+
+eval { $LR = is_LdisjointR(
+    [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 3,2 ], [ 'bogus' ]
+); };
+like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
+    "Got expected error message concerning too many arguments");
+

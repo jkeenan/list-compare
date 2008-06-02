@@ -2,7 +2,7 @@
 #$Id$
 # 01_oo_lists_dual_reg_sorted.t
 use strict;
-use Test::More qw(no_plan); # tests =>  84;
+use Test::More tests =>  12;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :hashes :results );

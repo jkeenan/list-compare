@@ -2,7 +2,7 @@
 #$Id$
 # 07_oo_lists_mult_acc_sorted.t
 use strict;
-use Test::More tests => 110;
+use Test::More tests => 112;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
@@ -54,6 +54,12 @@ $unique_ref = $lcm->get_unique_ref(2);
 is_deeply($unique_ref, \@pred, "Got expected unique");
 
 eval { $unique_ref = $lcm->get_unique_ref('jerky') };
+like($@,
+    qr/Argument to method List::Compare::Multiple::Accelerated::get_unique_ref must be the array index/,
+    "Got expected error message"
+);
+
+eval { $unique_ref = $lcm->get_unique_ref(999) };
 like($@,
     qr/Argument to method List::Compare::Multiple::Accelerated::get_unique_ref must be the array index/,
     "Got expected error message"
@@ -193,6 +199,12 @@ $complement_ref = $lcm->get_complement_ref(1);
 is_deeply($complement_ref, \@pred, "Got expected complement");
 
 eval { $complement_ref = $lcm->get_complement_ref('jerky') };
+like($@,
+    qr/Argument to method List::Compare::Multiple::Accelerated::get_complement_ref must be the array index/,
+    "Got expected error message"
+);
+
+eval { $complement_ref = $lcm->get_complement_ref(999) };
 like($@,
     qr/Argument to method List::Compare::Multiple::Accelerated::get_complement_ref must be the array index/,
     "Got expected error message"
