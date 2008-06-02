@@ -2,7 +2,7 @@
 #$Id$
 # 05_oo_lists_mult_reg_sorted.t
 use strict;
-use Test::More tests => 112;
+use Test::More tests => 115;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
@@ -442,6 +442,12 @@ like($@,
     "Got expected error message"
 );
 
+eval { $LR = $lcm->is_LsubsetR('jerky', 3) };
+like($@,
+    qr/Each argument to method List::Compare::Multiple::is_LsubsetR must be a valid array index /,
+    "Got expected error message"
+);
+
 {
     my ($rv, $stdout, $stderr);
     capture(
@@ -488,6 +494,12 @@ eval { $eqv = $lcm->is_LequivalentR(8,9) };
 like($@,
     qr/Each argument to method List::Compare::Multiple::is_LequivalentR must be a valid array index/,
     "Got expected error message",
+);
+
+eval { $LR = $lcm->is_LequivalentR('jerky', 3) };
+like($@,
+    qr/Each argument to method List::Compare::Multiple::is_LequivalentR must be a valid array index /,
+    "Got expected error message"
 );
 
 {
@@ -592,6 +604,12 @@ ok($disj, "Got expected disjoint relationship");
 eval { $disj = $lcm_dj->is_LdisjointR(2) };
 like($@, qr/Method List::Compare::Multiple::is_LdisjointR requires 2 arguments/,
     "Got expected error message");
+
+eval { $LR = $lcm->is_LdisjointR('jerky', 3) };
+like($@,
+    qr/Each argument to method List::Compare::Multiple::is_LdisjointR must be a valid array index /,
+    "Got expected error message"
+);
 
 ########## BELOW:  Testfor bad arguments to constructor ##########
 

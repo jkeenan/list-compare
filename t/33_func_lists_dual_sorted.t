@@ -2,7 +2,7 @@
 #$Id$
 # 33_func_lists_dual_sorted.t
 use strict;
-use Test::More tests =>  46;
+use Test::More tests =>  48;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -58,6 +58,10 @@ $unique_all_ref = get_unique_all( [ \@a0, \@a1 ] );
 is_deeply($unique_all_ref, [ @pred ],
     "Got expected values for get_unique_all()");
 
+eval { $unique_all_ref = get_unique_all( [ \@a0, \@a1 ], [ 'foobar' ] ); };
+like($@, qr/Subroutine call requires exactly 1 reference as argument/,
+    "Got expected error message for too many arguments");
+
 @pred = qw ( hilton );
 @complement = get_complement( [ \@a0, \@a1 ] );
 is_deeply(\@complement, \@pred, "Got expected complement");
@@ -72,6 +76,10 @@ is_deeply($complement_ref, \@pred, "Got expected complement");
 $complement_all_ref = get_complement_all( [ \@a0, \@a1 ] );
 is_deeply($complement_all_ref, [ @pred ],
     "Got expected values for get_complement_all()");
+
+eval { $complement_all_ref = get_complement_all( [ \@a0, \@a1 ], [ 'foobar' ] ); };
+like($@, qr/Subroutine call requires exactly 1 reference as argument/,
+    "Got expected error message for too many arguments");
 
 @pred = qw( abel hilton );
 @symmetric_difference = get_symmetric_difference( [ \@a0, \@a1 ] );

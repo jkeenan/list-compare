@@ -2,7 +2,7 @@
 #$Id$
 # 07_oo_lists_mult_acc_sorted.t
 use strict;
-use Test::More tests => 112;
+use Test::More tests => 114;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
@@ -494,6 +494,12 @@ like($@,
     "Got expected error message",
 );
 
+eval { $eqv = $lcm->is_LequivalentR('jerky',9) };
+like($@,
+    qr/Each argument to method List::Compare::Multiple::Accelerated::is_LequivalentR must be a valid array index/,
+    "Got expected error message",
+);
+
 {
     my ($rv, $stdout, $stderr);
     capture(
@@ -596,6 +602,12 @@ ok($disj, "Got expected disjoint relationship");
 eval { $disj = $lcm_dj->is_LdisjointR(2) };
 like($@, qr/Method List::Compare::Multiple::Accelerated::is_LdisjointR requires 2 arguments/,
     "Got expected error message");
+
+eval { $eqv = $lcm->is_LdisjointR('jerky',5) };
+like($@,
+    qr/Each argument to method List::Compare::Multiple::Accelerated::is_LdisjointR must be a valid array index/,
+    "Got expected error message",
+);
 
 ########## BELOW:  Testfor bad arguments to constructor ##########
 

@@ -2,7 +2,7 @@
 #$Id$
 # 35_func_lists_mult_sorted.t
 use strict;
-use Test::More tests =>  48;
+use Test::More tests =>  51;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -155,6 +155,12 @@ eval { $LR = is_LsubsetR(
 like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
     "Got expected error message concerning too many arguments");
 
+eval { $LR = is_LsubsetR(
+    [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 'bogus' , 2 ]
+); };
+like($@, qr/No element in index position/,
+    "Got expected error message concerning bad arguments");
+
 $eqv = is_LequivalentR( [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 3,4 ] );
 ok($eqv, "Got expected equivalence relationship");
 
@@ -169,6 +175,12 @@ eval { $LR = is_LequivalentR(
 ); };
 like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
     "Got expected error message concerning too many arguments");
+
+eval { $LR = is_LequivalentR(
+    [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 'bogus', 2 ]
+); };
+like($@, qr/No element in index position/,
+    "Got expected error message concerning bad arguments");
 
 {
     my ($rv, $stdout, $stderr);
@@ -232,4 +244,10 @@ eval { $LR = is_LdisjointR(
 ); };
 like($@, qr/Subroutine call requires 1 or 2 references as arguments/,
     "Got expected error message concerning too many arguments");
+
+eval { $LR = is_LdisjointR(
+    [ \@a0, \@a1, \@a2, \@a3, \@a4 ], [ 'bogus', 2 ]
+); };
+like($@, qr/No element in index position/,
+    "Got expected error message concerning bad arguments");
 
