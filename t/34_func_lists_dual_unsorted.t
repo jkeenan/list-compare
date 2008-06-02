@@ -2,7 +2,7 @@
 #$Id$
 # 34_func_lists_dual_unsorted.t
 use strict;
-use Test::More tests =>  38;
+use Test::More tests =>  42;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -193,3 +193,24 @@ is_deeply(\%seen, \%pred, "Got predicted quantities in bag");
 ok(unseen(\%seen, \@unpred),
     "bag:  All non-expected elements correctly excluded");
 %seen = ();
+
+# Tests for --unsorted option
+
+%pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton );
+@unpred = qw| icon jerky |;
+@union = get_union( '-u', [ \@a0, \@a1 ] );
+$seen{$_}++ foreach (@union);
+is_deeply(\%seen, \%pred, "unsorted:  got expected union");
+ok(unseen(\%seen, \@unpred),
+    "union:  All non-expected elements correctly excluded");
+%seen = ();
+
+%pred = map {$_, 1} qw( abel );
+@unpred = qw| baker camera delta edward fargo golfer hilton icon jerky |;
+@unique = get_unique( '-u', [ \@a0, \@a1 ] );
+$seen{$_}++ foreach (@unique);
+is_deeply(\%seen, \%pred, "unsorted:  got expected unique");
+ok(unseen(\%seen, \@unpred),
+    "unique:  All non-expected elements correctly excluded");
+%seen = ();
+
