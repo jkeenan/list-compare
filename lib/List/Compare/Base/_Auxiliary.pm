@@ -396,7 +396,6 @@ sub _index_message1 {
     croak "Argument to method $method must be the array index of the target list \n  in list of arrays passed as arguments to the constructor: $!"
         unless (
                 $index =~ /^\d+$/ 
-           and  0 <= $index 
            and  $index <= ${$dataref}{'maxindex'}
         );
 }
@@ -416,7 +415,6 @@ sub _index_message2 {
             croak "Each argument to method $method must be a valid array index for the target list \n  in list of arrays passed as arguments to the constructor: $!"
                 unless (
                         $_ =~ /^\d+$/ 
-                   and  0 <= $_ 
                    and  $_ <= ${$dataref}{'maxindex'}
                 );
         }
@@ -430,7 +428,6 @@ sub _index_message3 {
     croak "Argument to method $method must be the array index of the target list \n  in list of arrays passed as arguments to the constructor: $!"
         unless (
                 $index =~ /^\d+$/ 
-           and  0 <= $index 
            and  $index <= $maxindex
         );
 }
@@ -450,7 +447,6 @@ sub _index_message4 {
             croak "Each argument to method $method must be a valid array index for the target list \n  in list of arrays passed as arguments to the constructor: $!"
                 unless (
                         $_ =~ /^\d+$/ 
-                   and  0 <= $_ 
                    and  $_ <= $maxindex
                 );
         }
@@ -568,8 +564,7 @@ sub _argument_checker_3 {
     } elsif (@args == 2) {
         return (_argument_checker($args[0]), ${$args[1]}[0]);
     } else {
-        croak "Subroutine call requires 1 or 2 references as arguments:  $!"
-            unless (@args == 1 or @args == 2);
+        croak "Subroutine call requires 1 or 2 references as arguments:  $!";
     }
 }
 
@@ -600,8 +595,7 @@ sub _argument_checker_4 {
             croak "Must provide index positions corresponding to two lists: $!";
         }
     } else {
-        croak "Subroutine call requires 1 or 2 references as arguments: $!"
-            unless (@args == 1 or @args == 2);
+        croak "Subroutine call requires 1 or 2 references as arguments: $!";
     }
 }
 
