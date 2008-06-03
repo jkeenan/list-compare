@@ -475,15 +475,15 @@ sub _subset_engine_multaccel {
 
 sub _calc_seen {
     my ($refL, $refR) = @_;
-    if (ref($refL) eq 'ARRAY' and ref($refR) eq 'ARRAY') {
+    # We've already guaranteed that args are both array refs or both hash
+    # refs.  So checking the left-hand one is sufficient.
+    if (ref($refL) eq 'ARRAY') {
         my (%seenL, %seenR);
         foreach (@$refL) { $seenL{$_}++ }
         foreach (@$refR) { $seenR{$_}++ }
         return (\%seenL, \%seenR); 
-    } elsif (ref($refL) eq 'HASH' and ref($refR) eq 'HASH') {
-        return ($refL, $refR);
     } else {
-        croak "Improper mixing of arguments; accelerated calculation not possible:  $!";
+        return ($refL, $refR);
     }
 }
 
