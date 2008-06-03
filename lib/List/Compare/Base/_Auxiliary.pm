@@ -508,8 +508,6 @@ sub _equiv_engine {
 sub _argument_checker_0 {
     my @args = @_;
     my $first_ref = ref($args[0]);
-    croak "'$first_ref' must be array ref or hash ref: $!" 
-        unless ($first_ref eq 'ARRAY' or $first_ref eq 'HASH');
     my @temp = @args[1..$#args];
     my ($testing);
     my $condition = 1;

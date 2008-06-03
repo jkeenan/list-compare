@@ -198,7 +198,7 @@ ok(unseen(\%seen, \@unpred),
 
 %pred = map {$_, 1} qw( abel baker camera delta edward fargo golfer hilton );
 @unpred = qw| icon jerky |;
-@union = get_union( '-u', [ \@a0, \@a1 ] );
+@union = get_union( '--unsorted', [ \@a0, \@a1 ] );
 $seen{$_}++ foreach (@union);
 is_deeply(\%seen, \%pred, "unsorted:  got expected union");
 ok(unseen(\%seen, \@unpred),
@@ -207,7 +207,7 @@ ok(unseen(\%seen, \@unpred),
 
 %pred = map {$_, 1} qw( abel );
 @unpred = qw| baker camera delta edward fargo golfer hilton icon jerky |;
-@unique = get_unique( '-u', [ \@a0, \@a1 ] );
+@unique = get_unique( '--unsorted', [ \@a0, \@a1 ] );
 $seen{$_}++ foreach (@unique);
 is_deeply(\%seen, \%pred, "unsorted:  got expected unique");
 ok(unseen(\%seen, \@unpred),
