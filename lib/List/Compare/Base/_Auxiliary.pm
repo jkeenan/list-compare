@@ -616,10 +616,8 @@ sub _calc_seen1 {
             push(@seenrefs, \%seenthis);
         }
         return \@seenrefs;
-    } elsif (ref($listrefs[0]) eq 'HASH') {
-        return \@listrefs;
     } else {
-        croak "Indeterminate case in _calc_seen1: $!";
+        return \@listrefs;
     }
 }
 

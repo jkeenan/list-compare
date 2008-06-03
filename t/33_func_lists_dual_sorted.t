@@ -2,7 +2,7 @@
 #$Id$
 # 33_func_lists_dual_sorted.t
 use strict;
-use Test::More tests =>  48;
+use Test::More qw(no_plan); # tests =>  50;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -134,6 +134,11 @@ ok(! $disj, "Got expected disjoint relationship");
     like($stdout, qr/Subset Relationships/,
         "Got expected chart header");
 }
+
+eval { my $rv = print_subset_chart( [ \@a0, \@a1 ], [ 'bogus' ] ); };
+like($@, qr/Subroutine call requires exactly 1 reference as argument/,
+    "Got expected error message for too many arguments");
+
 {
     my ($rv, $stdout, $stderr);
     capture(
@@ -145,6 +150,10 @@ ok(! $disj, "Got expected disjoint relationship");
         "Got expected chart header");
 }
      
+eval { my $rv = print_equivalence_chart( [ \@a0, \@a1 ], [ 'bogus' ] ); };
+like($@, qr/Subroutine call requires exactly 1 reference as argument/,
+    "Got expected error message for too many arguments");
+
 @args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
 is_deeply(func_all_is_member_which( [ \@a0, \@a1 ], \@args ),
     $test_member_which_dual,
