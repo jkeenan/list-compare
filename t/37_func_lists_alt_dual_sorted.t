@@ -2,7 +2,7 @@
 #$Id$
 # 37_func_lists_alt_dual_sorted.t
 use strict;
-use Test::More tests =>  48;
+use Test::More tests =>  50;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -132,6 +132,10 @@ eval { my $rv = print_subset_chart( { lists => \$scalar } ); };
 like($@, qr/^Need to define 'lists' key properly/,
     "Got expected error message re value for 'lists' key other than array ref");
 
+eval { my $rv = print_subset_chart( { key => 'value' } ); };
+like($@, qr/^Need to define 'lists' key properly/,
+    "Got expected error message re value for 'lists' key other than array ref");
+
 {
     my ($rv, $stdout, $stderr);
     capture(
@@ -144,6 +148,10 @@ like($@, qr/^Need to define 'lists' key properly/,
 }
      
 eval { my $rv = print_equivalence_chart( { lists => \$scalar } ); };
+like($@, qr/^Need to define 'lists' key properly/,
+    "Got expected error message re value for 'lists' key other than array ref");
+
+eval { my $rv = print_equivalence_chart( { key => 'value' } ); };
 like($@, qr/^Need to define 'lists' key properly/,
     "Got expected error message re value for 'lists' key other than array ref");
 
