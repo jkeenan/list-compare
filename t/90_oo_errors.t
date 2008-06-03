@@ -2,7 +2,7 @@
 #$Id$
 # 01_oo_lists_dual_reg_sorted.t
 use strict;
-use Test::More tests =>  12;
+use Test::More tests =>  15;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :hashes :results );
@@ -34,6 +34,10 @@ my %h11 = (
 	hilton   => 1,
 );
 
+my %h12 = (
+	fargo    => 1, golfer   => 1, hilton   => 1, icon     => 2, jerky    => 1,	
+);
+
 eval { $lc  = List::Compare->new(\%h10, \%h11); };
 like($@,
     qr/Values in a 'seen-hash' may only be positive integers/s,
@@ -46,6 +50,19 @@ like($@,
 like($@,
     qr/Key:\s+golfer\s+Value:\s+one/s,
     "Got expected error message for left-hand hash which was not a seen-hash"
+);
+eval { $lc  = List::Compare->new(\%h10, \%h11, \%h12); };
+like($@,
+    qr/Values in a 'seen-hash' must be positive integers/s,
+    "Got expected error message for hash which was not a seen-hash"
+);
+like($@,
+    qr/Hash\s+0/s,
+    "Got expected error message for hash which was not a seen-hash"
+);
+like($@,
+    qr/Bad key-value pair:\s+golfer\s+one/s,
+    "Got expected error message for hash which was not a seen-hash"
 );
 
 my %h20 = (
