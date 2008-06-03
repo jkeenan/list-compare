@@ -664,9 +664,7 @@ sub _alt_construct_tester_1 {
 # are_members_which are_members_any
 sub _alt_construct_tester_2 {
     my @args = @_;
-    my ($argref);
     if (@args == 1 and (ref($args[0]) eq 'HASH')) {
-        my (@returns);
         my $hashref = $args[0];
        croak "$bad_lists_msg: $!"
            unless ( ${$hashref}{'lists'}
@@ -674,14 +672,10 @@ sub _alt_construct_tester_2 {
         croak "If argument is single hash ref, you must have an 'items' key whose value is an array ref: $!"
            unless ( ${$hashref}{'items'}
                 and (ref(${$hashref}{'items'}) eq 'ARRAY') );
-        @returns = defined ${$hashref}{'items'}
-                        ? (${$hashref}{'lists'}, ${$hashref}{'items'})
-                        : (${$hashref}{'lists'});
-        $argref = \@returns;
+        return [ (${$hashref}{'lists'}, ${$hashref}{'items'}) ];
     } else {
-        $argref = \@args; 
+        return \@args;
     }
-    return $argref;
 }
 
 # _alt_construct_tester_3 prepares for _argument_checker_3 in
