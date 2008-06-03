@@ -2,7 +2,7 @@
 #$Id$
 # 37_func_lists_alt_dual_sorted.t
 use strict;
-use Test::More tests =>  46;
+use Test::More tests =>  48;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :results );
@@ -126,6 +126,12 @@ ok(! $disj, "Got expected disjoint relationship");
     like($stdout, qr/Subset Relationships/,
         "Got expected chart header");
 }
+
+my $scalar = q{string};
+eval { my $rv = print_subset_chart( { lists => \$scalar } ); };
+like($@, qr/^Need to define 'lists' key properly/,
+    "Got expected error message re value for 'lists' key other than array ref");
+
 {
     my ($rv, $stdout, $stderr);
     capture(
@@ -137,6 +143,10 @@ ok(! $disj, "Got expected disjoint relationship");
         "Got expected chart header");
 }
      
+eval { my $rv = print_equivalence_chart( { lists => \$scalar } ); };
+like($@, qr/^Need to define 'lists' key properly/,
+    "Got expected error message re value for 'lists' key other than array ref");
+
 @args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
 is_deeply(func_all_is_member_which_alt( [ \@a0, \@a1 ], \@args ),
     $test_member_which_dual,
