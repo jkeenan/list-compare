@@ -2,7 +2,7 @@
 #$Id$
 # 01_oo_lists_dual_reg_sorted.t
 use strict;
-use Test::More tests =>  18;
+use Test::More tests =>  30;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :hashes :results );
@@ -51,6 +51,21 @@ like($@,
     qr/Key:\s+golfer\s+Value:\s+one/s,
     "Got expected error message for left-hand hash which was not a seen-hash"
 );
+
+eval { $lc  = List::Compare->new('-a', \%h10, \%h11); };
+like($@,
+    qr/Values in a 'seen-hash' must be numeric/s,
+    "Got expected error message for left-hand hash which was not a seen-hash"
+);
+like($@,
+    qr/First hash in arguments/s,
+    "Got expected error message for left-hand hash which was not a seen-hash"
+);
+like($@,
+    qr/Key:\s+golfer\s+Value:\s+one/s,
+    "Got expected error message for left-hand hash which was not a seen-hash"
+);
+
 eval { $lc  = List::Compare->new(\%h10, \%h11, \%h12); };
 like($@,
     qr/Values in a 'seen-hash' must be positive integers/s,
@@ -89,6 +104,20 @@ like($@,
     "Got expected error message for right-hand hash which was not a seen-hash"
 );
 
+eval { $lc  = List::Compare->new('-a', \%h20, \%h21); };
+like($@,
+    qr/Values in a 'seen-hash' must be numeric/s,
+    "Got expected error message for right-hand hash which was not a seen-hash"
+);
+like($@,
+    qr/Second hash in arguments/s,
+    "Got expected error message for right-hand hash which was not a seen-hash"
+);
+like($@,
+    qr/Key:\s+hilton\s+Value:\s+one/s,
+    "Got expected error message for right-hand hash which was not a seen-hash"
+);
+
 my %h30 = (
 	abel  => 2, baker => 1, camera => 1, delta => 1, edward => 1, fargo => 1,
 	golfer   => 0,
@@ -102,6 +131,20 @@ my %h31 = (
 eval { $lc  = List::Compare->new(\%h30, \%h31); };
 like($@,
     qr/Values in a 'seen-hash' may only be positive integers/s,
+    "Got expected error message for left-hand hash which was not a seen-hash"
+);
+like($@,
+    qr/First hash in arguments/s,
+    "Got expected error message for left-hand hash which was not a seen-hash"
+);
+like($@,
+    qr/Key:\s+golfer\s+Value:\s+0/s,
+    "Got expected error message for left-hand hash which was not a seen-hash"
+);
+
+eval { $lc  = List::Compare->new('-a', \%h30, \%h31); };
+like($@,
+    qr/Values in a 'seen-hash' must be numeric/s,
     "Got expected error message for left-hand hash which was not a seen-hash"
 );
 like($@,
@@ -140,6 +183,20 @@ my %h41 = (
 eval { $lc  = List::Compare->new(\%h40, \%h41); };
 like($@,
     qr/Values in a 'seen-hash' may only be positive integers/s,
+    "Got expected error message for right-hand hash which was not a seen-hash"
+);
+like($@,
+    qr/Second hash in arguments/s,
+    "Got expected error message for right-hand hash which was not a seen-hash"
+);
+like($@,
+    qr/Key:\s+hilton\s+Value:\s+0/s,
+    "Got expected error message for right-hand hash which was not a seen-hash"
+);
+
+eval { $lc  = List::Compare->new('-a', \%h40, \%h41); };
+like($@,
+    qr/Values in a 'seen-hash' must be numeric/s,
     "Got expected error message for right-hand hash which was not a seen-hash"
 );
 like($@,
