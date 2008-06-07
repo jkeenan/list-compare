@@ -1768,7 +1768,7 @@ The bare essentials:
 
 =over 4
 
-=item * Constructor
+=item * Constructor:  C<new()>
 
 Create a List::Compare object.  Put the two lists into arrays (named or 
 anonymous) and pass references to the arrays to the constructor.
@@ -1909,8 +1909,6 @@ elements found at least once in both).
 
 =item * C<is_member_which()>
 
-=over 4
-
 Determine in I<which> (if any) of the lists passed to the constructor a given 
 string can be found.  In list context, return a list of those indices in the 
 constructor's argument list corresponding to lists holding the string being 
@@ -1925,12 +1923,8 @@ In the example above, C<@memb_arr> will be:
 because C<'abel'> is found only in C<@Al> which holds position C<0> in the 
 list of arguments passed to C<new()>.
 
-=item *
-
 In scalar context, the return value is the number of lists passed to the 
 constructor in which a given string is found.
-
-=item *
 
 As with other List::Compare methods which return a list, you may wish the 
 above method returned a (scalar) reference to an array holding the list:
@@ -1947,8 +1941,6 @@ C<0> and C<1>, respectively, in the list of arguments passed to C<new()>.
 B<Note:>  methods C<is_member_which()> and C<is_member_which_ref> test
 only one string at a time and hence take only one argument.  To test more 
 than one string at a time see the next method, C<are_members_which()>.
-
-=back
 
 =item * C<are_members_which()>
 
@@ -2033,7 +2025,7 @@ Return current List::Compare version number.
 
 =over 4
 
-=item * Constructor
+=item * Constructor C<new()>
 
 If you are certain that you will only want the results of a I<single> 
 comparison, computation may be accelerated by passing C<'-a'> or 
@@ -2118,7 +2110,7 @@ you in the Accelerated case as well.
 
 =over 4
 
-=item * Constructor
+=item * Constructor C<new()>
 
 Create a List::Compare object.  Put each list into an array and pass
 references to the arrays to the constructor.
@@ -2191,21 +2183,21 @@ is C<0>, C<@beta> is C<1>, and so forth.
 
 =over 4
 
-=item *
+=item * C<get_intersection()>
 
 Get those items found in I<each> of the lists passed to the constructor 
 (their intersection):
 
     @intersection = $lcm->get_intersection;
 
-=item *
+=item * C<get_union()>
 
 Get those items found in I<any> of the lists passed to the constructor 
 (their union):
 
     @union = $lcm->get_union;
 
-=item *
+=item * C<get_unique()>
 
 To get those items which appear only in I<one particular list,> provide 
 C<get_unique()> with that list's index position in the list of arguments 
@@ -2220,7 +2212,7 @@ To get elements unique to C<@Carmen>:
 If no index position is passed to C<get_unique()> it will default to 0 
 and report items unique to the first list passed to the constructor.
 
-=item *
+=item * C<get_complement()>
 
 To get those items which appear in any list I<other than one particular 
 list,> provide C<get_complement()> with that list's index position in 
@@ -2236,14 +2228,14 @@ If no index position is passed to C<get_complement()> it will default to
 0 and report items found in any list other than the first list passed 
 to the constructor.
 
-=item *
+=item * C<get_symmetric_difference()>
 
 Get those items each of which appears in I<only one> of the lists 
 passed to the constructor (their symmetric_difference);
 
     @LorRonly = $lcm->get_symmetric_difference;
 
-=item *
+=item * C<get_bag()>
 
 Make a bag of all items found in any list.  The bag differs from the 
 lists' union in that it holds as many copies of individual elements 
@@ -2251,7 +2243,7 @@ as appear in the original lists.
 
     @bag = $lcm->get_bag;
 
-=item *
+=item * Return reference instead of list
 
 An alternative approach to the above methods:  If you do not immediately 
 require an array as the return value of the method call, but simply need 
@@ -2264,7 +2256,7 @@ a I<reference> to an array, use one of the following parallel methods:
     $LorRonly_ref     = $lcm->get_symmetric_difference_ref;
     $bag_ref          = $lcm->get_bag_ref;
 
-=item *
+=item * C<is_LsubsetR()>
 
 To determine whether one particular list is a subset of another list 
 passed to the constructor, provide C<is_LsubsetR()> with the index 
@@ -2281,7 +2273,7 @@ right-hand list; a false value (C<0>) is returned otherwise.
 If no arguments are passed, C<is_LsubsetR()> defaults to C<(0,1)> and 
 compares the first two lists passed to the constructor.
 
-=item *
+=item * C<is_LequivalentR()>
 
 To determine whether any two particular lists are equivalent to each 
 other, provide C<is_LequivalentR> with their index positions in the 
@@ -2297,7 +2289,7 @@ A true value (C<1>) is returned if the lists are equivalent; a false value
 If no arguments are passed, C<is_LequivalentR> defaults to C<(0,1)> and 
 compares the first two lists passed to the constructor.
 
-=item *
+=item * C<is_LdisjointR()>
 
 To determine whether any two particular lists are disjoint from each other 
 (I<i.e.,> have no members in common), provide C<is_LdisjointR> with their 
@@ -2314,21 +2306,21 @@ A true value (C<1>) is returned if the lists are equivalent; a false value
 If no arguments are passed, C<is_LdisjointR> defaults to C<(0,1)> and 
 compares the first two lists passed to the constructor.
 
-=item *
+=item * C<print_subset_chart()>
 
 Pretty-print a chart showing the subset relationships among the various 
 source lists:
 
     $lcm->print_subset_chart;
 
-=item *
+=item * C<print_equivalence_chart()>
 
 Pretty-print a chart showing the equivalence relationships among the 
 various source lists:
 
     $lcm->print_equivalence_chart;
 
-=item *
+=item * C<is_member_which()>
 
 Determine in I<which> (if any) of the lists passed to the constructor a given 
 string can be found.  In list context, return a list of those indices in the 
@@ -2344,7 +2336,7 @@ In the example above, C<@memb_arr> will be:
 because C<'abel'> is found only in C<@Al> which holds position C<0> in the 
 list of arguments passed to C<new()>.
 
-=item *
+=item * C<is_member_which_ref()>
 
 As with other List::Compare methods which return a list, you may wish the 
 above method returned a (scalar) reference to an array holding the list:
@@ -2362,7 +2354,7 @@ B<Note:>  methods C<is_member_which()> and C<is_member_which_ref> test
 only one string at a time and hence take only one argument.  To test more 
 than one string at a time see the next method, C<are_members_which()>.
 
-=item *
+=item * C<are_members_which()>
 
 Determine in C<which> (if any) of the lists passed to the constructor one or 
 more given strings can be found.  The strings to be tested are placed in an 
@@ -2397,7 +2389,7 @@ C<are_members_which()> returns a hash reference; the other methods return
 either a list or a reference to an array holding that list, depending on 
 context.
 
-=item *
+=item * C<is_member_any()>
 
 Determine whether a given string can be found in I<any> of the lists passed as 
 arguments to the constructor.
@@ -2410,7 +2402,7 @@ and C<0> if not.
 In the example above, C<$found> will be C<1> because C<'abel'> is found in one 
 or more of the lists passed as arguments to C<new()>.
 
-=item *
+=item * C<are_members_any()>
 
 Determine whether a specified string or strings can be found in I<any> of the 
 lists passed as arguments to the constructor.  The strings to be tested are 
@@ -2439,7 +2431,7 @@ In the two examples above, C<$memb_hash_ref> will be:
 C<zebra>'s value will be C<0> because C<zebra> is not found in any of the 
 lists passed as arguments to C<new()>.
 
-=item *
+=item * C<get_version()>
 
 Return current List::Compare version number:
 
@@ -2451,7 +2443,7 @@ Return current List::Compare version number:
 
 =over 4
 
-=item *
+=item * C<get_nonintersection()>
 
 Get those items found in I<any> of the lists passed to the constructor which 
 do I<not> appear in I<all> of the lists (I<i.e.,> all items except those found 
@@ -2459,7 +2451,7 @@ in the intersection of the lists):
 
     @nonintersection = $lcm->get_nonintersection;
 
-=item *
+=item * C<get_shared()>
 
 Get those items which appear in more than one of the lists passed to the 
 constructor (I<i.e.,> all items except those found in their symmetric 
@@ -2467,7 +2459,7 @@ difference);
 
     @shared = $lcm->get_shared;
 
-=item *
+=item * C<get_nonintersection_ref()>
 
 If you only need a reference to an array as a return value rather than a 
 full array, use the following alternative methods:
@@ -2475,7 +2467,7 @@ full array, use the following alternative methods:
     $nonintersection_ref = $lcm->get_nonintersection_ref;
     $shared_ref = $lcm->get_shared_ref;
 
-=item *
+=item * C<get_unique_all()>
 
 Get a reference to an array of array references where each of the interior 
 arrays holds the list of those items I<unique> to the list passed to the 
@@ -2493,7 +2485,7 @@ In the example above, C<$unique_all_ref> will hold:
         [ ],
     ]
 
-=item *
+=item * C<get_complement_all()>
 
 Get a reference to an array of array references where each of the interior 
 arrays holds the list of those items in the I<complement> to the list 
@@ -2519,7 +2511,7 @@ In the example above, C<$complement_all_ref> will hold:
 
 =over 4
 
-=item * Constructor
+=item * Constructor C<new()>
 
 If you are certain that you will only want the results of a single 
 comparison among three or more lists, computation may be accelerated 
@@ -2627,7 +2619,7 @@ seen-hash, why shouldn't you be able to pass (references to) seen-hashes
 I<directly> to the constructor and avoid unnecessary array 
 assignments before the constructor is called?
 
-=item * Constructor
+=item * Constructor C<new()>
 
 You can now do so:
 
