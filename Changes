@@ -143,3 +143,8 @@ List::Compare::Functional; other internal code clean-up
 0.36 Fri May 23 21:41:55 EDT 2008
     - IO::CaptureOutput was mispositioned:  should have been directly under t/
       rather than under t/Test/.
+
+0.37 Sat Jun  7 19:46:52 EDT 2008
+    - Tests refined and code refactored so as to achieve 100% subroutine,
+      statement, branch and condition coverage by test suite as measured by
+      Devel::Cover.  Some cleanup of POD.

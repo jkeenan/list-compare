@@ -1,6 +1,6 @@
 package List::Compare;
 #$Id$
-$VERSION = '0.36';
+$VERSION = '0.37';
 use strict;
 local $^W = 1;
 use Carp;
@@ -1745,8 +1745,8 @@ List::Compare - Compare elements of two or more lists
 
 =head1 VERSION
 
-This document refers to version 0.36 of List::Compare.  This version was
-released May 23, 2008.
+This document refers to version 0.37 of List::Compare.  This version was
+released June 07, 2008.
 
 =head1 SYNOPSIS
 
@@ -3173,7 +3173,7 @@ or through the web interface at L<http://rt.cpan.org>.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  May 23, 2008.
+Creation date:  May 20, 2002.  Last modification date:  June 07, 2008.
 
 =head1 COPYRIGHT
 
