@@ -1737,7 +1737,7 @@ sub get_version {
 1;
 
 
-__END__
+#################### DOCUMENTATION ####################
 
 =head1 NAME
 
@@ -1804,33 +1804,33 @@ or
         unsorted => 1,
     } );
 
-=item *
+=item * C<get_intersection()>
 
 Get those items which appear at least once in both lists (their intersection).
 
     @intersection = $lc->get_intersection;
 
-=item *
+=item * C<get_union()>
 
 Get those items which appear at least once in either list (their union).
 
     @union = $lc->get_union;
 
-=item *
+=item * C<get_unique()>
 
 Get those items which appear (at least once) only in the first list.
 
     @Lonly = $lc->get_unique;
     @Lonly = $lc->get_Lonly;    # alias
 
-=item *
+=item * C<get_complement()>
 
 Get those items which appear (at least once) only in the second list.
 
     @Ronly = $lc->get_complement;
     @Ronly = $lc->get_Ronly;            # alias
 
-=item *
+=item * C<get_symmetric_difference()>
 
 Get those items which appear at least once in either the first or the second 
 list, but not both.
@@ -1839,7 +1839,7 @@ list, but not both.
     @LorRonly = $lc->get_symdiff;       # alias
     @LorRonly = $lc->get_LorRonly;      # alias
 
-=item *
+=item * C<get_bag()>
 
 Make a bag of all those items in both lists.  The bag differs from the 
 union of the two lists in that it holds as many copies of individual 
@@ -1847,7 +1847,7 @@ elements as appear in the original lists.
 
     @bag = $lc->get_bag;
 
-=item *
+=item * Return references rather than lists
 
 An alternative approach to the above methods:  If you do not immediately 
 require an array as the return value of the method call, but simply need 
@@ -1865,7 +1865,7 @@ parallel methods:
     $LorRonly_ref     = $lc->get_LorRonly_ref;              # alias
     $bag_ref          = $lc->get_bag_ref;
 
-=item *
+=item * C<is_LsubsetR()>
 
 Return a true value if the first argument passed to the constructor 
 ('L' for 'left') is a subset of the second argument passed to the 
@@ -1877,7 +1877,7 @@ Return a true value if R is a subset of L.
 
     $RL = $lc->is_RsubsetL;
 
-=item *
+=item * C<is_LequivalentR()>
 
 Return a true value if the two lists passed to the constructor are 
 equivalent, I<i.e.> if every element in the left-hand list ('L') appears 
@@ -1886,7 +1886,7 @@ at least once in the right-hand list ('R') and I<vice versa>.
     $eqv = $lc->is_LequivalentR;
     $eqv = $lc->is_LeqvlntR;            # alias
 
-=item *
+=item * C<is_LdisjointR()>
 
 Return a true value if the two lists passed to the constructor are 
 disjoint, I<i.e.> if the two lists have zero elements in common (or, what 
@@ -1894,20 +1894,22 @@ is the same thing, if their intersection is an empty set).
 
     $disj = $lc->is_LdisjointR;
 
-=item *
+=item * C<print_subset_chart()>
 
 Pretty-print a chart showing whether one list is a subset of the other.
 
     $lc->print_subset_chart;
 
-=item *
+=item * C<print_equivalence_chart()>
 
 Pretty-print a chart showing whether the two lists are equivalent (same 
 elements found at least once in both).
 
     $lc->print_equivalence_chart;
 
-=item *
+=item * C<is_member_which()>
+
+=over 4
 
 Determine in I<which> (if any) of the lists passed to the constructor a given 
 string can be found.  In list context, return a list of those indices in the 
@@ -1946,7 +1948,9 @@ B<Note:>  methods C<is_member_which()> and C<is_member_which_ref> test
 only one string at a time and hence take only one argument.  To test more 
 than one string at a time see the next method, C<are_members_which()>.
 
-=item *
+=back
+
+=item * C<are_members_which()>
 
 Determine in I<which> (if any) of the lists passed to the constructor one or 
 more given strings can be found.  The strings to be tested are placed in an 
@@ -1977,7 +1981,7 @@ B<Note:>  C<are_members_which()> can take more than one argument;
 C<is_member_which()> and C<is_member_which_ref()> each take only one argument.  
 Unlike those two methods, C<are_members_which()> returns a hash reference.
 
-=item *
+=item * C<is_member_any()>
 
 Determine whether a given string can be found in I<any> of the lists passed as 
 arguments to the constructor.  Return 1 if a specified string can be found in 
@@ -1988,7 +1992,7 @@ any of the lists and 0 if not.
 In the example above, C<$found> will be C<1> because C<'abel'> is found in one 
 or more of the lists passed as arguments to C<new()>.
 
-=item *
+=item * C<are_members_any()>
 
 Determine whether a specified string or strings can be found in I<any> of the 
 lists passed as arguments to the constructor.  The strings to be tested are 
@@ -2017,7 +2021,7 @@ C<$memb_hash_ref> will be:
 C<zebra>'s value is C<0> because C<zebra> is not found in either of the lists 
 passed as arguments to C<new()>.
 
-=item *
+=item * C<get_version()>
 
 Return current List::Compare version number.
 
@@ -2719,7 +2723,7 @@ List::Compare objects where seen-hashes are used as arguments:
 =head2 General Comments
 
 List::Compare is an object-oriented implementation of very common Perl 
-code (see L<"History, References and Development"> below) used to
+code (see "History, References and Development" below) used to
 determine interesting relationships between two or more lists at a time.  
 A List::Compare object is created and automatically computes the values
 needed to supply List::Compare methods with appropriate results.  In the
