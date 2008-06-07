@@ -767,7 +767,7 @@ James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please
 include 'List::Compare' or 'List-Compare' in your subject line.
 
 Creation date:  May 20, 2002.  Last modification date:  June 07, 2008. 
-Copyright (c) 2002-04 James E. Keenan.  United States.  All rights reserved. 
+Copyright (c) 2002-08 James E. Keenan.  United States.  All rights reserved. 
 This is free software and may be distributed under the same terms as Perl
 itself.
 
