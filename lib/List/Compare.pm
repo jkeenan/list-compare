@@ -1,6 +1,6 @@
 package List::Compare;
 #$Id$
-$VERSION = '0.37';
+$VERSION = '0.38';
 use strict;
 local $^W = 1;
 use Carp;
@@ -1745,8 +1745,8 @@ List::Compare - Compare elements of two or more lists
 
 =head1 VERSION
 
-This document refers to version 0.37 of List::Compare.  This version was
-released June 07, 2008.
+This document refers to version 0.38 of List::Compare.  This version was
+released September 05, 2013.
 
 =head1 SYNOPSIS
 
@@ -3162,10 +3162,7 @@ CPAN upload date of this distribution.
 
 =head1 SUPPORT
 
-Support for List::Compare is now provided by mailing list:
-L<http://thenceforward.net/cgi-bin/mailman/listinfo/list-compare>.
-
-Please report any bugs by mail to C<bug-ExtUtils-ModuleMaker@rt.cpan.org> 
+Please report any bugs by mail to C<bug-List-Compare@rt.cpan.org> 
 or through the web interface at L<http://rt.cpan.org>.
 
 =head1 AUTHOR
@@ -3173,11 +3170,11 @@ or through the web interface at L<http://rt.cpan.org>.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  June 07, 2008.
+Creation date:  May 20, 2002.  Last modification date:  September 05, 2013.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2002-06 James E. Keenan.  United States.  All rights reserved. 
+Copyright (c) 2002-13 James E. Keenan.  United States.  All rights reserved. 
 This is free software and may be distributed under the same terms as Perl
 itself.
 
