@@ -1,9 +1,7 @@
 package List::Compare::Base::_Engine;
-#$Id$
-$VERSION = 0.38;
+$VERSION = 0.39;
 # Holds subroutines used within 
 # List::Compare::Base::Accelerated and List::Compare::Functional
-# As of:  09/18/2005
 use Carp;
 use List::Compare::Base::_Auxiliary qw(
     _equiv_engine 
@@ -83,8 +81,8 @@ List::Compare::Base::_Engine - Internal use only
 
 =head1 VERSION
 
-This document refers to version 0.38 of List::Compare::Base::_Engine.
-This version was released September 05, 2013.
+This document refers to version 0.39 of List::Compare::Base::_Engine.
+This version was released July 04 2014.
 
 =head1 SYNOPSIS
 
@@ -96,8 +94,8 @@ List::Compare::Functional.  They are not intended to be publicly callable.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  September 05, 2013. 
-Copyright (c) 2002-04 James E. Keenan.  United States.  All rights reserved. 
+Creation date:  May 20, 2002.  Last modification date:  July 04 2014. 
+Copyright (c) 2002-14 James E. Keenan.  United States.  All rights reserved. 
 This is free software and may be distributed under the same terms as Perl
 itself.
 
