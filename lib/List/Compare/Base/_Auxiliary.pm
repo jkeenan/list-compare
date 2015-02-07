@@ -1,5 +1,5 @@
 package List::Compare::Base::_Auxiliary;
-$VERSION = 0.39;
+$VERSION = 0.40;
 use Carp;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw|
@@ -15,31 +15,31 @@ use Carp;
     _calculate_hash_intersection
     _calculate_hash_shared
     _subset_subengine
-    _chart_engine_regular 
+    _chart_engine_regular
     _chart_engine_multiple
     _equivalent_subengine
     _index_message1
     _index_message2
     _index_message3
     _index_message4
-    _prepare_listrefs 
-    _subset_engine_multaccel 
+    _prepare_listrefs
+    _subset_engine_multaccel
     _calc_seen
     _calc_seen1
-    _equiv_engine 
-    _argument_checker_0 
-    _argument_checker 
-    _argument_checker_1 
-    _argument_checker_2 
-    _argument_checker_3 
-    _argument_checker_3a 
+    _equiv_engine
+    _argument_checker_0
+    _argument_checker
+    _argument_checker_1
+    _argument_checker_2
+    _argument_checker_3
+    _argument_checker_3a
     _argument_checker_4
-    _alt_construct_tester 
-    _alt_construct_tester_1 
-    _alt_construct_tester_2 
-    _alt_construct_tester_3 
-    _alt_construct_tester_4 
-    _alt_construct_tester_5 
+    _alt_construct_tester
+    _alt_construct_tester_1
+    _alt_construct_tester_2
+    _alt_construct_tester_3
+    _alt_construct_tester_4
+    _alt_construct_tester_5
 |;
 %EXPORT_TAGS = (
     calculate => [ qw(
@@ -53,21 +53,21 @@ use Carp;
         _calculate_hash_shared
     ) ],
     checker => [ qw(
-        _argument_checker_0 
-        _argument_checker 
-        _argument_checker_1 
-        _argument_checker_2 
-        _argument_checker_3 
-        _argument_checker_3a 
+        _argument_checker_0
+        _argument_checker
+        _argument_checker_1
+        _argument_checker_2
+        _argument_checker_3
+        _argument_checker_3a
         _argument_checker_4
     ) ],
     tester => [ qw(
-        _alt_construct_tester 
-        _alt_construct_tester_1 
-        _alt_construct_tester_2 
-        _alt_construct_tester_3 
-        _alt_construct_tester_4 
-        _alt_construct_tester_5 
+        _alt_construct_tester
+        _alt_construct_tester_1
+        _alt_construct_tester_2
+        _alt_construct_tester_3
+        _alt_construct_tester_4
+        _alt_construct_tester_5
     ) ],
 );
 use strict;
@@ -85,7 +85,7 @@ sub _validate_2_seenhashes {
         } else {
             $badentriesL{$_} = ${$refL}{$_};
         }
-    } 
+    }
     foreach (keys %$refR) {
         if (${$refR}{$_} =~ /^\d+$/ and ${$refR}{$_} > 0) {
             $seenR{$_} = ${$refR}{$_};
@@ -99,12 +99,12 @@ sub _validate_2_seenhashes {
         $msg .= "  These elements have invalid values:\n";
         if (keys %badentriesL) {
             $msg .= "  First hash in arguments:\n";
-            $msg .= "     Key:  $_\tValue:  $badentriesL{$_}\n" 
+            $msg .= "     Key:  $_\tValue:  $badentriesL{$_}\n"
                 foreach (sort keys %badentriesL);
-        } 
+        }
         if (keys %badentriesR) {
             $msg .= "  Second hash in arguments:\n";
-            $msg .= "     Key:  $_\tValue:  $badentriesR{$_}\n" 
+            $msg .= "     Key:  $_\tValue:  $badentriesR{$_}\n"
                 foreach (sort keys %badentriesR);
         }
         $msg .= "Correct invalid values before proceeding";
@@ -116,15 +116,15 @@ sub _validate_2_seenhashes {
 sub _validate_seen_hash {
     if (@_ > 2) {
         _validate_multiple_seenhashes( [@_] );
-    } else { 
+    } else {
         my ($l, $r) = @_;
         my (%badentriesL, %badentriesR);
         foreach (keys %$l) {
-            $badentriesL{$_} = ${$l}{$_} 
+            $badentriesL{$_} = ${$l}{$_}
                 unless (${$l}{$_} =~ /^\d+$/ and ${$l}{$_} > 0);
-        } 
+        }
         foreach (keys %$r) {
-            $badentriesR{$_} = ${$r}{$_} 
+            $badentriesR{$_} = ${$r}{$_}
                 unless (${$r}{$_} =~ /^\d+$/ and ${$r}{$_} > 0);
         }
         my $msg = q{};
@@ -133,12 +133,12 @@ sub _validate_seen_hash {
             $msg .= "  These elements have invalid values:\n";
             if (keys %badentriesL) {
                 $msg .= "  First hash in arguments:\n";
-                $msg .= "     Key:  $_\tValue:  $badentriesL{$_}\n" 
+                $msg .= "     Key:  $_\tValue:  $badentriesL{$_}\n"
                     foreach (sort keys %badentriesL);
-            } 
+            }
             if (keys %badentriesR) {
                 $msg .= "  Second hash in arguments:\n";
-                $msg .= "     Key:  $_\tValue:  $badentriesR{$_}\n" 
+                $msg .= "     Key:  $_\tValue:  $badentriesR{$_}\n"
                     foreach (sort keys %badentriesR);
             }
             $msg .= "Correct invalid values before proceeding";
@@ -391,7 +391,7 @@ sub _index_message1 {
     my $method = (caller(1))[3];
     croak "Argument to method $method must be the array index of the target list \n  in list of arrays passed as arguments to the constructor: $!"
         unless (
-                $index =~ /^\d+$/ 
+                $index =~ /^\d+$/
            and  $index <= ${$dataref}{'maxindex'}
         );
 }
@@ -410,7 +410,7 @@ sub _index_message2 {
         foreach ($index_left, $index_right) {
             croak "Each argument to method $method must be a valid array index for the target list \n  in list of arrays passed as arguments to the constructor: $!"
                 unless (
-                        $_ =~ /^\d+$/ 
+                        $_ =~ /^\d+$/
                    and  $_ <= ${$dataref}{'maxindex'}
                 );
         }
@@ -423,7 +423,7 @@ sub _index_message3 {
     my $method = (caller(1))[3];
     croak "Argument to method $method must be the array index of the target list \n  in list of arrays passed as arguments to the constructor: $!"
         unless (
-                $index =~ /^\d+$/ 
+                $index =~ /^\d+$/
            and  $index <= $maxindex
         );
 }
@@ -442,7 +442,7 @@ sub _index_message4 {
         foreach ($index_left, $index_right) {
             croak "Each argument to method $method must be a valid array index for the target list \n  in list of arrays passed as arguments to the constructor: $!"
                 unless (
-                        $_ =~ /^\d+$/ 
+                        $_ =~ /^\d+$/
                    and  $_ <= $maxindex
                 );
         }
@@ -477,7 +477,7 @@ sub _calc_seen {
         my (%seenL, %seenR);
         foreach (@$refL) { $seenL{$_}++ }
         foreach (@$refR) { $seenR{$_}++ }
-        return (\%seenL, \%seenR); 
+        return (\%seenL, \%seenR);
     } else {
         return ($refL, $refR);
     }
@@ -487,7 +487,7 @@ sub _equiv_engine {
     my ($hrefL, $hrefR) = @_;
     my (%intersection, %Lonly, %Ronly, %LorRonly);
     my $LequivalentR_status = 0;
-    
+
     foreach (keys %{$hrefL}) {
         exists ${$hrefR}{$_} ? $intersection{$_}++ : $Lonly{$_}++;
     }
@@ -544,9 +544,9 @@ sub _argument_checker_2 {
 
 # _argument_checker_3 is currently set-up to handle either 1 or 2 arguments
 # in get_unique and get_complement
-# The first argument is an arrayref holding refs to lists ('unsorted' has been 
+# The first argument is an arrayref holding refs to lists ('unsorted' has been
 # stripped off).
-# The second argument is an arrayref holding a single item (index number of 
+# The second argument is an arrayref holding a single item (index number of
 # item being tested)
 # Note:  Currently we're only checking for the quantity of arguments -- not
 # their types.  This should be fixed.
@@ -596,9 +596,9 @@ sub _argument_checker_4 {
 sub _calc_seen1 {
     my @listrefs = @_;
     # _calc_seen1() is applied after _argument_checker(), which checks to make
-    # sure that the references in its output are either all arrayrefs 
+    # sure that the references in its output are either all arrayrefs
     # or all seenhashrefs
-    # hence, _calc_seen1 only needs to determine whether it's dealing with 
+    # hence, _calc_seen1 only needs to determine whether it's dealing with
     # arrayrefs or seenhashrefs, then, if arrayrefs, calculate seenhashes
     if (ref($listrefs[0]) eq 'ARRAY') {
         my (@seenrefs);
@@ -615,7 +615,7 @@ sub _calc_seen1 {
     }
 }
 
-# _alt_construct_tester prepares for _argument_checker in 
+# _alt_construct_tester prepares for _argument_checker in
 # get_union get_intersection get_symmetric_difference get_shared get_nonintersection
 sub _alt_construct_tester {
     my @args = @_;
@@ -628,9 +628,9 @@ sub _alt_construct_tester {
        $argref = ${$hashref}{'lists'};
        $unsorted = ${$hashref}{'unsorted'} ? 1 : '';
     } else {
-        $unsorted = shift(@args) 
+        $unsorted = shift(@args)
             if ($args[0] eq '-u' or $args[0] eq '--unsorted');
-        $argref = shift(@args); 
+        $argref = shift(@args);
     }
     return ($argref, $unsorted);
 }
@@ -651,7 +651,7 @@ sub _alt_construct_tester_1 {
         @returns = ( ${$hashref}{'lists'}, [${$hashref}{'item'}] );
         $argref = \@returns;
     } else {
-        $argref = \@args; 
+        $argref = \@args;
     }
     return $argref;
 }
@@ -675,7 +675,7 @@ sub _alt_construct_tester_2 {
 }
 
 # _alt_construct_tester_3 prepares for _argument_checker_3 in
-# get_unique get_complement 
+# get_unique get_complement
 sub _alt_construct_tester_3 {
     my @args = @_;
     my ($argref, $unsorted);
@@ -692,7 +692,7 @@ sub _alt_construct_tester_3 {
         $unsorted = ${$hashref}{'unsorted'} ? 1 : '';
     } else {
         $unsorted = shift(@args) if ($args[0] eq '-u' or $args[0] eq '--unsorted');
-        $argref = \@args; 
+        $argref = \@args;
     }
     return ($argref, $unsorted);
 }
@@ -713,7 +713,7 @@ sub _alt_construct_tester_4 {
                         : (${$hashref}{'lists'});
         $argref = \@returns;
     } else {
-        $argref = \@args; 
+        $argref = \@args;
     }
     return $argref;
 }
@@ -731,7 +731,7 @@ sub _alt_construct_tester_5 {
                     and (ref(${$hashref}{'lists'}) eq 'ARRAY') );
            $argref = ${$hashref}{'lists'};
         } else {
-           $argref = shift(@args); 
+           $argref = shift(@args);
         }
     } else {
         croak "Subroutine call requires exactly 1 reference as argument:  $!";
@@ -749,23 +749,23 @@ List::Compare::Base::_Auxiliary - Internal use only
 
 =head1 VERSION
 
-This document refers to version 0.39 of List::Compare::Base::_Auxiliary.
-This version was released July 04 2014.
+This document refers to version 0.40 of List::Compare::Base::_Auxiliary.
+This version was released February 07 2015.
 
 =head1 SYNOPSIS
 
-This module contains subroutines used within List::Compare and 
+This module contains subroutines used within List::Compare and
 List::Compare::Functional.  They are not intended to be publicly callable.
 
 =head1 AUTHOR
 
-James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
+James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  July 04 2014. 
-Copyright (c) 2002-14 James E. Keenan.  United States.  All rights reserved. 
+Creation date:  May 20, 2002.  Last modification date:  February 07 2015.
+Copyright (c) 2002-15 James E. Keenan.  United States.  All rights reserved.
 This is free software and may be distributed under the same terms as Perl
 itself.
 
-=cut 
+=cut
 

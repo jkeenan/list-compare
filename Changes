@@ -154,3 +154,6 @@ List::Compare::Functional; other internal code clean-up
 0.39 Fri Jul  4 15:38:24 EDT 2014
     - Repository migrated from Subversion to git.  Development repository
       initiated at https://github.com/jkeenan/list-compare.
+
+0.40 Sat Feb  7 08:39:06 EST 2015
+    - Eliminated three unnecessary hash assignments.
