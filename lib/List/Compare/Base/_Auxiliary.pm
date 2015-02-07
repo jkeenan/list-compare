@@ -315,8 +315,7 @@ sub _calculate_hash_shared {
 sub _subset_subengine {
     my $aref = shift;
     my (@xsubset);
-    my $seenref = _calculate_seen_only($aref);
-    my %seen = %{$seenref};
+    my %seen = %{_calculate_seen_only($aref)};
     foreach my $i (keys %seen) {
         my %tempi = %{$seen{$i}};
         foreach my $j (keys %seen) {
@@ -375,8 +374,7 @@ sub _chart_engine_multiple {
 
 sub _equivalent_subengine {
     my $aref = shift;
-    my $xsubsetref = _subset_subengine($aref);
-    my @xsubset = @{$xsubsetref};
+    my @xsubset = @{_subset_subengine($aref)};
     my (@xequivalent);
     for (my $f = 0; $f <= $#xsubset; $f++) {
         for (my $g = 0; $g <= $#xsubset; $g++) {
