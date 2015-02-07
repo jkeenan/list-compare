@@ -294,9 +294,8 @@ sub _calculate_hash_intersection {
     my @xkeys = keys %{$xintersectionref};
     my %intersection = %{${$xintersectionref}{$xkeys[0]}};
     for (my $m = 1; $m <= $#xkeys; $m++) {
-        my %compare = %{${$xintersectionref}{$xkeys[$m]}};
         my %result = ();
-        foreach (keys %compare) {
+        foreach (keys %{${$xintersectionref}{$xkeys[$m]}}) {
             $result{$_}++ if (exists $intersection{$_});
         }
         %intersection = %result;
