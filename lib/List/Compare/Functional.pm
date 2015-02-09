@@ -136,9 +136,15 @@ sub get_intersection_ref {
 
 sub _intersection_engine {
     my $seenrefsref = _calc_seen1(@_);
-    my $xintersectionref = _calculate_xintersection_only($seenrefsref);
-    my $intersectionref = _calculate_hash_intersection($xintersectionref);
-    return [ keys %{$intersectionref} ];
+    my @vals = sort { scalar(keys(%{$a})) <=> scalar(keys(%{$b})) }
+        @{$seenrefsref};
+    my %intersection = map { $_ => 1 } keys %{$vals[0]};
+    for my $l ( 1..$#vals ) {
+        %intersection = map { $_ => 1 }
+            grep { exists $intersection{$_} }
+            keys %{$vals[$l]};
+    }
+    return [ keys %intersection ];
 }
 
 sub get_unique {
