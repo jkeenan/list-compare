@@ -157,3 +157,8 @@ List::Compare::Functional; other internal code clean-up
 
 0.40 Sat Feb  7 08:39:06 EST 2015
     - Eliminated three unnecessary hash assignments.
+
+0.41 Sun Feb  8 20:38:46 EST 2015
+    - Revised List::Compare::Functional::_intersection_engine() to eliminate
+      need to call _calculate_xintersection_only() and 
+      _calculate_hash_intersection();
