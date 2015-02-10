@@ -248,15 +248,27 @@ sub get_symmetric_difference_ref {
 }
 
 sub _symmetric_difference_engine {
+    #  Get those items which do not appear in more than one of several lists (their symmetric_difference);
     my $seenrefsref = _calc_seen1(@_);
-    my ($unionref, $xintersectionref) =
-        _calculate_union_xintersection_only($seenrefsref);
-    my @union = keys %{$unionref};
 
-    my $sharedref = _calculate_hash_shared($xintersectionref);
+    my $unionref = _calculate_union_only($seenrefsref);
+
+    my %intermediate = ();
+    for my $href (@{$seenrefsref}) {
+       my %this = map { $_ => 1 } keys(%{$href});
+        for my $k (keys %this) {;
+            $intermediate{$k}++;
+        };
+    }
+
+    my $sharedref;
+    for my $k (keys %intermediate) {
+        $sharedref->{$k}++ if $intermediate{$k} > 1;
+    }
+
     my (@symmetric_difference);
-    foreach (@union) {
-        push(@symmetric_difference, $_) unless exists ${$sharedref}{$_};
+    for my $k (keys %{$unionref}) {
+        push(@symmetric_difference, $k) unless exists $sharedref->{$k};
     }
     return \@symmetric_difference;
 }
@@ -298,15 +310,21 @@ sub get_nonintersection_ref {
 
 sub _nonintersection_engine {
     my $seenrefsref = _calc_seen1(@_);
-    my ($unionref, $xintersectionref) =
-        _calculate_union_xintersection_only($seenrefsref);
-    my @union = keys %{$unionref};
-    my $intersectionref = _calculate_hash_intersection($xintersectionref);
+    my $unionref =
+        _calculate_union_only($seenrefsref);
+    my @vals = sort { scalar(keys(%{$a})) <=> scalar(keys(%{$b})) }
+        @{$seenrefsref};
+    my %intersection = map { $_ => 1 } keys %{$vals[0]};
+    for my $l ( 1..$#vals ) {
+        %intersection = map { $_ => 1 }
+            grep { exists $intersection{$_} }
+            keys %{$vals[$l]};
+    }
     # Calculate nonintersection
-    # Inputs:  @union    %intersection
+    # Inputs:  @union (keys %$unionref)    %intersection
     my (@nonintersection);
-    foreach (@union) {
-        push(@nonintersection, $_) unless exists ${$intersectionref}{$_};
+    for my $k (keys %{$unionref}) {
+        push(@nonintersection, $k) unless exists $intersection{$k};
     }
     return \@nonintersection;
 }
