@@ -35,7 +35,7 @@ Revision history for Perl extension List::Compare.
 
 0.12  Sat Jul 13 2002
 	- major expansion
-	- capability to accelerate processing of comparisons of 2 lists 
+	- capability to accelerate processing of comparisons of 2 lists
 	  when only 1 comparison method is expected to be called
 	- capability to compare more than 2 lists at a time
 	- introduction of methods including:
@@ -96,7 +96,7 @@ Revision history for Perl extension List::Compare.
 
 0.26  Sun Apr 11 2004
         - List::Compare::SeenHash and associated tests deprecated
-        - capacity to pass references to seen-hashes to constructor now 
+        - capacity to pass references to seen-hashes to constructor now
 transferred directly into List::Compare
 	- corrections to POD
 
@@ -110,15 +110,15 @@ transferred directly into List::Compare
 	- further implication of deprecation of List::Compare::SeenHash is that all the code in List::Compare::Base::Regular, L:C:B:Accelerated, L:C:B:Multiple and L:C:B:Multiple::Accelerated is no longer shared between List::Compare and List::Compare::SeenHash and hence can be taken back into List::Compare; thereby eliminating the 'use base' calls from List::Compare.
 
 0.29  Sun May 16 2004
-	- implementation of alternative ('Adlerian') interface wherein a single hash reference is passed to constructor or function 
+	- implementation of alternative ('Adlerian') interface wherein a single hash reference is passed to constructor or function
 
 0.30  Fri May 21 2004
 	- documentation corrections only
 
 0.31  Sun Aug 15 2004
-	- added methods get_unique_all() and get_complement_all(); added 3335 
-tests; repositioned most methods in List::Compare::Base::_Engine to 
-List::Compare::Accelerated as they were no longer also being used in 
+	- added methods get_unique_all() and get_complement_all(); added 3335
+tests; repositioned most methods in List::Compare::Base::_Engine to
+List::Compare::Accelerated as they were no longer also being used in
 List::Compare::Functional; other internal code clean-up
 
 0.32  Sun Sep 18 2005
@@ -160,5 +160,13 @@ List::Compare::Functional; other internal code clean-up
 
 0.41 Sun Feb  8 20:38:46 EST 2015
     - Revised List::Compare::Functional::_intersection_engine() to eliminate
-      need to call _calculate_xintersection_only() and 
+      need to call _calculate_xintersection_only() and
       _calculate_hash_intersection();
+
+0.42 Wed Feb 11 20:57:43 EST 2015
+    - Improve performance of four List::Compare::Functional functions.
+
+      get_nonintersection
+      get_nonintersection_ref
+      get_symmetric_difference
+      get_symmetric_difference_ref
