@@ -14,6 +14,7 @@ use Carp;
     _calculate_union_seen_only
     _calculate_hash_intersection
     _calculate_hash_shared
+    _calculate_sharedref
     _subset_subengine
     _chart_engine_regular
     _chart_engine_multiple
@@ -51,6 +52,7 @@ use Carp;
         _calculate_union_seen_only
         _calculate_hash_intersection
         _calculate_hash_shared
+        _calculate_sharedref
     ) ],
     checker => [ qw(
         _argument_checker_0
@@ -310,6 +312,24 @@ sub _calculate_hash_shared {
         $shared{$_}++ foreach (keys %{${$xintersectionref}{$q}});
     }
     return \%shared;
+}
+
+sub _calculate_sharedref {
+    my $seenrefsref = shift;
+
+    my %intermediate = ();
+    for my $href (@{$seenrefsref}) {
+       my %this = map { $_ => 1 } keys(%{$href});
+        for my $k (keys %this) {;
+            $intermediate{$k}++;
+        };
+    }
+
+    my $sharedref;
+    for my $k (keys %intermediate) {
+        $sharedref->{$k}++ if $intermediate{$k} > 1;
+    }
+    return $sharedref;
 }
 
 sub _subset_subengine {

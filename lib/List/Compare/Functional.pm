@@ -253,18 +253,7 @@ sub _symmetric_difference_engine {
 
     my $unionref = _calculate_union_only($seenrefsref);
 
-    my %intermediate = ();
-    for my $href (@{$seenrefsref}) {
-       my %this = map { $_ => 1 } keys(%{$href});
-        for my $k (keys %this) {;
-            $intermediate{$k}++;
-        };
-    }
-
-    my $sharedref;
-    for my $k (keys %intermediate) {
-        $sharedref->{$k}++ if $intermediate{$k} > 1;
-    }
+    my $sharedref = _calculate_sharedref($seenrefsref);
 
     my (@symmetric_difference);
     for my $k (keys %{$unionref}) {
@@ -289,12 +278,9 @@ sub get_shared_ref {
 
 sub _shared_engine {
     my $seenrefsref = _calc_seen1(@_);
-    # Calculate @shared
-    # Inputs:  %xintersection
-    my $xintersectionref = _calculate_xintersection_only($seenrefsref);
-    my $sharedref = _calculate_hash_shared($xintersectionref);
-    my @shared = keys %{$sharedref};
-    return \@shared;
+
+    my $sharedref = _calculate_sharedref($seenrefsref);
+    return [ keys %{$sharedref} ];
 }
 
 sub get_nonintersection {
