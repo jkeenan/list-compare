@@ -170,3 +170,9 @@ List::Compare::Functional; other internal code clean-up
       get_nonintersection_ref
       get_symmetric_difference
       get_symmetric_difference_ref
+
+0.43 Thu Feb 12 19:14:35 EST 2015
+    - Improve performance of two List::Compare::Functional functions.
+
+      get_shared
+      get_shared_ref
