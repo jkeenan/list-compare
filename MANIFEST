@@ -8,8 +8,6 @@ lib/List/Compare/Functional.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
-MYMETA.json
-MYMETA.yml
 README
 t/01_oo_lists_dual_reg_sorted.t
 t/02_oo_lists_dual_reg_unsorted.t
