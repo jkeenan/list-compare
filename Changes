@@ -176,3 +176,11 @@ List::Compare::Functional; other internal code clean-up
 
       get_shared
       get_shared_ref
+
+0.44 Sun Feb 15 14:40:06 EST 2015
+    - Improve performance of complement-related functions in both functional
+      and object-oriented interfaces:
+
+      get_complement
+      get_complement_ref
+      get_complement_all

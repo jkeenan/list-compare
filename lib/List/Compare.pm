@@ -1,5 +1,5 @@
 package List::Compare;
-$VERSION = '0.43';
+$VERSION = '0.44';
 use strict;
 local $^W = 1;
 use Carp;
@@ -1744,8 +1744,8 @@ List::Compare - Compare elements of two or more lists
 
 =head1 VERSION
 
-This document refers to version 0.43 of List::Compare.  This version was
-released February 12 2015.
+This document refers to version 0.44 of List::Compare.  This version was
+released February 15 2015.
 
 =head1 SYNOPSIS
 
