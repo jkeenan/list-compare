@@ -53,17 +53,15 @@ sub _unique_all_engine {
 sub _complement_all_engine {
     my ($aref, $unsortflag) = @_;
     my ($unionref, $seenref) = _calculate_union_seen_only($aref);
-    my %seen = %{$seenref};
     my @union = $unsortflag ? keys %{$unionref} : sort(keys %{$unionref});
 
     # Calculate @xcomplement
     # Inputs:  $aref @union %seen
     my (@xcomplement);
     for (my $i = 0; $i <= $#{$aref}; $i++) {
-        my %seenthis = %{$seen{$i}};
         my @complementthis = ();
-        foreach (@union) {
-            push(@complementthis, $_) unless (exists $seenthis{$_});
+        foreach my $el (@union) {
+            push(@complementthis, $el) unless (exists $seenref->{$i}->{$el});
         }
         $xcomplement[$i] = \@complementthis;
     }
