@@ -219,17 +219,15 @@ sub _complement_engine {
     my $tested = pop(@_);
     my $seenrefsref = _calc_seen1(@_);
     my ($unionref, $seenref) = _calculate_union_seen_only($seenrefsref);
-    my %seen = %{$seenref};
     my @union = keys %{$unionref};
 
     # Calculate %xcomplement
     # Inputs:  $seenrefsref @union %seen
     my (%xcomplement);
     for (my $i = 0; $i <= $#{$seenrefsref}; $i++) {
-        my %seenthis = %{$seen{$i}};
         my @complementthis = ();
-        foreach (@union) {
-            push(@complementthis, $_) unless (exists $seenthis{$_});
+        foreach my $k (@union) {
+            push(@complementthis, $k) unless (exists $seenref->{$i}->{$k});
         }
         $xcomplement{$i} = \@complementthis;
     }
