@@ -20,21 +20,19 @@ sub _unique_all_engine {
     my $aref = shift;
     my ($seenref, $xintersectionref) =
         _calculate_seen_xintersection_only($aref);
-    my %seen = %{$seenref};
-    my %xintersection = %{$xintersectionref};
 
     # Calculate @xunique
     # Inputs:  $aref    %seen    %xintersection
     my (@xunique);
     for (my $i = 0; $i <= $#{$aref}; $i++) {
-        my %seenthis = %{$seen{$i}};
+        my %seenthis = %{$seenref->{$i}};
         my (@uniquethis, %deductions, %alldeductions);
         # Get those elements of %xintersection which we'll need
         # to subtract from %seenthis
-        foreach (keys %xintersection) {
-            my ($left, $right) = split /_/, $_;
+        foreach my $k (keys %{$xintersectionref}) {
+            my ($left, $right) = split /_/, $k;
             if ($left == $i || $right == $i) {
-                $deductions{$_} = $xintersection{$_};
+                $deductions{$k} = $xintersectionref->{$k};
             }
         }
         foreach my $ded (keys %deductions) {
@@ -42,8 +40,8 @@ sub _unique_all_engine {
                 $alldeductions{$_}++;
             }
         }
-        foreach (keys %seenthis) {
-            push(@uniquethis, $_) unless ($alldeductions{$_});
+        foreach my $k (keys %seenthis) {
+            push(@uniquethis, $k) unless ($alldeductions{$k});
         }
         $xunique[$i] = \@uniquethis;
     }
