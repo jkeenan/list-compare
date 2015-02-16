@@ -184,3 +184,12 @@ List::Compare::Functional; other internal code clean-up
       get_complement
       get_complement_ref
       get_complement_all
+
+0.45 Mon Feb 16 16:59:03 EST 2015
+    - Improve performance of unique-related functions in both functional and
+      object-oriented interfaces:
+
+      get_unique
+      get_unique_ref
+      get_unique_all
+
