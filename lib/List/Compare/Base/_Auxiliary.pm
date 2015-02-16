@@ -1,5 +1,5 @@
 package List::Compare::Base::_Auxiliary;
-$VERSION = 0.44;
+$VERSION = 0.45;
 use Carp;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw|
@@ -745,8 +745,8 @@ List::Compare::Base::_Auxiliary - Internal use only
 
 =head1 VERSION
 
-This document refers to version 0.44 of List::Compare::Base::_Auxiliary.
-This version was released February 15 2015.
+This document refers to version 0.45 of List::Compare::Base::_Auxiliary.
+This version was released February 16 2015.
 
 =head1 SYNOPSIS
 
@@ -758,7 +758,7 @@ List::Compare::Functional.  They are not intended to be publicly callable.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please
 include 'List::Compare' or 'List-Compare' in your subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  February 15 2015.
+Creation date:  May 20, 2002.  Last modification date:  February 16 2015.
 Copyright (c) 2002-15 James E. Keenan.  United States.  All rights reserved.
 This is free software and may be distributed under the same terms as Perl
 itself.
