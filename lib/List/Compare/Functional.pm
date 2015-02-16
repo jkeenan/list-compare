@@ -167,8 +167,7 @@ sub get_unique_all {
 
 sub _unique_engine {
     my $index = pop(@_);
-    my $seenrefsref = _calc_seen1(@_);
-    my $seenref = _calculate_seen_only($seenrefsref);
+    my $seenref = _calculate_seen_only(_calc_seen1(@_));
 
     my %seen_in_all_others = ();
     my @seenthis = ();
@@ -182,12 +181,12 @@ sub _unique_engine {
             @seenthis = keys %{$seenref->{$index}};
         }
     }
-    my @unique_to_index = ();
+    my @unique_to_this_index = ();
     for my $s (@seenthis) {
-        push @unique_to_index, $s
+        push @unique_to_this_index, $s
             unless $seen_in_all_others{$s};
     }
-    return \@unique_to_index;
+    return \@unique_to_this_index;
 }
 
 sub get_complement {

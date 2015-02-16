@@ -22,21 +22,21 @@ sub _unique_all_engine {
 
     my @all_uniques = ();
     for my $i (sort {$a <=> $b} keys %{$seenref}) {
-        my %allothers = ();
+        my %seen_in_all_others = ();
         for my $j (keys %{$seenref}) {
             unless ($i == $j) {
                 for my $k (keys %{$seenref->{$j}}) {
-                    $allothers{$k}++;
+                    $seen_in_all_others{$k}++;
                 }
             }
 
         }
-        my @intermediate = ();
+        my @these_uniques = ();
         for my $l (keys %{$seenref->{$i}}) {
-            push @intermediate, $l
-                unless $allothers{$l};
+            push @these_uniques, $l
+                unless $seen_in_all_others{$l};
         }
-        $all_uniques[$i]  = \@intermediate;
+        $all_uniques[$i]  = \@these_uniques;
     }
     return \@all_uniques;
 }
