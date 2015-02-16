@@ -17,49 +17,29 @@ use List::Compare::Base::_Auxiliary qw(
 use strict;
 local $^W = 1;
 
-use Data::Dump;
 sub _unique_all_engine {
     my $aref = shift;
-say STDERR "ZZZ: input to _unique_all_engine";
-Data::Dump::pp($aref);
-    my ($seenref, $xintersectionref) =
-        _calculate_seen_xintersection_only($aref);
-say STDERR "AAA: seenref, xintersectionref";
-Data::Dump::pp($seenref, $xintersectionref);
-my $abc = _calculate_seen_only($aref);
-say STDERR "BBB: abc";
-Data::Dump::pp($abc);
-    # dump demonstrates that $seenref and $abc are same
+    my $seenref = _calculate_seen_only($aref);
 
-    # Calculate @xunique
-    # Inputs:  $aref    %seen    %xintersection
-    my (@xunique);
-    for (my $i = 0; $i <= $#{$aref}; $i++) {
-        my %seenthis = %{$seenref->{$i}};
-        my (@uniquethis, %deductions, %alldeductions);
-        # Get those elements of %xintersection which we'll need
-        # to subtract from %seenthis
-        foreach my $k (keys %{$xintersectionref}) {
-            my ($left, $right) = split /_/, $k;
-            if ($left == $i || $right == $i) {
-                $deductions{$k} = $xintersectionref->{$k};
+    my @all_uniques = ();
+    for my $i (sort {$a <=> $b} keys %{$seenref}) {
+        my %allothers = ();
+        for my $j (keys %{$seenref}) {
+            unless ($i == $j) {
+                for my $k (keys %{$seenref->{$j}}) {
+                    $allothers{$k}++;
+                }
             }
+
         }
-        foreach my $ded (keys %deductions) {
-            foreach my $k (keys %{$deductions{$ded}}) {
-                $alldeductions{$k}++;
-            }
+        my @intermediate = ();
+        for my $l (keys %{$seenref->{$i}}) {
+            push @intermediate, $l
+                unless $allothers{$l};
         }
-        foreach my $k (keys %seenthis) {
-            push(@uniquethis, $k) unless ($alldeductions{$k});
-        }
-        $xunique[$i] = \@uniquethis;
+        $all_uniques[$i]  = \@intermediate;
     }
-#    return \@xunique;
-my $xyz = \@xunique;
-say STDERR "CCC: return from _unique_all_engine";
-Data::Dump::pp($xyz);
-    return $xyz;
+    return \@all_uniques;
 }
 
 sub _complement_all_engine {

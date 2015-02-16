@@ -1690,16 +1690,3 @@ itself.
 
 =cut
 
-__END__
-
-#say STDERR "ZZZ: $index";
-#say STDERR "AAA: seenref, xintersectionref";
-#Data::Dump::pp($seenref, $xintersectionref);
-#
-#
-#Data::Dump::pp($seenref);
-# dump shows we can $seenref matches $seenref
-#
-#say STDERR "BBB: unique_to_index";
-#Data::Dump::pp(\@unique_to_index);
-
