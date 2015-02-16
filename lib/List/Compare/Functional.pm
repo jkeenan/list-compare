@@ -166,34 +166,28 @@ sub get_unique_all {
 }
 
 sub _unique_engine {
-    my $tested = pop(@_);
+    my $index = pop(@_);
     my $seenrefsref = _calc_seen1(@_);
-    my ($seenref, $xintersectionref) =
-        _calculate_seen_xintersection_only($seenrefsref);
+    my $seenref = _calculate_seen_only($seenrefsref);
 
-    # Calculate %xunique
-    my (%xunique);
-    for (my $i = 0; $i <= $#{$seenrefsref}; $i++) {
-        my (@uniquethis, %deductions, %alldeductions);
-        # Get those elements of %xintersection which we'll need
-        # to subtract from %seenthis
-        foreach my $k (keys %{$xintersectionref}) {
-            my ($left, $right) = split /_/, $k;
-            if ($left == $i || $right == $i) {
-                $deductions{$k} = $xintersectionref->{$k};
+    my %seen_in_all_others = ();
+    my @seenthis = ();
+    for my $i (keys %{$seenref}) {
+        unless ($i == $index) {
+            for my $k (keys %{$seenref->{$i}}) {
+                $seen_in_all_others{$k}++;
             }
         }
-        foreach my $ded (keys %deductions) {
-            foreach my $k (keys %{$deductions{$ded}}) {
-                $alldeductions{$k}++;
-            }
+        else {
+            @seenthis = keys %{$seenref->{$index}};
         }
-        foreach my $k (keys %{$seenref->{$i}}) {
-            push(@uniquethis, $k) unless ($alldeductions{$k});
-        }
-        $xunique{$i} = \@uniquethis;
     }
-    return [ @{$xunique{$tested}} ];
+    my @unique_to_index = ();
+    for my $s (@seenthis) {
+        push @unique_to_index, $s
+            unless $seen_in_all_others{$s};
+    }
+    return \@unique_to_index;
 }
 
 sub get_complement {
@@ -1695,4 +1689,17 @@ This is free software and may be distributed under the same terms as Perl
 itself.
 
 =cut
+
+__END__
+
+#say STDERR "ZZZ: $index";
+#say STDERR "AAA: seenref, xintersectionref";
+#Data::Dump::pp($seenref, $xintersectionref);
+#
+#
+#Data::Dump::pp($seenref);
+# dump shows we can $seenref matches $seenref
+#
+#say STDERR "BBB: unique_to_index";
+#Data::Dump::pp(\@unique_to_index);
 
