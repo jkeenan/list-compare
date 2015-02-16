@@ -7,6 +7,7 @@ use List::Compare::Base::_Auxiliary qw(
     _equiv_engine
     _calculate_seen_xintersection_only
     _calculate_union_seen_only
+    _calculate_seen_only
 );
 @ISA = qw(Exporter);
 @EXPORT_OK = qw|
@@ -16,10 +17,19 @@ use List::Compare::Base::_Auxiliary qw(
 use strict;
 local $^W = 1;
 
+use Data::Dump;
 sub _unique_all_engine {
     my $aref = shift;
+say STDERR "ZZZ: input to _unique_all_engine";
+Data::Dump::pp($aref);
     my ($seenref, $xintersectionref) =
         _calculate_seen_xintersection_only($aref);
+say STDERR "AAA: seenref, xintersectionref";
+Data::Dump::pp($seenref, $xintersectionref);
+my $abc = _calculate_seen_only($aref);
+say STDERR "BBB: abc";
+Data::Dump::pp($abc);
+    # dump demonstrates that $seenref and $abc are same
 
     # Calculate @xunique
     # Inputs:  $aref    %seen    %xintersection
@@ -36,8 +46,8 @@ sub _unique_all_engine {
             }
         }
         foreach my $ded (keys %deductions) {
-            foreach (keys %{$deductions{$ded}}) {
-                $alldeductions{$_}++;
+            foreach my $k (keys %{$deductions{$ded}}) {
+                $alldeductions{$k}++;
             }
         }
         foreach my $k (keys %seenthis) {
@@ -45,7 +55,11 @@ sub _unique_all_engine {
         }
         $xunique[$i] = \@uniquethis;
     }
-    return \@xunique;
+#    return \@xunique;
+my $xyz = \@xunique;
+say STDERR "CCC: return from _unique_all_engine";
+Data::Dump::pp($xyz);
+    return $xyz;
 }
 
 sub _complement_all_engine {
