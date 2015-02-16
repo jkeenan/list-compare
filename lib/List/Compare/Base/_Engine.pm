@@ -5,7 +5,6 @@ $VERSION = 0.44;
 use Carp;
 use List::Compare::Base::_Auxiliary qw(
     _equiv_engine
-    _calculate_seen_xintersection_only
     _calculate_union_seen_only
     _calculate_seen_only
 );
