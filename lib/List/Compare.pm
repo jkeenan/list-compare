@@ -1362,12 +1362,17 @@ sub get_intersection_ref {
     my $unsortflag = $data{'unsort'};
     my $aref = _prepare_listrefs(\%data);
 
-    # Calculate overall intersection
-    # Inputs:  %xintersection
-    my $xintersectionref = _calculate_xintersection_only($aref);
-    my $intersectionref = _calculate_hash_intersection($xintersectionref);
+    my $aseenref = _calculate_array_seen_only($aref);
+    my @vals = sort { scalar(keys(%{$a})) <=> scalar(keys(%{$b})) }
+        @{$aseenref};
+    my %intermediate = map { $_ => 1 } keys %{$vals[0]};
+    for my $l ( 1..$#vals ) {
+        %intermediate = map { $_ => 1 }
+            grep { exists $intermediate{$_} }
+            keys %{$vals[$l]};
+    }
     my @intersection =
-        $unsortflag ? keys %{$intersectionref} : sort(keys %{$intersectionref});
+        $unsortflag ? keys %intermediate : sort(keys %intermediate);
     return \@intersection;
 }
 
@@ -1404,12 +1409,9 @@ sub get_shared_ref {
     my %data = %$class;
     my $unsortflag = $data{'unsort'};
     my $aref = _prepare_listrefs(\%data);
-
-    # Calculate @shared
-    # Inputs:  %xintersection
-    my $xintersectionref = _calculate_xintersection_only($aref);
-    my $sharedref = _calculate_hash_shared($xintersectionref);
-    my @shared = $unsortflag ? keys %{$sharedref} : sort(keys %{$sharedref});
+    my $aseenref = _calculate_array_seen_only($aref);
+    my $intermediate = _calculate_sharedref($aseenref);
+    my @shared = $unsortflag ? keys %{$intermediate} : sort(keys %{$intermediate});
     return \@shared;
 }
 

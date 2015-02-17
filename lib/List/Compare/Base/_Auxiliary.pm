@@ -7,6 +7,7 @@ use Carp;
     _validate_seen_hash
     _validate_multiple_seenhashes
     _calculate_union_xintersection_only
+    _calculate_array_seen_only
     _calculate_seen_only
     _calculate_xintersection_only
     _calculate_union_only
@@ -44,6 +45,7 @@ use Carp;
 %EXPORT_TAGS = (
     calculate => [ qw(
         _calculate_union_xintersection_only
+        _calculate_array_seen_only
         _calculate_seen_only
         _calculate_xintersection_only
         _calculate_union_only
@@ -206,6 +208,19 @@ sub _calculate_union_xintersection_only {
         }
     }
     return (\%union, \%xintersection);
+}
+
+sub _calculate_array_seen_only {
+    my $aref = shift;
+    my (@seen);
+    for (my $i = 0; $i <= $#{$aref}; $i++) {
+        my %seenthis = ();
+        foreach my $el ( List::Compare::Base::_Auxiliary::_list_builder($aref, $i) ) {
+            $seenthis{$el}++;
+        }
+        push @seen, \%seenthis;
+    }
+    return \@seen;
 }
 
 sub _calculate_seen_only {
