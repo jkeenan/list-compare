@@ -192,4 +192,3 @@ List::Compare::Functional; other internal code clean-up
       get_unique
       get_unique_ref
       get_unique_all
-
