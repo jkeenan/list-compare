@@ -192,3 +192,12 @@ List::Compare::Functional; other internal code clean-up
       get_unique
       get_unique_ref
       get_unique_all
+
+0.46 Wed Feb 18 19:30:30 EST 2015
+    - Improve performance of List::Compare::Multiple::Accelerated methods:
+
+      get_intersection
+      get_intersection_ref
+      get_shared
+      get_shared_ref
+
