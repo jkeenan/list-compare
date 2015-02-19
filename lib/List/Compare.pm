@@ -1625,7 +1625,6 @@ sub is_member_which_ref {
 
 sub are_members_which {
     my $class = shift;
-#    croak "Method call needs at least one argument:  $!" unless (@_);
     croak "Method call requires exactly 1 argument which must be an array reference\n    holding the items to be tested:  $!"
         unless (@_ == 1 and ref($_[0]) eq 'ARRAY');
     my %data = %{$class};
@@ -1633,9 +1632,6 @@ sub are_members_which {
     my $seenref = _calculate_seen_only($aref);
     my (@args, %found);
     @args = @{$_[0]};
-#    @args = (@_ == 1 and ref($_[0]) eq 'ARRAY')
-#        ?  @{$_[0]}
-#        :  @_;
     for (my $i=0; $i<=$#args; $i++) {
         my (@not_found);
         foreach (sort keys %{$seenref}) {
