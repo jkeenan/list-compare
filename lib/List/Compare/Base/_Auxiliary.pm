@@ -9,6 +9,7 @@ use Carp;
     _calculate_union_xintersection_only
     _calculate_array_seen_only
     _calculate_seen_only
+    _calculate_intermediate
     _calculate_xintersection_only
     _calculate_union_only
     _calculate_union_seen_only
@@ -47,6 +48,7 @@ use Carp;
         _calculate_union_xintersection_only
         _calculate_array_seen_only
         _calculate_seen_only
+        _calculate_intermediate
         _calculate_xintersection_only
         _calculate_union_only
         _calculate_union_seen_only
@@ -234,6 +236,19 @@ sub _calculate_seen_only {
         $seen{$i} = \%seenthis;
     }
     return \%seen;
+}
+
+sub _calculate_intermediate {
+    my $aref = shift;
+    my $aseenref = _calculate_array_seen_only($aref);
+    my @vals = sort { scalar(keys(%{$a})) <=> scalar(keys(%{$b})) } @{$aseenref};
+    my %intermediate = map { $_ => 1 } keys %{$vals[0]};
+    for my $l ( 1..$#vals ) {
+        %intermediate = map { $_ => 1 }
+            grep { exists $intermediate{$_} }
+            keys %{$vals[$l]};
+    }
+    return \%intermediate;
 }
 
 sub _calculate_xintersection_only {

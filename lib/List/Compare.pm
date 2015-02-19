@@ -1361,18 +1361,9 @@ sub get_intersection_ref {
     my %data = %$class;
     my $unsortflag = $data{'unsort'};
     my $aref = _prepare_listrefs(\%data);
-
-    my $aseenref = _calculate_array_seen_only($aref);
-    my @vals = sort { scalar(keys(%{$a})) <=> scalar(keys(%{$b})) }
-        @{$aseenref};
-    my %intermediate = map { $_ => 1 } keys %{$vals[0]};
-    for my $l ( 1..$#vals ) {
-        %intermediate = map { $_ => 1 }
-            grep { exists $intermediate{$_} }
-            keys %{$vals[$l]};
-    }
+    my $intermediate_ref = _calculate_intermediate($aref);
     my @intersection =
-        $unsortflag ? keys %intermediate : sort(keys %intermediate);
+        $unsortflag ? keys %{$intermediate_ref} : sort(keys %{$intermediate_ref});
     return \@intersection;
 }
 
@@ -1386,18 +1377,13 @@ sub get_nonintersection_ref {
     my $unsortflag = $data{'unsort'};
     my $aref = _prepare_listrefs(\%data);
 
-    my ($unionref, $xintersectionref) =
-        _calculate_union_xintersection_only($aref);
-    my @union = $unsortflag ? keys %{$unionref} : sort(keys %{$unionref});
-    my $intersectionref = _calculate_hash_intersection($xintersectionref);
-
-    # Calculate nonintersection
-    # Inputs:  @union    %intersection
+    my $unionref = _calculate_union_only($aref);
+    my $intermediate_ref = _calculate_intermediate($aref);
     my (@nonintersection);
-    foreach (@union) {
-        push(@nonintersection, $_) unless exists ${$intersectionref}{$_};
+    foreach my $el (keys %{$unionref}) {
+        push(@nonintersection, $el) unless exists $intermediate_ref->{$el};
     }
-    return \@nonintersection;
+    return [ $unsortflag ? @nonintersection : sort(@nonintersection) ];
 }
 
 sub get_shared {
@@ -1424,17 +1410,16 @@ sub get_symmetric_difference_ref {
     my %data = %$class;
     my $unsortflag = $data{'unsort'};
     my $aref = _prepare_listrefs(\%data);
+    my $unionref = _calculate_union_only($aref);
 
-    my ($unionref, $xintersectionref) =
-        _calculate_union_xintersection_only($aref);
-    my @union = $unsortflag ? keys %{$unionref} : sort(keys %{$unionref});
+    my $aseenref = _calculate_array_seen_only($aref);
+    my $sharedref = _calculate_sharedref($aseenref);
 
-    my $sharedref = _calculate_hash_shared($xintersectionref);
     my (@symmetric_difference);
-    foreach (@union) {
-        push(@symmetric_difference, $_) unless exists ${$sharedref}{$_};
+    foreach my $el (keys %{$unionref}) {
+        push(@symmetric_difference, $el) unless exists $sharedref->{$el};
     }
-    return \@symmetric_difference;
+    return [ $unsortflag ? @symmetric_difference : sort(@symmetric_difference) ];
 }
 
 *get_symdiff = \&get_symmetric_difference;
@@ -1625,7 +1610,6 @@ sub is_member_which_ref {
 
 sub are_members_which {
     my $class = shift;
-#    croak "Method call needs at least one argument:  $!" unless (@_);
     croak "Method call requires exactly 1 argument which must be an array reference\n    holding the items to be tested:  $!"
         unless (@_ == 1 and ref($_[0]) eq 'ARRAY');
     my %data = %{$class};
@@ -1633,9 +1617,6 @@ sub are_members_which {
     my $seenref = _calculate_seen_only($aref);
     my (@args, %found);
     @args = @{$_[0]};
-#    @args = (@_ == 1 and ref($_[0]) eq 'ARRAY')
-#        ?  @{$_[0]}
-#        :  @_;
     for (my $i=0; $i<=$#args; $i++) {
         my (@not_found);
         foreach (sort keys %{$seenref}) {
