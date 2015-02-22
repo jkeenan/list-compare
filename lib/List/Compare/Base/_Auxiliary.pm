@@ -6,7 +6,6 @@ use Carp;
     _validate_2_seenhashes
     _validate_seen_hash
     _validate_multiple_seenhashes
-    _calculate_union_xintersection_only
     _calculate_array_seen_only
     _calculate_seen_only
     _calculate_intermediate
@@ -45,7 +44,6 @@ use Carp;
 |;
 %EXPORT_TAGS = (
     calculate => [ qw(
-        _calculate_union_xintersection_only
         _calculate_array_seen_only
         _calculate_seen_only
         _calculate_intermediate
@@ -187,29 +185,6 @@ sub _list_builder {
     } else {
         return      @{${$aref}[$x]};
     }
-}
-
-sub _calculate_union_xintersection_only {
-    my $aref = shift;
-    my (%union, %xintersection);
-    for (my $i = 0; $i <= $#{$aref}; $i++) {
-        my %seenthis = ();
-        foreach my $h ( _list_builder($aref, $i) ) {
-            $seenthis{$h}++;
-            $union{$h}++;
-        }
-        for (my $j = $i+1; $j <=$#{$aref}; $j++) {
-            my %seenthat = ();
-            my %seenintersect = ();
-            my $ilabel = $i . '_' . $j;
-            $seenthat{$_}++ foreach ( _list_builder($aref, $j) );
-            foreach my $k (keys %seenthat) {
-                $seenintersect{$k}++ if (exists $seenthis{$k});
-            }
-            $xintersection{$ilabel} = \%seenintersect;
-        }
-    }
-    return (\%union, \%xintersection);
 }
 
 sub _calculate_array_seen_only {
