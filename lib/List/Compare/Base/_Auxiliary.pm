@@ -6,9 +6,9 @@ use Carp;
     _validate_2_seenhashes
     _validate_seen_hash
     _validate_multiple_seenhashes
-    _calculate_union_xintersection_only
     _calculate_array_seen_only
     _calculate_seen_only
+    _calculate_intermediate
     _calculate_xintersection_only
     _calculate_union_only
     _calculate_union_seen_only
@@ -44,9 +44,9 @@ use Carp;
 |;
 %EXPORT_TAGS = (
     calculate => [ qw(
-        _calculate_union_xintersection_only
         _calculate_array_seen_only
         _calculate_seen_only
+        _calculate_intermediate
         _calculate_xintersection_only
         _calculate_union_only
         _calculate_union_seen_only
@@ -187,29 +187,6 @@ sub _list_builder {
     }
 }
 
-sub _calculate_union_xintersection_only {
-    my $aref = shift;
-    my (%union, %xintersection);
-    for (my $i = 0; $i <= $#{$aref}; $i++) {
-        my %seenthis = ();
-        foreach my $h ( _list_builder($aref, $i) ) {
-            $seenthis{$h}++;
-            $union{$h}++;
-        }
-        for (my $j = $i+1; $j <=$#{$aref}; $j++) {
-            my %seenthat = ();
-            my %seenintersect = ();
-            my $ilabel = $i . '_' . $j;
-            $seenthat{$_}++ foreach ( _list_builder($aref, $j) );
-            foreach my $k (keys %seenthat) {
-                $seenintersect{$k}++ if (exists $seenthis{$k});
-            }
-            $xintersection{$ilabel} = \%seenintersect;
-        }
-    }
-    return (\%union, \%xintersection);
-}
-
 sub _calculate_array_seen_only {
     my $aref = shift;
     my (@seen);
@@ -234,6 +211,19 @@ sub _calculate_seen_only {
         $seen{$i} = \%seenthis;
     }
     return \%seen;
+}
+
+sub _calculate_intermediate {
+    my $aref = shift;
+    my $aseenref = _calculate_array_seen_only($aref);
+    my @vals = sort { scalar(keys(%{$a})) <=> scalar(keys(%{$b})) } @{$aseenref};
+    my %intermediate = map { $_ => 1 } keys %{$vals[0]};
+    for my $l ( 1..$#vals ) {
+        %intermediate = map { $_ => 1 }
+            grep { exists $intermediate{$_} }
+            keys %{$vals[$l]};
+    }
+    return \%intermediate;
 }
 
 sub _calculate_xintersection_only {
