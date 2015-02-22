@@ -1316,7 +1316,6 @@ use List::Compare::Base::_Auxiliary qw(
     _equivalent_subengine
     _index_message3
     _index_message4
-    _prepare_listrefs
     _subset_engine_multaccel
 );
 use List::Compare::Base::_Auxiliary qw(:calculate);
@@ -1574,18 +1573,16 @@ sub is_LdisjointR {
     my %data = %$class;
     my $aref = _prepare_listrefs(\%data);
     my ($index_left, $index_right) = _index_message4($#{$aref}, @_);
-
-    my (@xdisjoint);
-    my $xintersectionref = _calculate_xintersection_only($aref);
-    for (my $i = 0; $i <= $#{$aref}; $i++) {
-        foreach (keys %{$xintersectionref}) {
-            my ($left, $right) = split /_/, $_;
-            $xdisjoint[$left][$right] = $xdisjoint[$right][$left] =
-                ! scalar(keys %{${$xintersectionref}{$_}}) ? 1 : 0;
+    my $aseenref = _calculate_array_seen_only(
+        [ $aref->[$index_left], $aref->[$index_right] ]
+    );
+    my $disjoint_status = 1;
+    OUTER: for my $k (keys %{$aseenref->[0]}) {
+        if ($aseenref->[1]->{$k}) {
+            $disjoint_status = 0;
+            last OUTER;
         }
-        $xdisjoint[$i][$i] = 0;
     }
-    my $disjoint_status = $xdisjoint[$index_left][$index_right];
     return $disjoint_status;
 }
 

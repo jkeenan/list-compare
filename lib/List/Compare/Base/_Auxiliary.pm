@@ -9,7 +9,6 @@ use Carp;
     _calculate_array_seen_only
     _calculate_seen_only
     _calculate_intermediate
-    _calculate_xintersection_only
     _calculate_union_only
     _calculate_union_seen_only
     _calculate_hash_intersection
@@ -47,7 +46,6 @@ use Carp;
         _calculate_array_seen_only
         _calculate_seen_only
         _calculate_intermediate
-        _calculate_xintersection_only
         _calculate_union_only
         _calculate_union_seen_only
         _calculate_hash_intersection
@@ -224,27 +222,6 @@ sub _calculate_intermediate {
             keys %{$vals[$l]};
     }
     return \%intermediate;
-}
-
-sub _calculate_xintersection_only {
-    my $aref = shift;
-    my (%xintersection);
-    for (my $i = 0; $i <= $#{$aref}; $i++) {
-        my %seenthis = ();
-        foreach my $h ( _list_builder($aref, $i) ) {
-            $seenthis{$h}++;
-        }
-        for (my $j = $i+1; $j <=$#{$aref}; $j++) {
-            my (%seenthat, %seenintersect);
-            my $ilabel = $i . '_' . $j;
-            $seenthat{$_}++ foreach ( _list_builder($aref, $j) );
-            foreach (keys %seenthat) {
-                $seenintersect{$_}++ if (exists $seenthis{$_});
-            }
-            $xintersection{$ilabel} = \%seenintersect;
-        }
-    }
-    return \%xintersection;
 }
 
 sub _calculate_union_only {

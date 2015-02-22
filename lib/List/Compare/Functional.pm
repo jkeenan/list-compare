@@ -352,18 +352,14 @@ sub is_LdisjointR {
 sub _is_LdisjointR_engine {
     my $testedref = pop(@_);
     my $seenrefsref = _calc_seen1(@_);
-    my $xintersectionref = _calculate_xintersection_only($seenrefsref);
-    my (@xdisjoint);
-    for (my $i = 0; $i <= @{$seenrefsref}; $i++) {
-        foreach (keys %{$xintersectionref}) {
-            my ($left, $right) = split /_/, $_;
-            $xdisjoint[$left][$right] = $xdisjoint[$right][$left] =
-                ! scalar(keys %{${$xintersectionref}{$_}}) ? 1 : 0;
+    my $disjoint = 1; # start out assuming disjoint status
+    OUTER: for my $k (keys %{$seenrefsref->[$testedref->[0]]}) {
+        if ($seenrefsref->[$testedref->[1]]->{$k}) {
+            $disjoint = 0;
+            last OUTER;
         }
-        $xdisjoint[$i][$i] = 0;
     }
-    my $disjoint_status = $xdisjoint[${$testedref}[1]][${$testedref}[0]];
-    return $disjoint_status;
+    return $disjoint;
 }
 
 sub print_subset_chart {
