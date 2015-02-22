@@ -201,3 +201,11 @@ List::Compare::Functional; other internal code clean-up
       get_shared
       get_shared_ref
 
+0.47 Sun Feb 22 08:17:54 EST 2015
+    - Improve performance of List::Compare::Multiple::Accelerated methods:
+
+      get_nonintersection
+      get_nonintersection_ref
+      get_symmetric_difference
+      get_symmetric_difference_ref
+
