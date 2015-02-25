@@ -209,3 +209,6 @@ List::Compare::Functional; other internal code clean-up
       get_symmetric_difference
       get_symmetric_difference_ref
 
+0.48 Wed Feb 25 17:59:30 EST 2015
+    - Improve performance of is_LdisjointR in List::Compare::Functional and in
+      multiple accelerated mode of List::Compare.
