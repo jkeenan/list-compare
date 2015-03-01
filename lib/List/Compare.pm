@@ -10,7 +10,7 @@ use List::Compare::Base::_Auxiliary qw(
 
 sub new {
     my $class = shift;
-    my (@args, $unsorted, $accelerated, $self, $dataref, $unsortflag);
+    my (@args, $unsorted, $accelerated);
     my ($argument_error_status, $nextarg, @testargs);
     if (@_ == 1 and (ref($_[0]) eq 'HASH')) {
         my $argref = shift;
@@ -44,21 +44,16 @@ sub new {
     croak "Must pass all array references or all hash references: $!"
         unless $argument_error_status;
 
-    # bless a ref to an empty hash into the invoking class
+    # Compose the name of the class
     if (@args > 2) {
         if ($accelerated) {
             $class .= '::Multiple::Accelerated';
-            $self = bless {}, $class;
         } else {
             $class .= '::Multiple';
-            $self = bless {}, $class;
         }
     } elsif (@args == 2) {
         if ($accelerated) {
             $class .= '::Accelerated';
-            $self = bless {}, $class;
-        } else {
-            $self = bless {}, $class;
         }
     } else {
         croak "Must pass at least 2 references to \&new: $!";
@@ -66,8 +61,8 @@ sub new {
 
     # do necessary calculations and store results in a hash
     # take a reference to that hash
-    $unsortflag = $unsorted ? 1 : 0;
-    $dataref = $self->_init($unsortflag, @args);
+    my $self = bless {}, $class;
+    my $dataref = $self->_init(($unsorted ? 1 : 0), @args);
 
     # initialize the object from the prepared values (Damian, p. 98)
     %$self = %$dataref;
