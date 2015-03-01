@@ -11,7 +11,6 @@ use Carp;
     _calculate_intermediate
     _calculate_union_only
     _calculate_union_seen_only
-    _calculate_hash_intersection
     _calculate_hash_shared
     _calculate_sharedref
     _subset_subengine
@@ -48,7 +47,6 @@ use Carp;
         _calculate_intermediate
         _calculate_union_only
         _calculate_union_seen_only
-        _calculate_hash_intersection
         _calculate_hash_shared
         _calculate_sharedref
     ) ],
@@ -247,20 +245,6 @@ sub _calculate_union_seen_only {
         $seen{$i} = \%seenthis;
     }
     return (\%union, \%seen);
-}
-
-sub _calculate_hash_intersection {
-    my $xintersectionref = shift;
-    my @xkeys = keys %{$xintersectionref};
-    my %intersection = %{${$xintersectionref}{$xkeys[0]}};
-    for (my $m = 1; $m <= $#xkeys; $m++) {
-        my %result = ();
-        foreach (keys %{${$xintersectionref}{$xkeys[$m]}}) {
-            $result{$_}++ if (exists $intersection{$_});
-        }
-        %intersection = %result;
-    }
-    return \%intersection;
 }
 
 sub _calculate_hash_shared {
