@@ -147,26 +147,22 @@ sub _validate_seen_hash {
 
 sub _validate_multiple_seenhashes {
     my $hashrefsref = shift;
-    my @hashrefs = @{$hashrefsref};
-    my (%badentries, $badentriesflag);
-    for (my $i = 0; $i <= $#hashrefs; $i++) {
-        my %seenhash = %{$hashrefs[$i]};
-        foreach (keys %seenhash) {
-            unless ($seenhash{$_} =~ /^\d+$/ and $seenhash{$_} > 0) {
-                $badentries{$i}{$_} = $seenhash{$_};
-                $badentriesflag++;
+    my (%badentries);
+    for (my $i = 0; $i <= $#{$hashrefsref}; $i++) {
+        foreach my $k (keys %{$hashrefsref->[$i]}) {
+            unless ($hashrefsref->[$i]->{$k} =~ /^\d+$/ and $hashrefsref->[$i]->{$k} > 0) {
+                $badentries{$i}{$k} = $hashrefsref->[$i]->{$k};
             }
         }
     }
     my $msg = q{};
-    if ($badentriesflag) {
+    if (scalar(keys %badentries)) {
         $msg .= "\nValues in a 'seen-hash' must be positive integers.\n";
         $msg .= "  These elements have invalid values:\n\n";
-        foreach (sort keys %badentries) {
-            $msg .= "    Hash $_:\n";
-            my %pairs = %{$badentries{$_}};
-            foreach my $val (sort keys %pairs) {
-                $msg .= "        Bad key-value pair:  $val\t$pairs{$val}\n";
+        foreach my $b (sort keys %badentries) {
+            $msg .= "    Hash $b:\n";
+            foreach my $val (sort keys %{$badentries{$b}}) {
+                $msg .= "        Bad key-value pair:  $val\t$badentries{$b}->{$val}\n";
             }
         }
         $msg .= "Correct invalid values before proceeding";
@@ -188,7 +184,7 @@ sub _calculate_array_seen_only {
     my (@seen);
     for (my $i = 0; $i <= $#{$aref}; $i++) {
         my %seenthis = ();
-        foreach my $el ( List::Compare::Base::_Auxiliary::_list_builder($aref, $i) ) {
+        foreach my $el ( _list_builder($aref, $i) ) {
             $seenthis{$el}++;
         }
         push @seen, \%seenthis;
