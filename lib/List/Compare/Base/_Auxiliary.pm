@@ -11,7 +11,6 @@ use Carp;
     _calculate_intermediate
     _calculate_union_only
     _calculate_union_seen_only
-    _calculate_hash_shared
     _calculate_sharedref
     _subset_subengine
     _chart_engine_regular
@@ -47,7 +46,6 @@ use Carp;
         _calculate_intermediate
         _calculate_union_only
         _calculate_union_seen_only
-        _calculate_hash_shared
         _calculate_sharedref
     ) ],
     checker => [ qw(
@@ -241,15 +239,6 @@ sub _calculate_union_seen_only {
         $seen{$i} = \%seenthis;
     }
     return (\%union, \%seen);
-}
-
-sub _calculate_hash_shared {
-    my $xintersectionref = shift;
-    my (%shared);
-    foreach my $q (keys %{$xintersectionref}) {
-        $shared{$_}++ foreach (keys %{${$xintersectionref}{$q}});
-    }
-    return \%shared;
 }
 
 sub _calculate_sharedref {
