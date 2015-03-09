@@ -1,5 +1,5 @@
 package List::Compare::Functional;
-$VERSION = 0.48;
+$VERSION = 0.49;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw|
     get_intersection
@@ -513,7 +513,7 @@ List::Compare::Functional - Compare elements of two or more lists
 
 =head1 VERSION
 
-This document refers to version 0.48 of List::Compare::Functional.
+This document refers to version 0.49 of List::Compare::Functional.
 This version was released February 25 2015.  The first released
 version of List::Compare::Functional was v0.21.  Its version numbers
 are set to be consistent with the other parts of the List::Compare

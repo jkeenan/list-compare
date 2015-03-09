@@ -1,5 +1,5 @@
 package List::Compare::Base::_Auxiliary;
-$VERSION = 0.48;
+$VERSION = 0.49;
 use Carp;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw|
@@ -696,7 +696,7 @@ List::Compare::Base::_Auxiliary - Internal use only
 
 =head1 VERSION
 
-This document refers to version 0.48 of List::Compare::Base::_Auxiliary.
+This document refers to version 0.49 of List::Compare::Base::_Auxiliary.
 This version was released February 25 2015.
 
 =head1 SYNOPSIS
