@@ -258,24 +258,43 @@ sub _calculate_sharedref {
     }
     return $sharedref;
 }
-
+sub _is_list_subset {
+	my ( $subset, $superset ) = @_;
+	# return false if the superset value is false
+	# for any subset value.
+	# note that this does *not* validate overlap of
+	# the keys; it validates the truth of supserset
+	# values.
+	$superset->{ $_ } or return 0 for keys %$subset;
+    return 1;
+}
 sub _subset_subengine {
     my $aref = shift;
     my (@xsubset);
     my %seen = %{_calculate_seen_only($aref)};
     foreach my $i (keys %seen) {
-        my %tempi = %{$seen{$i}};
         foreach my $j (keys %seen) {
-            my %tempj = %{$seen{$j}};
-            $xsubset[$i][$j] = 1;
-            foreach my $k (keys %tempi) {
-                $xsubset[$i][$j] = 0 if (! $tempj{$k});
+            if ( $i eq $j ) {
+                $xsubset[$i][$j] = 1;
+            }
+            elsif ( $i gt $j ) {
+                if ( scalar(keys %{ $seen{$i} }) == scalar(keys %{ $seen{$j} }) ){
+                    $xsubset[$i][$j] = _is_list_subset($seen{$i}, $seen{$j});
+                    $xsubset[$j][$i] = $xsubset[$i][$j];
+                }
+                elsif ( scalar(keys %{ $seen{$i} }) < scalar(keys %{ $seen{$j} }) ){
+                    $xsubset[$i][$j] = _is_list_subset($seen{$i}, $seen{$j});
+                    $xsubset[$j][$i] = 0;
+                }
+                elsif ( scalar(keys %{ $seen{$i} }) > scalar(keys %{ $seen{$j} }) ){
+                    $xsubset[$j][$i] = _is_list_subset($seen{$i}, $seen{$j});
+                    $xsubset[$i][$j] = 0;
+                }
             }
         }
     }
     return \@xsubset;
 }
-
 sub _chart_engine_regular {
     my $aref = shift;
     my @sub_or_eqv = @$aref;
