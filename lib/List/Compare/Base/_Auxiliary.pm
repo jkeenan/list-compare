@@ -264,12 +264,10 @@ sub _subset_subengine {
     my (@xsubset);
     my %seen = %{_calculate_seen_only($aref)};
     foreach my $i (keys %seen) {
-        my %tempi = %{$seen{$i}};
         foreach my $j (keys %seen) {
-            my %tempj = %{$seen{$j}};
             $xsubset[$i][$j] = 1;
-            foreach my $k (keys %tempi) {
-                $xsubset[$i][$j] = 0 if (! $tempj{$k});
+            foreach my $k (keys %{$seen{$i}}) {
+                $xsubset[$i][$j] = 0 if (! $seen{$j}{$k});
             }
         }
     }
