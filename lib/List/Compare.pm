@@ -1,5 +1,5 @@
 package List::Compare;
-$VERSION = '0.49';
+$VERSION = '0.50';
 use strict;
 local $^W = 1;
 use Carp;
@@ -1719,8 +1719,8 @@ List::Compare - Compare elements of two or more lists
 
 =head1 VERSION
 
-This document refers to version 0.49 of List::Compare.  This version was
-released February 25 2015.
+This document refers to version 0.50 of List::Compare.  This version was
+released May 09 2015.
 
 =head1 SYNOPSIS
 
@@ -3024,6 +3024,13 @@ new methods, C<get_unique_all> and C<get_complement_all>.  In writing these
 two methods, I followed a model of test-driven development much more so than
 in earlier versions of List::Compare and my other CPAN modules.  The result?
 List::Compare's test suite grew by over 3300 tests to nearly 23,000 tests.
+
+At the Second New York Perl Hackathon (May 02 2015), a project was created to
+request performance improvements in certain List::Compare functions
+(L<https://github.com/nyperlmongers/nyperlhackathon2015/wiki/List-Compare-Performance-Improvements).
+Hackathon participant Mich Rawson submitted a pull request with changes to
+List::Compare::Base::_Auxiliary.  After these revisions were benchmarked, a
+patch embodying the pull request was accepted, leading to CPAN version 0.50.
 
 =head2 If You Like List::Compare, You'll Love ...
 
