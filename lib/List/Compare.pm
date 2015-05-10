@@ -3028,7 +3028,7 @@ List::Compare's test suite grew by over 3300 tests to nearly 23,000 tests.
 At the Second New York Perl Hackathon (May 02 2015), a project was created to
 request performance improvements in certain List::Compare functions
 (L<https://github.com/nyperlmongers/nyperlhackathon2015/wiki/List-Compare-Performance-Improvements).
-Hackathon participant Mich Rawson submitted a pull request with changes to
+Hackathon participant Michael Rawson submitted a pull request with changes to
 List::Compare::Base::_Auxiliary.  After these revisions were benchmarked, a
 patch embodying the pull request was accepted, leading to CPAN version 0.50.
 
