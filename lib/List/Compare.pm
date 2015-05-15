@@ -1,5 +1,5 @@
 package List::Compare;
-$VERSION = '0.50';
+$VERSION = '0.51';
 use strict;
 local $^W = 1;
 use Carp;
@@ -1719,8 +1719,8 @@ List::Compare - Compare elements of two or more lists
 
 =head1 VERSION
 
-This document refers to version 0.50 of List::Compare.  This version was
-released May 09 2015.
+This document refers to version 0.51 of List::Compare.  This version was
+released May 14 2015.
 
 =head1 SYNOPSIS
 
@@ -3030,7 +3030,7 @@ request performance improvements in certain List::Compare functions
 (L<https://github.com/nyperlmongers/nyperlhackathon2015/wiki/List-Compare-Performance-Improvements).
 Hackathon participant Michael Rawson submitted a pull request with changes to
 List::Compare::Base::_Auxiliary.  After these revisions were benchmarked, a
-patch embodying the pull request was accepted, leading to CPAN version 0.50.
+patch embodying the pull request was accepted, leading to CPAN version 0.51.
 
 =head2 If You Like List::Compare, You'll Love ...
 

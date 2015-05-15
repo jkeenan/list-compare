@@ -219,3 +219,10 @@ List::Compare::Functional; other internal code clean-up
 0.50 Sat May  9 09:06:41 EDT 2015
     - Improve performance of is_LsubsetR via patches submitted by Mich Rawson
       at New York Perl Hackathon (May 2 2015).
+
+0.51 Thu May 14 21:49:00 EDT 2015
+    - Changes to List::Compare::Functional::is_LsubsetR introduced in v0.50
+      found to be buggy.  See: https://rt.cpan.org/Ticket/Display.html?id=104452.
+      Pending further investigation, reverted to v0.49 of
+      List::Compare::Base::_Auxiliary; added two test files.
+
