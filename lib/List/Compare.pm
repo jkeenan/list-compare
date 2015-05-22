@@ -3136,6 +3136,16 @@ you must first install the Want module, also available on CPAN.
 
 =back
 
+=head1 ADDITIONAL CONTRIBUTORS
+
+=over 4
+
+=item * Syohei YOSHIDA
+
+Pull request accepted May 22 2015.
+
+=back
+
 =head1 BUGS
 
 There are no bug reports outstanding on List::Compare as of the most recent
