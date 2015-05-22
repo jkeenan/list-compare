@@ -1,5 +1,5 @@
 package List::Compare::Base::_Auxiliary;
-$VERSION = 0.51;
+$VERSION = 0.52;
 use Carp;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw|
@@ -264,12 +264,10 @@ sub _subset_subengine {
     my (@xsubset);
     my %seen = %{_calculate_seen_only($aref)};
     foreach my $i (keys %seen) {
-        my %tempi = %{$seen{$i}};
         foreach my $j (keys %seen) {
-            my %tempj = %{$seen{$j}};
             $xsubset[$i][$j] = 1;
-            foreach my $k (keys %tempi) {
-                $xsubset[$i][$j] = 0 if (! $tempj{$k});
+            foreach my $k (keys %{$seen{$i}}) {
+                $xsubset[$i][$j] = 0 if (! $seen{$j}{$k});
             }
         }
     }
@@ -696,8 +694,8 @@ List::Compare::Base::_Auxiliary - Internal use only
 
 =head1 VERSION
 
-This document refers to version 0.51 of List::Compare::Base::_Auxiliary.
-This version was released May 14 2015.
+This document refers to version 0.52 of List::Compare::Base::_Auxiliary.
+This version was released May 21 2015.
 
 =head1 SYNOPSIS
 
