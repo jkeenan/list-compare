@@ -226,3 +226,6 @@ List::Compare::Functional; other internal code clean-up
       Pending further investigation, reverted to v0.49 of
       List::Compare::Base::_Auxiliary; added two test files.
 
+0.52 Thu May 21 21:57:18 EDT 2015
+    - v0.51 changes were not applied to master branch; apply them.
+      Remove two hash-to-hash assignments in List::Compare::Base::_Auxiliary::_subset_subengine.
