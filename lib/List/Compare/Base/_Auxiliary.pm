@@ -262,12 +262,21 @@ sub _calculate_sharedref {
 sub _subset_subengine {
     my $aref = shift;
     my (@xsubset);
-    my %seen = %{_calculate_seen_only($aref)};
-    foreach my $i (keys %seen) {
-        foreach my $j (keys %seen) {
+#    my %seen = %{_calculate_seen_only($aref)};
+#    foreach my $i (keys %seen) {
+#        foreach my $j (keys %seen) {
+#            $xsubset[$i][$j] = 1;
+#            foreach my $k (keys %{$seen{$i}}) {
+#                $xsubset[$i][$j] = 0 if (! $seen{$j}{$k});
+#            }
+#        }
+#    }
+    my $seen = _calculate_seen_only($aref);
+    foreach my $i (keys %{$seen}) {
+        foreach my $j (keys %{$seen}) {
             $xsubset[$i][$j] = 1;
-            foreach my $k (keys %{$seen{$i}}) {
-                $xsubset[$i][$j] = 0 if (! $seen{$j}{$k});
+            foreach my $k (keys %{$seen->{$i}}) {
+                $xsubset[$i][$j] = 0 if (! $seen->{$j}{$k});
             }
         }
     }
