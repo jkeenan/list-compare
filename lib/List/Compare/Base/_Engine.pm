@@ -14,7 +14,7 @@ use List::Compare::Base::_Auxiliary qw(
     _complement_all_engine
 |;
 use strict;
-local $^W = 1;
+use warnings;
 
 sub _unique_all_engine {
     my $aref = shift;

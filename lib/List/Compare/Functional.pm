@@ -91,7 +91,7 @@ $VERSION = 0.52;
     ) ],
 );
 use strict;
-local $^W = 1;
+use warnings;
 use Carp;
 use List::Compare::Base::_Auxiliary qw(
     _subset_subengine

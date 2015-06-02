@@ -122,7 +122,7 @@ sub DESTROY {
         # some versions of perl complain about reading from fd 1 or 2
         # which could happen if STDOUT and STDERR were closed when $newio
         # was opened, so we just squelch warnings here and continue
-        local $^W; 
+        no warnings; 
         seek $newio, 0, 0;
         $$capture = do {local $/; <$newio>};
         close $newio;
