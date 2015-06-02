@@ -61,5 +61,6 @@ t/49_lc_subset.t
 t/50_lcf_subset.t
 t/90_oo_errors.t
 t/91_func_errors.t
+t/92_pod.t
 t/IO/CaptureOutput.pm
 t/Test/ListCompareSpecial.pm
