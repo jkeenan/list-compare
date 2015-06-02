@@ -67,7 +67,7 @@ use Carp;
     ) ],
 );
 use strict;
-local $^W =1;
+use warnings;
 
 my $bad_lists_msg = q{If argument is single hash ref, you must have a 'lists' key whose value is an array ref};
 
