@@ -2,7 +2,7 @@
 #$Id$
 # 04_oo_lists_dual_acc_unsorted.t
 use strict;
-use Test::More tests => 109;
+use Test::More tests => 166;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
@@ -436,31 +436,27 @@ $disj = $lcu_dj->is_LdisjointR;
 ok($disj, "disjoint correctly determined");
 
 ########## BELOW:  Tests for '--unsorted' and '--accelerated' options ##########
-
-my $lcaun   = List::Compare->new('--unsorted', '-a', \@a0, \@a1);
-ok($lcaun, "Constructor worked with --unsorted and -a options");
-
-my $lcaun_s  = List::Compare->new('--unsorted', '-a', \@a2, \@a3);
-ok($lcaun_s, "Constructor worked with --unsorted and -a options");
-
-my $lcaun_e  = List::Compare->new('--unsorted', '-a', \@a3, \@a4);
-ok($lcaun_e, "Constructor worked with --unsorted and -a options");
-
-my $lcaccun   = List::Compare->new('--unsorted', '--accelerated', \@a0, \@a1);
-ok($lcaccun, "Constructor worked with --unsorted and --accelerated options");
-
-my $lcaccun_s  = List::Compare->new('--unsorted', '--accelerated', \@a2, \@a3);
-ok($lcaccun_s, "Constructor worked with --unsorted and --accelerated options");
-
-my $lcaccun_e  = List::Compare->new('--unsorted', '--accelerated', \@a3, \@a4);
-ok($lcaccun_e, "Constructor worked with --unsorted and --accelerated options");
-
-my $lcaccu   = List::Compare->new('-u', '--accelerated', \@a0, \@a1);
-ok($lcaccu, "Constructor worked with -u and --accelerated options");
-
-my $lcaccu_s  = List::Compare->new('-u', '--accelerated', \@a2, \@a3);
-ok($lcaccu_s, "Constructor worked with -u and --accelerated options");
-
-my $lcaccu_e  = List::Compare->new('-u', '--accelerated', \@a3, \@a4);
-ok($lcaccu_e, "Constructor worked with -u and --accelerated options");
-
+for my $opt1 ('', qw| -u --unsorted |) {
+	my $unsorted = $opt1;
+	for my $opt2 ('', qw| -a --accelerated |) {
+		my $accelerated = $opt2;
+		for my $swap (0..1) {
+			my @opts = grep {$_} ($opt1, $opt2);
+			@opts = reverse @opts if $swap;
+			my $lc = List::Compare->new(@opts, \@a0, \@a1);
+			ok($lc, "Constructor worked with '@opts' options");
+			my @intersection = qw| golfer delta edward baker camera fargo  |;
+			@intersection = sort @intersection unless $unsorted;
+			if ($accelerated) {
+				ok(! $lc->{'intersection'}, "Results not pre-computed");
+			}
+			else {
+				is_deeply($lc->{'intersection'}, \@intersection, "Results pre-computed");
+			}
+			is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+			if ($accelerated) {
+				ok(! $lc->{'intersection'}, "Results not stored");
+			}
+		}
+	}
+}
