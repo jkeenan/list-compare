@@ -38,6 +38,7 @@ use Carp;
     _alt_construct_tester_3
     _alt_construct_tester_4
     _alt_construct_tester_5
+	_parse_options
 |;
 %EXPORT_TAGS = (
     calculate => [ qw(
@@ -64,6 +65,7 @@ use Carp;
         _alt_construct_tester_3
         _alt_construct_tester_4
         _alt_construct_tester_5
+		_parse_options
     ) ],
 );
 use strict;
@@ -595,8 +597,7 @@ sub _alt_construct_tester {
        $argref = ${$hashref}{'lists'};
        $unsorted = ${$hashref}{'unsorted'} ? 1 : '';
     } else {
-        $unsorted = shift(@args)
-            if ($args[0] eq '-u' or $args[0] eq '--unsorted');
+        ($unsorted) = _parse_options(\@args);
         $argref = shift(@args);
     }
     return ($argref, $unsorted);
@@ -658,7 +659,7 @@ sub _alt_construct_tester_3 {
         $argref = \@returns;
         $unsorted = ${$hashref}{'unsorted'} ? 1 : '';
     } else {
-        $unsorted = shift(@args) if ($args[0] eq '-u' or $args[0] eq '--unsorted');
+        ($unsorted) = _parse_options(\@args);
         $argref = \@args;
     }
     return ($argref, $unsorted);
@@ -704,6 +705,32 @@ sub _alt_construct_tester_5 {
         croak "Subroutine call requires exactly 1 reference as argument:  $!";
     }
     return $argref;
+}
+
+# ($unsorted, $accelerated) = _parse_options( \@args );
+# input: reference to list of arguments passed in to a function
+# output:
+# - $unsorted    set if '-u' or '--unsorted'    as one of the first list elements
+# - $accelerated set if '-a' or '--accelerated' as one of the first list elements
+# the options, if found, are removed from the passed in list
+# the options can be passed in any order
+sub _parse_options {
+	my($args) = @_;
+	croak "Need to be passed a reference to a list"
+		unless ref($args) eq 'ARRAY';
+	my($unsorted, $accelerated) = ('', '');
+	while (@$args && !ref($args->[0])) {
+		if ($args->[0] eq '-u' || $args->[0] eq '--unsorted') {
+			$unsorted = shift @$args;
+		}
+		elsif ($args->[0] eq '-a' || $args->[0] eq '--accelerated') {
+			$accelerated = shift @$args;
+		}
+		else {
+			last;
+		}
+	}
+	return ($unsorted, $accelerated);
 }
 
 1;
