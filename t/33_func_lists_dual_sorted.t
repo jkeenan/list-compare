@@ -131,8 +131,17 @@ ok(! $disj, "Got expected disjoint relationship");
         \$stdout,
     );
     ok($rv, "print_subset_chart() returned true value");
-    like($stdout, qr/Subset Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Subset Relationships
+
+   Right:    0    1
+
+Left:  0:    1    0
+
+       1:    0    1
+
+...
 }
 
 eval { my $rv = print_subset_chart( [ \@a0, \@a1 ], [ 'bogus' ] ); };
