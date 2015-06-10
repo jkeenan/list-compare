@@ -152,8 +152,17 @@ like($@, qr/^Need to define 'lists' key properly/,
         \$stdout,
     );
     ok($rv, "print_equivalence_chart() returned true value");
-    like($stdout, qr/Equivalence Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Equivalence Relationships
+
+   Right:    0    1
+
+Left:  0:    1    0
+
+       1:    0    1
+
+...
 }
      
 eval { my $rv = print_equivalence_chart( { lists => \$scalar } ); };
