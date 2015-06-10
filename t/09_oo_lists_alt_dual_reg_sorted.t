@@ -220,8 +220,17 @@ Left:  0:    1    0
         \$stdout,
     );
     ok($rv, "print_equivalence_chart() returned true value");
-    like($stdout, qr/Equivalence Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Equivalence Relationships
+
+   Right:    0    1
+
+Left:  0:    1    0
+
+       1:    0    1
+
+...
 }
      
 ok(wrap_is_member_which(
