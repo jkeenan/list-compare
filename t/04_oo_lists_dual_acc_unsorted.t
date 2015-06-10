@@ -2,7 +2,7 @@
 #$Id$
 # 04_oo_lists_dual_acc_unsorted.t
 use strict;
-use Test::More tests => 166;
+use Test::More tests => 232;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
@@ -443,7 +443,16 @@ for my $opt1 ('', qw| -u --unsorted |) {
 		for my $swap (0..1) {
 			my @opts = grep {$_} ($opt1, $opt2);
 			@opts = reverse @opts if $swap;
-			my $lc = List::Compare->new(@opts, \@a0, \@a1);
+			for my $args ( # list-arguments to constructor
+						   [ @opts, \@a0, \@a1 ],
+						   # hash-arguments to constructor
+						   [ { lists       => [ \@a0, \@a1 ],
+						       accelerated => $accelerated,
+							   unsorted    => $unsorted,
+							 }
+						   ]
+						  ) {							   
+			my $lc = List::Compare->new(@$args);
 			ok($lc, "Constructor worked with '@opts' options");
 			my @intersection = qw| golfer delta edward baker camera fargo  |;
 			@intersection = sort @intersection unless $unsorted;
@@ -456,6 +465,7 @@ for my $opt1 ('', qw| -u --unsorted |) {
 			is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
 			if ($accelerated) {
 				ok(! $lc->{'intersection'}, "Results not stored");
+			}
 			}
 		}
 	}
