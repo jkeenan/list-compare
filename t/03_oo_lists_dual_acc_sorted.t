@@ -308,7 +308,7 @@ like($@,
     "are_members_any() correctly generated error message");
 
 $vers = $lc->get_version;
-ok($vers, "get_version() returned true value");
+is($vers, $List::Compare::VERSION, "get_version() returned the correct value");
 
 ### new ###
 my $lc_s  = List::Compare->new('-a', \@a2, \@a3);

@@ -616,7 +616,7 @@ like($@,
     "are_members_any() correctly generated error message");
 
 $vers = $lcm->get_version;
-ok($vers, "get_version() returned true value");
+is($vers, $List::Compare::VERSION, "get_version() returned the correct value");
 
 ### new ###
 my $lcm_dj   = List::Compare->new(\@a0, \@a1, \@a2, \@a3, \@a4, \@a8);

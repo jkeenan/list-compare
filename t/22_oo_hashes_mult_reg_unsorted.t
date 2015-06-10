@@ -590,7 +590,7 @@ is_deeply($memb_hash_ref, $test_members_any_mult,
     "are_members_any() returned all expected values");
 
 $vers = $lcmu->get_version;
-ok($vers, "get_version() returned true value");
+is($vers, $List::Compare::VERSION, "get_version() returned the correct value");
 
 ### new ###
 my $lcmu_dj   = List::Compare->new(\%h0, \%h1, \%h2, \%h3, \%h4, \%h8);

@@ -409,7 +409,7 @@ ok(wrap_are_members_any(
 ), "are_members_any() returned all expected values");
 
 $vers = $lcu->get_version;
-ok($vers, "get_version() returned true value");
+is($vers, $List::Compare::VERSION, "get_version() returned the correct value");
 
 ### new ###
 my $lcu_s    = List::Compare->new( {
