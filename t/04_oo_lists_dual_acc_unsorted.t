@@ -452,20 +452,20 @@ for my $opt1 ('', qw| -u --unsorted |) {
 							 }
 						   ]
 						  ) {							   
-			my $lc = List::Compare->new(@$args);
-			ok($lc, "Constructor worked with '@opts' options");
-			my @intersection = qw| golfer delta edward baker camera fargo  |;
-			@intersection = sort @intersection unless $unsorted;
-			if ($accelerated) {
-				ok(! $lc->{'intersection'}, "Results not pre-computed");
-			}
-			else {
-				is_deeply($lc->{'intersection'}, \@intersection, "Results pre-computed");
-			}
-			is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
-			if ($accelerated) {
-				ok(! $lc->{'intersection'}, "Results not stored");
-			}
+				my $lc = List::Compare->new(@$args);
+				ok($lc, "Constructor worked with '@opts' options");
+				my @intersection = qw| golfer delta edward baker camera fargo  |;
+				@intersection = sort @intersection unless $unsorted;
+				if ($accelerated) {
+					ok(! $lc->{'intersection'}, "Results not pre-computed");
+				}
+				else {
+					is_deeply($lc->{'intersection'}, \@intersection, "Results pre-computed");
+				}
+				is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+				if ($accelerated) {
+					ok(! $lc->{'intersection'}, "Results not stored");
+				}
 			}
 		}
 	}
