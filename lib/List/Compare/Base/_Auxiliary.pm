@@ -73,8 +73,7 @@ my $bad_lists_msg = q{If argument is single hash ref, you must have a 'lists' ke
 
 sub _validate_2_seenhashes {
     my ($refL, $refR) = @_;
-    my (%seenL, %seenR);
-    my (%badentriesL, %badentriesR);
+    my (%seenL, %seenR, %badentriesL, %badentriesR);
     foreach (keys %$refL) {
         if (${$refL}{$_} =~ /^\d+$/ and ${$refL}{$_} > 0) {
             $seenL{$_} = ${$refL}{$_};
@@ -288,7 +287,7 @@ sub _subset_subengine {
                     $xsubset[$i][$j] = _is_list_subset($seen{$i}, $seen{$j});
                     $xsubset[$j][$i] = 0;
                 }
-                elsif ( scalar(keys %{ $seen{$i} }) > scalar(keys %{ $seen{$j} }) ){
+                else {
                     $xsubset[$j][$i] = _is_list_subset($seen{$j}, $seen{$i});
                     $xsubset[$i][$j] = 0;
                 }
