@@ -307,13 +307,10 @@ sub is_member_which_ref {
     croak "Method call requires exactly 1 argument (no references):  $!"
         unless (@_ == 1 and ref($_[0]) ne 'ARRAY');
     my %data = %$class;
-    my ($arg, @found);
-    $arg = shift;
+    my $arg = shift;
+    my @found = ();
     if (exists ${$data{'seenL'}}{$arg}) { push @found, 0; }
     if (exists ${$data{'seenR'}}{$arg}) { push @found, 1; }
-    if ( (! exists ${$data{'seenL'}}{$arg}) &&
-         (! exists ${$data{'seenR'}}{$arg}) )
-       { @found = (); }
     return \@found;
 }
 
@@ -325,11 +322,9 @@ sub are_members_which {
     my (@args, %found);
     @args = @{$_[0]};
     for (my $i=0; $i<=$#args; $i++) {
+        @{$found{$args[$i]}} = ();
         if (exists ${$data{'seenL'}}{$args[$i]}) { push @{$found{$args[$i]}}, 0; }
         if (exists ${$data{'seenR'}}{$args[$i]}) { push @{$found{$args[$i]}}, 1; }
-        if ( (! exists ${$data{'seenL'}}{$args[$i]}) &&
-             (! exists ${$data{'seenR'}}{$args[$i]}) )
-           { @{$found{$args[$i]}} = (); }
     }
     return \%found;
 }
@@ -744,12 +739,9 @@ sub _print_equivalence_chart_engine {
 sub _is_member_which_engine {
     my ($l, $r, $arg) = @_;
     my ($hrefL, $hrefR) = _calc_seen($l, $r);
-    my (@found);
+    my @found = ();
     if (exists ${$hrefL}{$arg}) { push @found, 0; }
     if (exists ${$hrefR}{$arg}) { push @found, 1; }
-    if ( (! exists ${$hrefL}{$arg}) &&
-         (! exists ${$hrefR}{$arg}) )
-       { @found = (); }
     return \@found;
 }
 
@@ -759,11 +751,9 @@ sub _are_members_which_engine {
     my @args = @{$arg};
     my (%found);
     for (my $i=0; $i<=$#args; $i++) {
+        @{$found{$args[$i]}} = ();
         if (exists ${$hrefL}{$args[$i]}) { push @{$found{$args[$i]}}, 0; }
         if (exists ${$hrefR}{$args[$i]}) { push @{$found{$args[$i]}}, 1; }
-        if ( (! exists ${$hrefL}{$args[$i]}) &&
-             (! exists ${$hrefR}{$args[$i]}) )
-           { @{$found{$args[$i]}} = (); }
     }
     return \%found;
 }
