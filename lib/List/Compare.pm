@@ -10,8 +10,7 @@ use List::Compare::Base::_Auxiliary qw(
 
 sub new {
     my $class = shift;
-    my (@args, $unsorted, $accelerated);
-    my ($argument_error_status, $nextarg, @testargs);
+    my (@args, $unsorted, $accelerated, $argument_error_status, $nextarg, @testargs);
     if (@_ == 1 and (ref($_[0]) eq 'HASH')) {
         my $argref = shift;
         die "Need to pass references to 2 or more seen-hashes or \n  to provide a 'lists' key within the single hash being passed by reference"
