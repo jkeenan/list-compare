@@ -38,7 +38,7 @@ use Carp;
     _alt_construct_tester_3
     _alt_construct_tester_4
     _alt_construct_tester_5
-	_parse_options
+    _parse_options
 |;
 %EXPORT_TAGS = (
     calculate => [ qw(
@@ -65,7 +65,7 @@ use Carp;
         _alt_construct_tester_3
         _alt_construct_tester_4
         _alt_construct_tester_5
-		_parse_options
+        _parse_options
     ) ],
 );
 use strict;
@@ -715,22 +715,22 @@ sub _alt_construct_tester_5 {
 # the options, if found, are removed from the passed in list
 # the options can be passed in any order
 sub _parse_options {
-	my($args) = @_;
-	croak "Need to be passed a reference to a list"
-		unless ref($args) eq 'ARRAY';
-	my($unsorted, $accelerated) = ('', '');
-	while (@$args && !ref($args->[0])) {
-		if ($args->[0] eq '-u' || $args->[0] eq '--unsorted') {
-			$unsorted = shift @$args;
-		}
-		elsif ($args->[0] eq '-a' || $args->[0] eq '--accelerated') {
-			$accelerated = shift @$args;
-		}
-		else {
-			last;
-		}
-	}
-	return ($unsorted, $accelerated);
+    my($args) = @_;
+    croak "Need to be passed a reference to a list"
+        unless ref($args) eq 'ARRAY';
+    my($unsorted, $accelerated) = ('', '');
+    while (@$args && !ref($args->[0])) {
+        if ($args->[0] eq '-u' || $args->[0] eq '--unsorted') {
+            $unsorted = shift @$args;
+        }
+        elsif ($args->[0] eq '-a' || $args->[0] eq '--accelerated') {
+            $accelerated = shift @$args;
+        }
+        else {
+            last;
+        }
+    }
+    return ($unsorted, $accelerated);
 }
 
 1;
