@@ -2,7 +2,7 @@
 #$Id$
 # 04_oo_lists_dual_acc_unsorted.t
 use strict;
-use Test::More tests => 170;
+use Test::More tests => 151;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :arrays :results );
@@ -436,35 +436,41 @@ $disj = $lcu_dj->is_LdisjointR;
 ok($disj, "disjoint correctly determined");
 
 ########## Tests for '--unsorted' and '--accelerated' in any order ##########
+# - test depends on white-box knowledge of module internals, to check if
+#   --accelerated is working as expected
+# - test depends on the order of keys %array, which is assumed to be the same
+#   in the same perl interpreter, to check if --unsorted is working as expected
+
+# set up test data
+my %expected_intersection;
+foreach (qw| golfer delta edward baker camera fargo  |) {
+    $expected_intersection{$_}++;
+}
+my @unsorted_intersection =      keys %expected_intersection;
+my @sorted_intersection   = sort keys %expected_intersection;
 
 ########## Options: <empty>
 
 # list-arguments to constructor
 my $lc = List::Compare->new(\@a0, \@a1);
-ok($lc, "Constructor worked with '' options");
-my @intersection = sort qw| golfer delta edward baker camera fargo  |;
-is_deeply($lc->{'intersection'}, \@intersection, "Results pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->{'intersection'}, \@sorted_intersection, "Results pre-computed");
+is_deeply($lc->get_intersection_ref, \@sorted_intersection, "Results ok");
 
 # hash-arguments to constructor
 my $lc = List::Compare->new({  lists       => [ \@a0, \@a1 ],
 							   accelerated => 0,
 							   unsorted    => 0,
 							 });
-ok($lc, "Constructor worked with '' options");
-my @intersection = sort qw| golfer delta edward baker camera fargo  |;
-is_deeply($lc->{'intersection'}, \@intersection, "Results pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->{'intersection'}, \@sorted_intersection, "Results pre-computed");
+is_deeply($lc->get_intersection_ref, \@sorted_intersection, "Results ok");
 
 
 ########## Options: --accelerated
 
 # list-arguments to constructor
 my $lc = List::Compare->new('--accelerated', \@a0, \@a1);
-ok($lc, "Constructor worked with '--accelerated' options");
-my @intersection = sort qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@sorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 # hash-arguments to constructor
@@ -472,10 +478,8 @@ my $lc = List::Compare->new({  lists       => [ \@a0, \@a1 ],
 							   accelerated => 1,
 							   unsorted    => 0,
 							 });
-ok($lc, "Constructor worked with '--accelerated' options");
-my @intersection = sort qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@sorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 
@@ -483,10 +487,8 @@ ok(! $lc->{'intersection'}, "Results not stored");
 
 # list-arguments to constructor
 my $lc = List::Compare->new('-a', \@a0, \@a1);
-ok($lc, "Constructor worked with '-a' options");
-my @intersection = sort qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@sorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 # hash-arguments to constructor
@@ -494,10 +496,8 @@ my $lc = List::Compare->new({  lists       => [ \@a0, \@a1 ],
 							   accelerated => 1,
 							   unsorted    => 0,
 							 });
-ok($lc, "Constructor worked with '-a' options");
-my @intersection = sort qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@sorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 
@@ -505,50 +505,40 @@ ok(! $lc->{'intersection'}, "Results not stored");
 
 # list-arguments to constructor
 my $lc = List::Compare->new('--unsorted', \@a0, \@a1);
-ok($lc, "Constructor worked with '--unsorted' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
-is_deeply($lc->{'intersection'}, \@intersection, "Results pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->{'intersection'}, \@unsorted_intersection, "Results pre-computed");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 
 # hash-arguments to constructor
 my $lc = List::Compare->new({  lists       => [ \@a0, \@a1 ],
 							   accelerated => 0,
 							   unsorted    => 1,
 							 });
-ok($lc, "Constructor worked with '--unsorted' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
-is_deeply($lc->{'intersection'}, \@intersection, "Results pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->{'intersection'}, \@unsorted_intersection, "Results pre-computed");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 
 
 ########## Options: -u
 
 # list-arguments to constructor
 my $lc = List::Compare->new('-u', \@a0, \@a1);
-ok($lc, "Constructor worked with '-u' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
-is_deeply($lc->{'intersection'}, \@intersection, "Results pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->{'intersection'}, \@unsorted_intersection, "Results pre-computed");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 
 # hash-arguments to constructor
 my $lc = List::Compare->new({  lists       => [ \@a0, \@a1 ],
 							   accelerated => 0,
 							   unsorted    => 1,
 							 });
-ok($lc, "Constructor worked with '-u' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
-is_deeply($lc->{'intersection'}, \@intersection, "Results pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->{'intersection'}, \@unsorted_intersection, "Results pre-computed");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 
 
 ########## Options: --accelerated --unsorted
 
 # list-arguments to constructor
 my $lc = List::Compare->new('--accelerated', '--unsorted', \@a0, \@a1);
-ok($lc, "Constructor worked with '--accelerated --unsorted' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 # hash-arguments to constructor
@@ -556,79 +546,63 @@ my $lc = List::Compare->new({  lists       => [ \@a0, \@a1 ],
 							   accelerated => 1,
 							   unsorted    => 1,
 							 });
-ok($lc, "Constructor worked with '--accelerated --unsorted' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 
 ########## Options: --accelerated -u
 
 my $lc = List::Compare->new('--accelerated', '-u', \@a0, \@a1);
-ok($lc, "Constructor worked with '--accelerated -u' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 
 ########## Options: --unsorted --accelerated
 
 my $lc = List::Compare->new('--unsorted', '--accelerated', \@a0, \@a1);
-ok($lc, "Constructor worked with '--unsorted --accelerated' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 
 ########## Options: --unsorted -a
 
 my $lc = List::Compare->new('--unsorted', '-a', \@a0, \@a1);
-ok($lc, "Constructor worked with '--unsorted -a' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 
 ########## Options: -a --unsorted
 
 my $lc = List::Compare->new('-a', '--unsorted', \@a0, \@a1);
-ok($lc, "Constructor worked with '-a --unsorted' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 
 ########## Options: -a -u
 
 my $lc = List::Compare->new('-a', '-u', \@a0, \@a1);
-ok($lc, "Constructor worked with '-a -u' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 
 ########## Options: -u --accelerated
 
 my $lc = List::Compare->new('-u', '--accelerated', \@a0, \@a1);
-ok($lc, "Constructor worked with '-u --accelerated' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
 
 ########## Options: -u -a
 
 my $lc = List::Compare->new('-u', '-a', \@a0, \@a1);
-ok($lc, "Constructor worked with '-u -a' options");
-my @intersection = qw| golfer delta edward baker camera fargo  |;
 ok(! $lc->{'intersection'}, "Results not pre-computed");
-is_deeply($lc->get_intersection_ref, \@intersection, "Results ok");
+is_deeply($lc->get_intersection_ref, \@unsorted_intersection, "Results ok");
 ok(! $lc->{'intersection'}, "Results not stored");
 
