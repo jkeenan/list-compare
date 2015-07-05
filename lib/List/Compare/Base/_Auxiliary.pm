@@ -714,25 +714,33 @@ sub _alt_construct_tester_5 {
 # - $accelerated set if '-a' or '--accelerated' as one of the first list elements
 # the options, if found, are removed from the passed in list
 # the options can be passed in any order
+
 sub _parse_options {
-    my($args) = @_;
+    my ($args) = @_;
     croak "Need to be passed a reference to a list"
         unless ref($args) eq 'ARRAY';
-    my($unsorted, $accelerated) = ('', '');
-    while (@$args && !ref($args->[0])) {
-        if ($args->[0] eq '-u' || $args->[0] eq '--unsorted') {
-            $unsorted = shift @$args;
+    my ($unsorted, $accelerated) = ('', '');
+    my %xyz = map { $_ => '' } qw( u a );
+    my ($uidx, $aidx);
+    for (my $i=0; $i<=$#{$args}; $i++) {
+        next if ref($args->[$i]);
+        if (($args->[$i] eq '-u' || $args->[$i] eq '--unsorted') and (! defined($uidx))) {
+            $xyz{u}++;
+            $uidx = $i;
         }
-        elsif ($args->[0] eq '-a' || $args->[0] eq '--accelerated') {
-            $accelerated = shift @$args;
+        elsif (($args->[$i] eq '-a' || $args->[$i] eq '--accelerated') and (! defined($aidx))) {
+            $xyz{a}++;
+            $aidx = $i;
         }
         else {
             last;
         }
     }
-    return ($unsorted, $accelerated);
+    for my $idx (sort {$b <=> $a} grep { defined($_) } ($uidx, $aidx)) {
+        splice @{$args}, $idx, 1;
+    }
+    return ($xyz{u}, $xyz{a});
 }
-
 1;
 
 __END__
