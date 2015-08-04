@@ -169,11 +169,14 @@ sub _validate_multiple_seenhashes {
 
 sub _list_builder {
     my ($aref, $x) = @_;
-    if (ref(${$aref}[$x]) eq 'HASH') {
-        return keys %{${$aref}[$x]};
-    } else {
-        return      @{${$aref}[$x]};
-    }
+#    if (ref(${$aref}[$x]) eq 'HASH') {
+#        return keys %{${$aref}[$x]};
+#    } else {
+#        return      @{${$aref}[$x]};
+#    }
+    return (ref(${$aref}[$x]) eq 'HASH')
+        ? keys %{${$aref}[$x]}
+        : @{${$aref}[$x]};
 }
 
 sub _calculate_array_seen_only {
