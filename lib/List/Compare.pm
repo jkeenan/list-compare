@@ -6,7 +6,6 @@ use Carp;
 use List::Compare::Base::_Auxiliary qw(
     _validate_2_seenhashes
     _chart_engine_regular
-	_parse_options
 );
 
 sub new {
@@ -24,7 +23,10 @@ sub new {
         $accelerated = ${$argref}{'accelerated'} ? 1 : '';
     } else {
         @args = @_;
-		($unsorted, $accelerated) = _parse_options(\@args);
+        $unsorted = ($args[0] eq '-u' or $args[0] eq '--unsorted')
+            ? shift(@args) : '';
+        $accelerated = shift(@args)
+            if ($args[0] eq '-a' or $args[0] eq '--accelerated');
     }
     $argument_error_status = 1;
     @testargs = @args[1..$#args];
@@ -2808,10 +2810,9 @@ any references to lists are passed to the constructor.
 
 Note that if are calling List::Compare in the Accelerated or Multiple
 Accelerated mode I<and> wish to have the lists returned in unsorted order,
-you can pass the argument for the unsorted option
-(C<'-u'> or C<'--unsorted'>) and the argument for the
-Accelerated mode (C<'-a'> or C<'--accelerated'>) in any order,
-as long as they appear before the actual lists to be compared.
+you I<first> pass the argument for the unsorted option
+(C<'-u'> or C<'--unsorted'>) and I<then> pass the argument for the
+Accelerated mode (C<'-a'> or C<'--accelerated'>).
 
 =back
 
