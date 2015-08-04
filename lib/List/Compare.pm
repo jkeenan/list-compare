@@ -6,7 +6,7 @@ use Carp;
 use List::Compare::Base::_Auxiliary qw(
     _validate_2_seenhashes
     _chart_engine_regular
-    _parse_options
+	_parse_options
 );
 
 sub new {
@@ -24,7 +24,7 @@ sub new {
         $accelerated = ${$argref}{'accelerated'} ? 1 : '';
     } else {
         @args = @_;
-        ($unsorted, $accelerated) = _parse_options(\@args);
+		($unsorted, $accelerated) = _parse_options(\@args);
     }
     $argument_error_status = 1;
     @testargs = @args[1..$#args];
