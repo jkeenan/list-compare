@@ -3065,6 +3065,14 @@ union.
 
 =item *
 
+Data::Compare - compare perl data structures
+(L<http://search.cpan.org/dist/Data-Compare/>)
+
+This library compares Perl data structures recursively.  Comes recommended by
+Slaven Rezić!
+
+=item *
+
 List::Util - A selection of general-utility list subroutines
 (L<http://search.cpan.org/dist/Scalar-List-Utils/>)
 
