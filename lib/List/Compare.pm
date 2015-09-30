@@ -1702,6 +1702,8 @@ sub get_version {
 
 #################### DOCUMENTATION ####################
 
+=encoding utf-8
+
 =head1 NAME
 
 List::Compare - Compare elements of two or more lists
