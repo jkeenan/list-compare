@@ -189,8 +189,23 @@ like($@, qr/No element in index position/,
         \$stdout,
     );
     ok($rv, "print_subset_chart() returned true value");
-    like($stdout, qr/Subset Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Subset Relationships
+
+   Right:    0    1    2    3    4
+
+Left:  0:    1    0    0    0    0
+
+       1:    0    1    0    0    0
+
+       2:    0    0    1    0    0
+
+       3:    0    0    1    1    1
+
+       4:    0    0    1    1    1
+
+...
 }
 {
     my ($rv, $stdout, $stderr);
@@ -199,8 +214,23 @@ like($@, qr/No element in index position/,
         \$stdout,
     );
     ok($rv, "print_equivalence_chart() returned true value");
-    like($stdout, qr/Equivalence Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Equivalence Relationships
+
+   Right:    0    1    2    3    4
+
+Left:  0:    1    0    0    0    0
+
+       1:    0    1    0    0    0
+
+       2:    0    0    1    0    0
+
+       3:    0    0    0    1    1
+
+       4:    0    0    0    1    1
+
+...
 }
 
 @args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );

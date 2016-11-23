@@ -123,8 +123,17 @@ ok(! $disj, "Got expected disjoint relationship");
         \$stdout,
     );
     ok($rv, "print_subset_chart() returned true value");
-    like($stdout, qr/Subset Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Subset Relationships
+
+   Right:    0    1
+
+Left:  0:    1    0
+
+       1:    0    1
+
+...
 }
 {
     my ($rv, $stdout, $stderr);
@@ -133,8 +142,17 @@ ok(! $disj, "Got expected disjoint relationship");
         \$stdout,
     );
     ok($rv, "print_equivalence_chart() returned true value");
-    like($stdout, qr/Equivalence Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Equivalence Relationships
+
+   Right:    0    1
+
+Left:  0:    1    0
+
+       1:    0    1
+
+...
 }
      
 @args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );

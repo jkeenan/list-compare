@@ -484,8 +484,23 @@ like($@,
         \$stdout,
     );
     ok($rv, "print_subset_chart() returned true value");
-    like($stdout, qr/Subset Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Subset Relationships
+
+   Right:    0    1    2    3    4
+
+Left:  0:    1    0    0    0    0
+
+       1:    0    1    0    0    0
+
+       2:    0    0    1    0    0
+
+       3:    0    0    1    1    1
+
+       4:    0    0    1    1    1
+
+...
 }
 {
     my ($rv, $stdout, $stderr);
@@ -494,8 +509,23 @@ like($@,
         \$stdout,
     );
     ok($rv, "print_equivalence_chart() returned true value");
-    like($stdout, qr/Equivalence Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Equivalence Relationships
+
+   Right:    0    1    2    3    4
+
+Left:  0:    1    0    0    0    0
+
+       1:    0    1    0    0    0
+
+       2:    0    0    1    0    0
+
+       3:    0    0    0    1    1
+
+       4:    0    0    0    1    1
+
+...
 }
 
 @args = qw( abel baker camera delta edward fargo golfer hilton icon jerky zebra );
@@ -542,7 +572,7 @@ like($@,
     "are_members_any() correctly generated error message");
 
 $vers = $lcm->get_version;
-ok($vers, "get_version() returned true value");
+is($vers, $List::Compare::VERSION, "get_version() returned the correct value");
 
 ### new ###
 my $lcm_dj   = List::Compare->new( { lists => [ \%h0, \%h1, \%h2, \%h3, \%h4, \%h8 ] } );

@@ -35,12 +35,14 @@ our @EXPORT_OK = qw(
     func_wrap_are_members_which
     func_wrap_is_member_any
     func_wrap_are_members_any
+	convert_eol
  );
 our %EXPORT_TAGS = (
     seen => [ qw(
         ok_capture_error ok_seen_a  ok_seen_h ok_any_h _capture
         getseen unseen
         make_array_seen_hash
+		convert_eol
     ) ],
     wrap => [ qw(
         wrap_is_member_which
@@ -524,3 +526,9 @@ sub func_wrap_are_members_any {
     ($correct == scalar keys %{ $args }) ? 1 : 0;
 }
 
+# for Win32 here-documents
+sub convert_eol {
+	local $_ = shift;
+	s/\r\n/\n/g;
+	$_;
+}

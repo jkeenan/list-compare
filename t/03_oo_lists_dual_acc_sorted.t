@@ -205,8 +205,17 @@ ok(! $disj, "Got expected disjoint relationship");
         \$stdout,
     );
     ok($rv, "print_subset_chart() returned true value");
-    like($stdout, qr/Subset Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Subset Relationships
+
+   Right:    0    1
+
+Left:  0:    1    0
+
+       1:    0    1
+
+...
 }
 {
     my ($rv, $stdout, $stderr);
@@ -215,8 +224,17 @@ ok(! $disj, "Got expected disjoint relationship");
         \$stdout,
     );
     ok($rv, "print_equivalence_chart() returned true value");
-    like($stdout, qr/Equivalence Relationships/,
-        "Got expected chart header");
+    is($stdout, convert_eol(<<'...'), "Got expected chart");
+
+Equivalence Relationships
+
+   Right:    0    1
+
+Left:  0:    1    0
+
+       1:    0    1
+
+...
 }
      
 ok(wrap_is_member_which(
@@ -290,7 +308,7 @@ like($@,
     "are_members_any() correctly generated error message");
 
 $vers = $lc->get_version;
-ok($vers, "get_version() returned true value");
+is($vers, $List::Compare::VERSION, "get_version() returned the correct value");
 
 ### new ###
 my $lc_s  = List::Compare->new('-a', \@a2, \@a3);
