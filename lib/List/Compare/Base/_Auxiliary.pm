@@ -206,9 +206,9 @@ sub _calculate_intermediate {
     my $aref = shift;
     my $aseenref = _calculate_array_seen_only($aref);
     my @vals = sort { scalar(keys(%{$a})) <=> scalar(keys(%{$b})) } @{$aseenref};
-    my %intermediate = map { $_ => 1 } keys %{$vals[0]};
+    my %intermediate = map { $_ => undef } keys %{$vals[0]};
     for my $l ( 1..$#vals ) {
-        %intermediate = map { $_ => 1 }
+        %intermediate = map { $_ => undef }
             grep { exists $intermediate{$_} }
             keys %{$vals[$l]};
     }
@@ -245,7 +245,7 @@ sub _calculate_sharedref {
 
     my %intermediate = ();
     for my $href (@{$seenrefsref}) {
-       my %this = map { $_ => 1 } keys(%{$href});
+       my %this = map { $_ => undef } keys(%{$href});
         for my $k (keys %this) {;
             $intermediate{$k}++;
         };
