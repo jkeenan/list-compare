@@ -1,5 +1,5 @@
 package List::Compare::Base::_Engine;
-our $VERSION = 0.54;
+our $VERSION = 0.55;
 # Holds subroutines used within
 # List::Compare::Base::Accelerated and List::Compare::Functional
 use Carp;
@@ -70,7 +70,7 @@ List::Compare::Base::_Engine - Internal use only
 
 =head1 VERSION
 
-This document refers to version 0.54 of List::Compare::Base::_Engine.
+This document refers to version 0.55 of List::Compare::Base::_Engine.
 This version was released August 16 2020.
 
 =head1 SYNOPSIS
