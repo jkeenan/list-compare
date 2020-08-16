@@ -6,7 +6,7 @@ use Test::More tests => 103;
 use List::Compare;
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :wrap :hashes :results );
-use IO::CaptureOutput qw( capture );
+use Capture::Tiny q|:all|;
 
 my @pred = ();
 my %seen = ();

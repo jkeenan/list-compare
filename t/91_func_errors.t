@@ -6,7 +6,7 @@ use Test::More tests => 176;
 use List::Compare::Functional qw(:originals :aliases);
 use lib ("./t");
 use Test::ListCompareSpecial qw( :seen :func_wrap :arrays :hashes :results );
-use IO::CaptureOutput qw( capture );
+use Capture::Tiny q|:all|;
 
 my @pred = ();
 my %seen = ();
