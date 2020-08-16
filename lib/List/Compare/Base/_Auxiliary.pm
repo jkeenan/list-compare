@@ -1,8 +1,8 @@
 package List::Compare::Base::_Auxiliary;
-$VERSION = 0.53;
+our $VERSION = 0.54;
 use Carp;
-@ISA = qw(Exporter);
-@EXPORT_OK = qw|
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw|
     _validate_2_seenhashes
     _validate_seen_hash
     _validate_multiple_seenhashes
@@ -39,7 +39,7 @@ use Carp;
     _alt_construct_tester_4
     _alt_construct_tester_5
 |;
-%EXPORT_TAGS = (
+our %EXPORT_TAGS = (
     calculate => [ qw(
         _calculate_array_seen_only
         _calculate_seen_only

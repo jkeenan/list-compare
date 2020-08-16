@@ -1,5 +1,5 @@
 package List::Compare::Base::_Engine;
-$VERSION = 0.53;
+our $VERSION = 0.54;
 # Holds subroutines used within
 # List::Compare::Base::Accelerated and List::Compare::Functional
 use Carp;
@@ -8,8 +8,8 @@ use List::Compare::Base::_Auxiliary qw(
     _calculate_union_seen_only
     _calculate_seen_only
 );
-@ISA = qw(Exporter);
-@EXPORT_OK = qw|
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw|
     _unique_all_engine
     _complement_all_engine
 |;

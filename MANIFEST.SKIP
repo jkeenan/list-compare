@@ -35,3 +35,7 @@ svndiff/
 ^MYMETA.*
 nytprof/
 nytprof.out
+\.travis.yml
+^README.md
+^.README.pod
+\.appveyor.yml

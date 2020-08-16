@@ -1,5 +1,5 @@
 package List::Compare;
-$VERSION = '0.53';
+our $VERSION = '0.54';
 use strict;
 local $^W = 1;
 use Carp;
@@ -194,10 +194,13 @@ sub get_unique_all {
     return [ $data{'unique'}, $data{'complement'} ];
 }
 
-*get_Lonly = \&get_unique;
-*get_Aonly = \&get_unique;
-*get_Lonly_ref = \&get_unique_ref;
-*get_Aonly_ref = \&get_unique_ref;
+{
+    no warnings 'once';
+    *get_Lonly = \&get_unique;
+    *get_Aonly = \&get_unique;
+    *get_Lonly_ref = \&get_unique_ref;
+    *get_Aonly_ref = \&get_unique_ref;
+}
 
 sub get_complement {
     return @{ get_complement_ref(shift) };
@@ -215,10 +218,13 @@ sub get_complement_all {
     return [ $data{'complement'}, $data{'unique'} ];
 }
 
-*get_Ronly = \&get_complement;
-*get_Bonly = \&get_complement;
-*get_Ronly_ref = \&get_complement_ref;
-*get_Bonly_ref = \&get_complement_ref;
+{
+    no warnings 'once';
+    *get_Ronly = \&get_complement;
+    *get_Bonly = \&get_complement;
+    *get_Ronly_ref = \&get_complement_ref;
+    *get_Bonly_ref = \&get_complement_ref;
+}
 
 sub get_symmetric_difference {
     return @{ get_symmetric_difference_ref(shift) };
@@ -230,12 +236,15 @@ sub get_symmetric_difference_ref {
     return $data{'symmetric_difference'};
 }
 
-*get_symdiff  = \&get_symmetric_difference;
-*get_LorRonly = \&get_symmetric_difference;
-*get_AorBonly = \&get_symmetric_difference;
-*get_symdiff_ref  = \&get_symmetric_difference_ref;
-*get_LorRonly_ref = \&get_symmetric_difference_ref;
-*get_AorBonly_ref = \&get_symmetric_difference_ref;
+{
+    no warnings 'once';
+    *get_symdiff  = \&get_symmetric_difference;
+    *get_LorRonly = \&get_symmetric_difference;
+    *get_AorBonly = \&get_symmetric_difference;
+    *get_symdiff_ref  = \&get_symmetric_difference_ref;
+    *get_LorRonly_ref = \&get_symmetric_difference_ref;
+    *get_AorBonly_ref = \&get_symmetric_difference_ref;
+}
 
 sub get_nonintersection {
     my $class = shift;
@@ -257,7 +266,7 @@ sub is_LsubsetR {
     return $data{'LsubsetR_status'};
 }
 
-*is_AsubsetB = \&is_LsubsetR;
+{ no warnings 'once'; *is_AsubsetB = \&is_LsubsetR; }
 
 sub is_RsubsetL {
     my $class = shift;
@@ -265,7 +274,7 @@ sub is_RsubsetL {
     return $data{'RsubsetL_status'};
 }
 
-*is_BsubsetA = \&is_RsubsetL;
+{ no warnings 'once'; *is_BsubsetA = \&is_RsubsetL; }
 
 sub is_LequivalentR {
     my $class = shift;
@@ -273,7 +282,7 @@ sub is_LequivalentR {
     return $data{'LequivalentR_status'};
 }
 
-*is_LeqvlntR = \&is_LequivalentR;
+{ no warnings 'once'; *is_LeqvlntR = \&is_LequivalentR; }
 
 sub is_LdisjointR {
     my $class = shift;
@@ -442,10 +451,13 @@ sub get_unique_all {
     return [ get_unique_ref($class), get_complement_ref($class) ];
 }
 
-*get_Lonly = \&get_unique;
-*get_Aonly = \&get_unique;
-*get_Lonly_ref = \&get_unique_ref;
-*get_Aonly_ref = \&get_unique_ref;
+{
+    no warnings 'once';
+    *get_Lonly = \&get_unique;
+    *get_Aonly = \&get_unique;
+    *get_Lonly_ref = \&get_unique_ref;
+    *get_Aonly_ref = \&get_unique_ref;
+}
 
 sub get_complement {
     return @{ get_complement_ref(shift) };
@@ -464,10 +476,13 @@ sub get_complement_all {
     return [ get_complement_ref($class), get_unique_ref($class) ];
 }
 
-*get_Ronly = \&get_complement;
-*get_Bonly = \&get_complement;
-*get_Ronly_ref = \&get_complement_ref;
-*get_Bonly_ref = \&get_complement_ref;
+{
+    no warnings 'once';
+    *get_Ronly = \&get_complement;
+    *get_Bonly = \&get_complement;
+    *get_Ronly_ref = \&get_complement_ref;
+    *get_Bonly_ref = \&get_complement_ref;
+}
 
 sub get_symmetric_difference {
     return @{ get_symmetric_difference_ref(shift) };
@@ -481,12 +496,15 @@ sub get_symmetric_difference_ref {
       : return [ sort @{_symmetric_difference_engine($data{'L'}, $data{'R'})} ];
 }
 
-*get_symdiff  = \&get_symmetric_difference;
-*get_LorRonly = \&get_symmetric_difference;
-*get_AorBonly = \&get_symmetric_difference;
-*get_symdiff_ref  = \&get_symmetric_difference_ref;
-*get_LorRonly_ref = \&get_symmetric_difference_ref;
-*get_AorBonly_ref = \&get_symmetric_difference_ref;
+{
+    no warnings 'once';
+    *get_symdiff  = \&get_symmetric_difference;
+    *get_LorRonly = \&get_symmetric_difference;
+    *get_AorBonly = \&get_symmetric_difference;
+    *get_symdiff_ref  = \&get_symmetric_difference_ref;
+    *get_LorRonly_ref = \&get_symmetric_difference_ref;
+    *get_AorBonly_ref = \&get_symmetric_difference_ref;
+}
 
 sub get_nonintersection {
     return @{ get_nonintersection_ref(shift) };
@@ -506,7 +524,7 @@ sub is_LsubsetR {
     return _is_LsubsetR_engine($data{'L'}, $data{'R'});
 }
 
-*is_AsubsetB  = \&is_LsubsetR;
+{ no warnings 'once'; *is_AsubsetB  = \&is_LsubsetR; }
 
 sub is_RsubsetL {
     my $class = shift;
@@ -514,7 +532,7 @@ sub is_RsubsetL {
     return _is_RsubsetL_engine($data{'L'}, $data{'R'});
 }
 
-*is_BsubsetA  = \&is_RsubsetL;
+{ no warnings 'once'; *is_BsubsetA  = \&is_RsubsetL; }
 
 sub is_LequivalentR {
     my $class = shift;
@@ -522,7 +540,7 @@ sub is_LequivalentR {
     return _is_LequivalentR_engine($data{'L'}, $data{'R'});
 }
 
-*is_LeqvlntR = \&is_LequivalentR;
+{ no warnings 'once'; *is_LeqvlntR = \&is_LequivalentR; }
 
 sub is_LdisjointR {
     my $class = shift;
@@ -1054,8 +1072,11 @@ sub get_Lonly_ref {
     get_unique_ref($class, $index);
 }
 
-*get_Aonly = \&get_Lonly;
-*get_Aonly_ref = \&get_Lonly_ref;
+{
+    no warnings 'once';
+    *get_Aonly = \&get_Lonly;
+    *get_Aonly_ref = \&get_Lonly_ref;
+}
 
 sub get_complement {
     my $class = shift;
@@ -1094,8 +1115,11 @@ sub get_Ronly_ref {
     &get_complement_ref($class, $index);
 }
 
-*get_Bonly = \&get_Ronly;
-*get_Bonly_ref = \&get_Ronly_ref;
+{
+    no warnings 'once';
+    *get_Bonly = \&get_Ronly;
+    *get_Bonly_ref = \&get_Ronly_ref;
+}
 
 sub get_symmetric_difference {
     return @{ get_symmetric_difference_ref(shift) };
@@ -1107,8 +1131,11 @@ sub get_symmetric_difference_ref {
     return $data{'symmetric_difference'};
 }
 
-*get_symdiff  = \&get_symmetric_difference;
-*get_symdiff_ref  = \&get_symmetric_difference_ref;
+{
+    no warnings 'once';
+    *get_symdiff  = \&get_symmetric_difference;
+    *get_symdiff_ref  = \&get_symmetric_difference_ref;
+}
 
 sub get_LorRonly {
     my $class = shift;
@@ -1126,8 +1153,11 @@ sub get_LorRonly_ref {
     get_symmetric_difference_ref($class);
 }
 
-*get_AorBonly = \&get_LorRonly;
-*get_AorBonly_ref = \&get_LorRonly_ref;
+{
+    no warnings 'once';
+    *get_AorBonly = \&get_LorRonly;
+    *get_AorBonly_ref = \&get_LorRonly_ref;
+}
 
 sub get_nonintersection {
     return @{ get_nonintersection_ref(shift) };
@@ -1148,7 +1178,7 @@ sub is_LsubsetR {
     return $subset_status;
 }
 
-*is_AsubsetB = \&is_LsubsetR;
+{ no warnings 'once'; *is_AsubsetB = \&is_LsubsetR; }
 
 sub is_RsubsetL {
     my $class = shift;
@@ -1163,7 +1193,7 @@ sub is_RsubsetL {
     return $subset_status;
 }
 
-*is_BsubsetA = \&is_RsubsetL;
+{ no warnings 'once'; *is_BsubsetA = \&is_RsubsetL; }
 
 sub is_LequivalentR {
     my $class = shift;
@@ -1174,7 +1204,7 @@ sub is_LequivalentR {
     return $equivalent_status;
 }
 
-*is_LeqvlntR = \&is_LequivalentR;
+{ no warnings 'once'; *is_LeqvlntR = \&is_LequivalentR; }
 
 sub is_LdisjointR {
     my $class = shift;
@@ -1405,8 +1435,11 @@ sub get_symmetric_difference_ref {
     return [ $unsortflag ? @symmetric_difference : sort(@symmetric_difference) ];
 }
 
-*get_symdiff = \&get_symmetric_difference;
-*get_symdiff_ref = \&get_symmetric_difference_ref;
+{
+    no warnings 'once';
+    *get_symdiff = \&get_symmetric_difference;
+    *get_symdiff_ref = \&get_symmetric_difference_ref;
+}
 
 sub get_LorRonly {
     my $class = shift;
@@ -1424,8 +1457,11 @@ sub get_LorRonly_ref {
     get_symmetric_difference_ref($class);
 }
 
-*get_AorBonly = \&get_LorRonly;
-*get_AorBonly_ref = \&get_LorRonly_ref;
+{
+    no warnings 'once';
+    *get_AorBonly = \&get_LorRonly;
+    *get_AorBonly_ref = \&get_LorRonly_ref;
+}
 
 sub get_unique {
     my $class = shift;
@@ -1468,8 +1504,11 @@ sub get_Lonly_ref {
     get_unique_ref($class, $index);
 }
 
-*get_Aonly = \&get_Lonly;
-*get_Aonly_ref = \&get_Lonly_ref;
+{
+    no warnings 'once';
+    *get_Aonly = \&get_Lonly;
+    *get_Aonly_ref = \&get_Lonly_ref;
+}
 
 sub get_complement {
     my $class = shift;
@@ -1513,8 +1552,11 @@ sub get_Ronly_ref {
     &get_complement_ref($class, $index);
 }
 
-*get_Bonly = \&get_Ronly;
-*get_Bonly_ref = \&get_Ronly_ref;
+{
+    no warnings 'once';
+    *get_Bonly = \&get_Ronly;
+    *get_Bonly_ref = \&get_Ronly_ref;
+}
 
 sub is_LsubsetR {
     my $class = shift;
@@ -1523,7 +1565,7 @@ sub is_LsubsetR {
     return $subset_status;
 }
 
-*is_AsubsetB = \&is_LsubsetR;
+{ no warnings 'once'; *is_AsubsetB = \&is_LsubsetR; }
 
 sub is_RsubsetL {
     my $class = shift;
@@ -1538,7 +1580,7 @@ sub is_RsubsetL {
     return $subset_status;
 }
 
-*is_BsubsetA = \&is_RsubsetL;
+{ no warnings 'once'; *is_BsubsetA = \&is_RsubsetL; }
 
 sub is_LequivalentR {
     my $class = shift;
@@ -1550,7 +1592,7 @@ sub is_LequivalentR {
     return ${$xequivalentref}[$index_left][$index_right];
 }
 
-*is_LeqvlntR = \&is_LequivalentR;
+{ no warnings 'once'; *is_LeqvlntR = \&is_LequivalentR; }
 
 sub is_LdisjointR {
     my $class = shift;

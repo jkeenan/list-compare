@@ -1,7 +1,7 @@
 package List::Compare::Functional;
-$VERSION = 0.53;
-@ISA = qw(Exporter);
-@EXPORT_OK = qw|
+our $VERSION = '0.54';
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw|
     get_intersection
     get_intersection_ref
     get_union
@@ -36,7 +36,7 @@ $VERSION = 0.53;
     get_bag_ref
     get_version
 |;
-%EXPORT_TAGS = (
+our %EXPORT_TAGS = (
     main => [ qw(
         get_intersection
         get_union
@@ -249,8 +249,11 @@ sub _symmetric_difference_engine {
     return \@symmetric_difference;
 }
 
-*get_symdiff  = \&get_symmetric_difference;
-*get_symdiff_ref  = \&get_symmetric_difference_ref;
+{
+    no warnings 'once';
+    *get_symdiff  = \&get_symmetric_difference;
+    *get_symdiff_ref  = \&get_symmetric_difference_ref;
+}
 
 sub get_shared {
     return @{ get_shared_ref(@_) };
@@ -335,7 +338,7 @@ sub is_LequivalentR {
     return _is_LequivalentR_engine(_argument_checker_4($argref));
 }
 
-*is_LeqvlntR = \&is_LequivalentR;
+{ no warnings 'once'; *is_LeqvlntR = \&is_LequivalentR; }
 
 sub _is_LequivalentR_engine {
     my $testedref = pop(@_);
