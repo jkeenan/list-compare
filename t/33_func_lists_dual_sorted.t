@@ -126,10 +126,7 @@ ok(! $disj, "Got expected disjoint relationship");
 
 {
     my ($rv, $stdout, $stderr);
-    capture(
-        sub { $rv = print_subset_chart( [ \@a0, \@a1 ] ); },
-        \$stdout,
-    );
+    $stdout = capture_stdout { $rv = print_subset_chart( [ \@a0, \@a1 ] ); };
     ok($rv, "print_subset_chart() returned true value");
     like($stdout, qr/Subset Relationships/,
         "Got expected chart header");
@@ -141,10 +138,7 @@ like($@, qr/Subroutine call requires exactly 1 reference as argument/,
 
 {
     my ($rv, $stdout, $stderr);
-    capture(
-        sub { $rv = print_equivalence_chart( [ \@a0, \@a1 ] ); },
-        \$stdout,
-    );
+    $stdout = capture_stdout { $rv = print_equivalence_chart( [ \@a0, \@a1 ] ); };
     ok($rv, "print_equivalence_chart() returned true value");
     like($stdout, qr/Equivalence Relationships/,
         "Got expected chart header");
@@ -211,3 +205,4 @@ ok(0 == scalar(@{get_intersection_ref( [ \@a4, \@a8 ] )}),
     "no intersection, as expected");
 $disj = is_LdisjointR( [ \@a4, \@a8 ] );
 ok($disj, "disjoint correctly determined");
+

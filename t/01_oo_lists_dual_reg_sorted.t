@@ -343,3 +343,4 @@ like($@, qr/Must pass all array references or all hash references/,
 eval { $lc_bad = List::Compare->new(\@a0) };
 like($@, qr/Must pass at least 2 references/,
     "Got expected error message from bad constructor");
+

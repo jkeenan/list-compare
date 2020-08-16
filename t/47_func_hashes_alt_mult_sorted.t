@@ -144,20 +144,14 @@ ok(! $eqv, "Got expected equivalence relationship");
 
 {
     my ($rv, $stdout, $stderr);
-    capture(
-        sub { $rv = print_subset_chart( { lists => [ \%h0, \%h1, \%h2, \%h3, \%h4 ] } ); },
-        \$stdout,
-    );
+    $stdout = capture_stdout { $rv = print_subset_chart( { lists => [ \%h0, \%h1, \%h2, \%h3, \%h4 ] } ); };
     ok($rv, "print_subset_chart() returned true value");
     like($stdout, qr/Subset Relationships/,
         "Got expected chart header");
 }
 {
     my ($rv, $stdout, $stderr);
-    capture(
-        sub { $rv = print_equivalence_chart( { lists => [ \%h0, \%h1, \%h2, \%h3, \%h4 ] } ); },
-        \$stdout,
-    );
+    $stdout = capture_stdout { $rv = print_equivalence_chart( { lists => [ \%h0, \%h1, \%h2, \%h3, \%h4 ] } ); };
     ok($rv, "print_equivalence_chart() returned true value");
     like($stdout, qr/Equivalence Relationships/,
         "Got expected chart header");
@@ -206,3 +200,4 @@ ok(! $disj, "Got expected disjoint relationship");
 $disj = is_LdisjointR( { lists => [ \%h0, \%h1, \%h2, \%h3, \%h4, \%h8 ], pair
 => [ 4,5 ] } );
 ok($disj, "Got expected disjoint relationship");
+

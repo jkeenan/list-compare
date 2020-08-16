@@ -193,3 +193,4 @@ sub V_class_func_tests {
     like($@, qr/^Subroutine call requires 2 references as arguments/,
         "$name:  Got expected error message for lack of second argument");
 }
+
