@@ -516,8 +516,8 @@ List::Compare::Functional - Compare elements of two or more lists
 
 =head1 VERSION
 
-This document refers to version 0.53 of List::Compare::Functional.
-This version was released June 07 2015.  The first released
+This document refers to version 0.54 of List::Compare::Functional.
+This version was released August 16 2020.  The first released
 version of List::Compare::Functional was v0.21.  Its version numbers
 are set to be consistent with the other parts of the List::Compare
 distribution.
@@ -1681,8 +1681,8 @@ James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please
 include 'List::Compare::Functional' or 'List-Compare-Functional' in your
 subject line.
 
-Creation date:  May 20, 2002.  Last modification date:  June 07 2015.
-Copyright (c) 2002-15 James E. Keenan.  United States.  All rights reserved.
+Creation date:  May 20, 2002.  Last modification date:  August 16 2020.
+Copyright (c) 2002-20 James E. Keenan.  United States.  All rights reserved.
 This is free software and may be distributed under the same terms as Perl
 itself.
 
