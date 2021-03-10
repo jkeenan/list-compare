@@ -25,6 +25,7 @@ WriteMakefile(
             },
             bugtracker => {
                 web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=List-Compare',
+                mailto => 'bug-list-compare@rt.cpan.org',
             },
         },
     })),
