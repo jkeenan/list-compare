@@ -3,6 +3,7 @@ require 5.006;
 
 my $mm_ver = ExtUtils::MakeMaker->VERSION;
 
+
 WriteMakefile(
     NAME            => 'List::Compare',
     AUTHOR          => 'James E Keenan (jkeenan@cpan.org)',
