@@ -3129,7 +3129,7 @@ rather than just one -- but it aims to be as simple and useful as
 List::Util.  List::Util will be included in the standard Perl
 distribution as of Perl 5.8.0.
 
-Lists::Util (L<http://search.cpan.org/dist/List-MoreUtils/>),
+Lists::MoreUtils (L<http://search.cpan.org/dist/List-MoreUtils/>),
 by Tassilo von Parseval, building on code by Terrence Brannon, provides
 methods
 which extend List::Util's functionality.
